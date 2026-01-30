@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import '../cubit/vehicle_cubit.dart';
 import '../cubit/vehicle_state.dart';
 import '../models/vehicle.dart';
 import '../models/service_record.dart';
+import '../constants/theme.dart';
 import 'add_service_screen.dart';
 
 class VehicleDetailScreen extends StatefulWidget {
@@ -41,15 +43,18 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Vehicle Details'),
-        backgroundColor: Colors.white,
-        foregroundColor: Colors.black87,
+        backgroundColor: AppColors.background,
+        foregroundColor: AppColors.primaryText,
         elevation: 0,
         actions: [
           BlocBuilder<VehicleCubit, VehicleState>(
             builder: (context, state) {
               if (state is VehicleLoaded && state.vehicles.isNotEmpty) {
                 return IconButton(
-                  icon: const Icon(Icons.delete_outline),
+                  icon: const Icon(
+                    Icons.delete_outline,
+                    color: AppColors.error,
+                  ),
                   onPressed: () {
                     _showDeleteDialog(context, state.vehicles.first);
                   },
@@ -74,12 +79,12 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
               children: [
                 // Vehicle Info Card
                 Container(
-                  margin: const EdgeInsets.all(16),
-                  padding: const EdgeInsets.all(16),
+                  margin: EdgeInsets.all(16.w),
+                  padding: EdgeInsets.all(16.w),
                   decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(color: Colors.grey[200]!),
+                    color: AppColors.surface,
+                    borderRadius: BorderRadius.circular(8.r),
+                    border: Border.all(color: AppColors.border),
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -87,41 +92,42 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
                       Row(
                         children: [
                           Container(
-                            width: 56,
-                            height: 56,
+                            width: 56.w,
+                            height: 56.h,
                             decoration: BoxDecoration(
-                              color: Colors.grey[100],
-                              borderRadius: BorderRadius.circular(8),
+                              color: AppColors.accent.withOpacity(0.2),
+                              borderRadius: BorderRadius.circular(8.r),
                             ),
                             child: Center(
                               child: Text(
                                 vehicle.name[0].toUpperCase(),
-                                style: const TextStyle(
-                                  color: Colors.black87,
-                                  fontSize: 24,
+                                style: TextStyle(
+                                  color: AppColors.accent,
+                                  fontSize: 24.sp,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
                             ),
                           ),
-                          const SizedBox(width: 16),
+                          SizedBox(width: 16.w),
                           Expanded(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
                                   vehicle.name,
-                                  style: const TextStyle(
-                                    fontSize: 18,
+                                  style: TextStyle(
+                                    fontSize: 18.sp,
                                     fontWeight: FontWeight.w600,
+                                    color: AppColors.primaryText,
                                   ),
                                 ),
-                                const SizedBox(height: 4),
+                                SizedBox(height: 4.h),
                                 Text(
                                   vehicle.plateNumber,
                                   style: TextStyle(
-                                    fontSize: 14,
-                                    color: Colors.grey[600],
+                                    fontSize: 14.sp,
+                                    color: AppColors.secondaryText,
                                   ),
                                 ),
                               ],
@@ -129,35 +135,41 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
                           ),
                         ],
                       ),
-                      const SizedBox(height: 16),
+                      SizedBox(height: 16.h),
                       if (vehicle.brand != null || vehicle.model != null)
                         Padding(
-                          padding: const EdgeInsets.only(bottom: 8),
+                          padding: EdgeInsets.only(bottom: 8.h),
                           child: Row(
                             children: [
                               if (vehicle.brand != null) ...[
                                 Icon(
                                   Icons.business_outlined,
-                                  size: 18,
-                                  color: Colors.grey[500],
+                                  size: 18.sp,
+                                  color: AppColors.secondaryText,
                                 ),
-                                const SizedBox(width: 8),
+                                SizedBox(width: 8.w),
                                 Text(
                                   vehicle.brand!,
-                                  style: TextStyle(color: Colors.grey[700]),
+                                  style: TextStyle(
+                                    color: AppColors.primaryText,
+                                    fontSize: 14.sp,
+                                  ),
                                 ),
-                                const SizedBox(width: 16),
+                                SizedBox(width: 16.w),
                               ],
                               if (vehicle.model != null) ...[
                                 Icon(
                                   Icons.category_outlined,
-                                  size: 18,
-                                  color: Colors.grey[500],
+                                  size: 18.sp,
+                                  color: AppColors.secondaryText,
                                 ),
-                                const SizedBox(width: 8),
+                                SizedBox(width: 8.w),
                                 Text(
                                   vehicle.model!,
-                                  style: TextStyle(color: Colors.grey[700]),
+                                  style: TextStyle(
+                                    color: AppColors.primaryText,
+                                    fontSize: 14.sp,
+                                  ),
                                 ),
                               ],
                             ],
@@ -169,26 +181,32 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
                             if (vehicle.year != null) ...[
                               Icon(
                                 Icons.calendar_today_outlined,
-                                size: 18,
-                                color: Colors.grey[500],
+                                size: 18.sp,
+                                color: AppColors.secondaryText,
                               ),
-                              const SizedBox(width: 8),
+                              SizedBox(width: 8.w),
                               Text(
                                 vehicle.year!,
-                                style: TextStyle(color: Colors.grey[700]),
+                                style: TextStyle(
+                                  color: AppColors.primaryText,
+                                  fontSize: 14.sp,
+                                ),
                               ),
-                              const SizedBox(width: 16),
+                              SizedBox(width: 16.w),
                             ],
                             if (vehicle.color != null) ...[
                               Icon(
                                 Icons.palette_outlined,
-                                size: 18,
-                                color: Colors.grey[500],
+                                size: 18.sp,
+                                color: AppColors.secondaryText,
                               ),
-                              const SizedBox(width: 8),
+                              SizedBox(width: 8.w),
                               Text(
                                 vehicle.color!,
-                                style: TextStyle(color: Colors.grey[700]),
+                                style: TextStyle(
+                                  color: AppColors.primaryText,
+                                  fontSize: 14.sp,
+                                ),
                               ),
                             ],
                           ],
@@ -198,63 +216,65 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
                 ),
                 // Statistics
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  padding: EdgeInsets.symmetric(horizontal: 16.w),
                   child: Row(
                     children: [
                       Expanded(
                         child: Container(
-                          padding: const EdgeInsets.all(16),
+                          padding: EdgeInsets.all(16.w),
                           decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(8),
-                            border: Border.all(color: Colors.grey[200]!),
+                            color: AppColors.surface,
+                            borderRadius: BorderRadius.circular(8.r),
+                            border: Border.all(color: AppColors.border),
                           ),
                           child: Column(
                             children: [
                               Text(
                                 '$serviceCount',
-                                style: const TextStyle(
-                                  fontSize: 24,
+                                style: TextStyle(
+                                  fontSize: 24.sp,
                                   fontWeight: FontWeight.bold,
+                                  color: AppColors.primaryText,
                                 ),
                               ),
-                              const SizedBox(height: 4),
+                              SizedBox(height: 4.h),
                               Text(
                                 'Services',
                                 style: TextStyle(
-                                  fontSize: 12,
-                                  color: Colors.grey[600],
+                                  fontSize: 12.sp,
+                                  color: AppColors.secondaryText,
                                 ),
                               ),
                             ],
                           ),
                         ),
                       ),
-                      const SizedBox(width: 12),
+                      SizedBox(width: 12.w),
                       Expanded(
                         child: Container(
-                          padding: const EdgeInsets.all(16),
+                          padding: EdgeInsets.all(16.w),
                           decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(8),
-                            border: Border.all(color: Colors.grey[200]!),
+                            color: AppColors.surface,
+                            borderRadius: BorderRadius.circular(8.r),
+                            border: Border.all(color: AppColors.border),
                           ),
                           child: Column(
                             children: [
                               Text(
                                 _formatCurrency(totalCost),
-                                style: const TextStyle(
-                                  fontSize: 16,
+                                style: TextStyle(
+                                  fontSize: 16.sp,
                                   fontWeight: FontWeight.bold,
+                                  color: AppColors.primaryText,
                                 ),
                                 textAlign: TextAlign.center,
                               ),
-                              const SizedBox(height: 4),
+                              SizedBox(height: 4.h),
                               Text(
                                 'Total Cost',
                                 style: TextStyle(
-                                  fontSize: 12,
-                                  color: Colors.grey[600],
+                                  fontSize: 12.sp,
+                                  color: AppColors.secondaryText,
                                 ),
                               ),
                             ],
@@ -264,7 +284,7 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
                     ],
                   ),
                 ),
-                const SizedBox(height: 16),
+                SizedBox(height: 16.h),
                 // Service Records
                 Expanded(
                   child:
@@ -275,69 +295,70 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
                               children: [
                                 Icon(
                                   Icons.history_outlined,
-                                  size: 64,
-                                  color: Colors.grey[300],
+                                  size: 64.sp,
+                                  color: AppColors.secondaryText,
                                 ),
-                                const SizedBox(height: 16),
+                                SizedBox(height: 16.h),
                                 Text(
                                   'No service records yet',
                                   style: TextStyle(
-                                    fontSize: 16,
-                                    color: Colors.grey[600],
+                                    fontSize: 16.sp,
+                                    color: AppColors.primaryText,
                                   ),
                                 ),
-                                const SizedBox(height: 8),
+                                SizedBox(height: 8.h),
                                 Text(
                                   'Tap + to add your first service record',
                                   style: TextStyle(
-                                    fontSize: 14,
-                                    color: Colors.grey[400],
+                                    fontSize: 14.sp,
+                                    color: AppColors.secondaryText,
                                   ),
                                 ),
                               ],
                             ),
                           )
                           : ListView.builder(
-                            padding: const EdgeInsets.symmetric(horizontal: 16),
+                            padding: EdgeInsets.symmetric(horizontal: 16.w),
                             itemCount: serviceRecords.length,
                             itemBuilder: (context, index) {
                               final record = serviceRecords[index];
                               return Container(
-                                margin: const EdgeInsets.only(bottom: 12),
+                                margin: EdgeInsets.only(bottom: 12.h),
                                 decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(8),
-                                  border: Border.all(color: Colors.grey[200]!),
+                                  color: AppColors.surface,
+                                  borderRadius: BorderRadius.circular(8.r),
+                                  border: Border.all(color: AppColors.border),
                                 ),
                                 child: ListTile(
-                                  contentPadding: const EdgeInsets.symmetric(
-                                    horizontal: 16,
-                                    vertical: 8,
+                                  contentPadding: EdgeInsets.symmetric(
+                                    horizontal: 16.w,
+                                    vertical: 8.h,
                                   ),
                                   leading: Container(
-                                    width: 48,
-                                    height: 48,
+                                    width: 48.w,
+                                    height: 48.h,
                                     decoration: BoxDecoration(
                                       color: _getServiceTypeColor(
                                         record.serviceType,
                                       ),
-                                      borderRadius: BorderRadius.circular(8),
+                                      borderRadius: BorderRadius.circular(8.r),
                                     ),
                                     child: Icon(
                                       _getServiceTypeIcon(record.serviceType),
                                       color: Colors.white,
-                                      size: 24,
+                                      size: 24.sp,
                                     ),
                                   ),
                                   title: Text(
                                     record.serviceType,
-                                    style: const TextStyle(
+                                    style: TextStyle(
                                       fontWeight: FontWeight.w600,
-                                      fontSize: 15,
+                                      fontSize: 15.sp,
+                                      color: AppColors.primaryText,
                                     ),
                                   ),
                                   subtitle: Padding(
-                                    padding: const EdgeInsets.only(top: 4),
+                                    padding: EdgeInsets.only(top: 4.h),
                                     child: Column(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
@@ -345,16 +366,16 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
                                         Text(
                                           _formatDate(record.serviceDate),
                                           style: TextStyle(
-                                            fontSize: 13,
-                                            color: Colors.grey[600],
+                                            fontSize: 13.sp,
+                                            color: AppColors.secondaryText,
                                           ),
                                         ),
                                         if (record.cost != null)
                                           Text(
                                             _formatCurrency(record.cost!),
                                             style: TextStyle(
-                                              fontSize: 13,
-                                              color: Colors.grey[800],
+                                              fontSize: 13.sp,
+                                              color: AppColors.primaryText,
                                               fontWeight: FontWeight.w500,
                                             ),
                                           ),
@@ -364,7 +385,8 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
                                   trailing: IconButton(
                                     icon: Icon(
                                       Icons.delete_outline,
-                                      color: Colors.grey[400],
+                                      color: AppColors.secondaryText,
+                                      size: 20.sp,
                                     ),
                                     onPressed: () {
                                       _showDeleteServiceDialog(context, record);
@@ -385,12 +407,19 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.error_outline, size: 48, color: Colors.grey[400]),
-                  const SizedBox(height: 16),
+                  Icon(
+                    Icons.error_outline,
+                    size: 48.sp,
+                    color: AppColors.error,
+                  ),
+                  SizedBox(height: 16.h),
                   Text(
                     state.message,
                     textAlign: TextAlign.center,
-                    style: TextStyle(color: Colors.grey[600]),
+                    style: TextStyle(
+                      color: AppColors.primaryText,
+                      fontSize: 14.sp,
+                    ),
                   ),
                 ],
               ),
@@ -400,7 +429,7 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
         },
       ),
       floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.black87,
+        backgroundColor: AppColors.accent,
         onPressed: () {
           Navigator.push(
             context,
@@ -410,7 +439,7 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
             ),
           );
         },
-        child: const Icon(Icons.add, color: Colors.white),
+        child: Icon(Icons.add, color: AppColors.background, size: 24.sp),
       ),
     );
   }
@@ -473,7 +502,7 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
                   context.read<VehicleCubit>().deleteVehicle(vehicle.id);
                   Navigator.pop(context);
                 },
-                style: TextButton.styleFrom(foregroundColor: Colors.red),
+                style: TextButton.styleFrom(foregroundColor: AppColors.error),
                 child: const Text('Delete'),
               ),
             ],
@@ -503,7 +532,7 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
                     widget.vehicleId,
                   );
                 },
-                style: TextButton.styleFrom(foregroundColor: Colors.red),
+                style: TextButton.styleFrom(foregroundColor: AppColors.error),
                 child: const Text('Delete'),
               ),
             ],
@@ -558,21 +587,30 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
 
   Widget _buildDetailRow(IconData icon, String label, String value) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8),
+      padding: EdgeInsets.symmetric(vertical: 8.h),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(icon, size: 20, color: Colors.grey[600]),
-          const SizedBox(width: 12),
+          Icon(icon, size: 20.sp, color: AppColors.secondaryText),
+          SizedBox(width: 12.w),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   label,
-                  style: TextStyle(fontSize: 12, color: Colors.grey[600]),
+                  style: TextStyle(
+                    fontSize: 12.sp,
+                    color: AppColors.secondaryText,
+                  ),
                 ),
-                Text(value, style: const TextStyle(fontSize: 14)),
+                Text(
+                  value,
+                  style: TextStyle(
+                    fontSize: 14.sp,
+                    color: AppColors.primaryText,
+                  ),
+                ),
               ],
             ),
           ),

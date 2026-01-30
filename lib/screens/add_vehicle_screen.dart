@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../cubit/vehicle_cubit.dart';
 import '../cubit/vehicle_state.dart';
 import '../models/vehicle.dart';
+import '../constants/theme.dart';
 
 class AddVehicleScreen extends StatefulWidget {
   const AddVehicleScreen({super.key});
@@ -63,8 +65,8 @@ class _AddVehicleScreenState extends State<AddVehicleScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Add Vehicle'),
-        backgroundColor: Colors.white,
-        foregroundColor: Colors.black87,
+        backgroundColor: AppColors.background,
+        foregroundColor: AppColors.primaryText,
         elevation: 0,
       ),
       body: BlocListener<VehicleCubit, VehicleState>(
@@ -73,7 +75,7 @@ class _AddVehicleScreenState extends State<AddVehicleScreen> {
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(
                 content: Text('Vehicle added successfully'),
-                backgroundColor: Colors.black87,
+                backgroundColor: AppColors.success,
               ),
             );
             Navigator.pop(context);
@@ -81,7 +83,7 @@ class _AddVehicleScreenState extends State<AddVehicleScreen> {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text(state.message),
-                backgroundColor: Colors.red,
+                backgroundColor: AppColors.error,
               ),
             );
           }
@@ -90,7 +92,7 @@ class _AddVehicleScreenState extends State<AddVehicleScreen> {
           builder: (context, state) {
             final isLoading = state is VehicleLoading;
             return SingleChildScrollView(
-              padding: const EdgeInsets.all(16.0),
+              padding: EdgeInsets.all(16.w),
               child: Form(
                 key: _formKey,
                 child: Column(
@@ -101,17 +103,24 @@ class _AddVehicleScreenState extends State<AddVehicleScreen> {
                       decoration: InputDecoration(
                         labelText: 'Vehicle Name *',
                         hintText: 'e.g., My Car',
-                        hintStyle: TextStyle(color: Colors.grey[400]),
+                        hintStyle: TextStyle(
+                          color: AppColors.secondaryText,
+                          fontSize: 14.sp,
+                        ),
                         filled: true,
-                        fillColor: Colors.grey[100],
+                        fillColor: AppColors.inputBackground,
                         border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
+                          borderRadius: BorderRadius.circular(8.r),
                           borderSide: BorderSide.none,
                         ),
-                        contentPadding: const EdgeInsets.symmetric(
-                          horizontal: 16,
-                          vertical: 12,
+                        contentPadding: EdgeInsets.symmetric(
+                          horizontal: 16.w,
+                          vertical: 12.h,
                         ),
+                      ),
+                      style: TextStyle(
+                        fontSize: 16.sp,
+                        color: AppColors.primaryText,
                       ),
                       validator: (value) {
                         if (value == null || value.trim().isEmpty) {
@@ -120,23 +129,30 @@ class _AddVehicleScreenState extends State<AddVehicleScreen> {
                         return null;
                       },
                     ),
-                    const SizedBox(height: 16),
+                    SizedBox(height: 16.h),
                     TextFormField(
                       controller: _plateNumberController,
                       decoration: InputDecoration(
                         labelText: 'Plate Number *',
                         hintText: 'e.g., B 1234 ABC',
-                        hintStyle: TextStyle(color: Colors.grey[400]),
+                        hintStyle: TextStyle(
+                          color: AppColors.secondaryText,
+                          fontSize: 14.sp,
+                        ),
                         filled: true,
-                        fillColor: Colors.grey[100],
+                        fillColor: AppColors.inputBackground,
                         border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
+                          borderRadius: BorderRadius.circular(8.r),
                           borderSide: BorderSide.none,
                         ),
-                        contentPadding: const EdgeInsets.symmetric(
-                          horizontal: 16,
-                          vertical: 12,
+                        contentPadding: EdgeInsets.symmetric(
+                          horizontal: 16.w,
+                          vertical: 12.h,
                         ),
+                      ),
+                      style: TextStyle(
+                        fontSize: 16.sp,
+                        color: AppColors.primaryText,
                       ),
                       textCapitalization: TextCapitalization.characters,
                       validator: (value) {
@@ -146,111 +162,143 @@ class _AddVehicleScreenState extends State<AddVehicleScreen> {
                         return null;
                       },
                     ),
-                    const SizedBox(height: 16),
+                    SizedBox(height: 16.h),
                     TextFormField(
                       controller: _brandController,
                       decoration: InputDecoration(
                         labelText: 'Brand',
                         hintText: 'e.g., Toyota',
-                        hintStyle: TextStyle(color: Colors.grey[400]),
+                        hintStyle: TextStyle(
+                          color: AppColors.secondaryText,
+                          fontSize: 14.sp,
+                        ),
                         filled: true,
-                        fillColor: Colors.grey[100],
+                        fillColor: AppColors.inputBackground,
                         border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
+                          borderRadius: BorderRadius.circular(8.r),
                           borderSide: BorderSide.none,
                         ),
-                        contentPadding: const EdgeInsets.symmetric(
-                          horizontal: 16,
-                          vertical: 12,
+                        contentPadding: EdgeInsets.symmetric(
+                          horizontal: 16.w,
+                          vertical: 12.h,
                         ),
                       ),
+                      style: TextStyle(
+                        fontSize: 16.sp,
+                        color: AppColors.primaryText,
+                      ),
                     ),
-                    const SizedBox(height: 16),
+                    SizedBox(height: 16.h),
                     TextFormField(
                       controller: _modelController,
                       decoration: InputDecoration(
                         labelText: 'Model',
                         hintText: 'e.g., Avanza',
-                        hintStyle: TextStyle(color: Colors.grey[400]),
+                        hintStyle: TextStyle(
+                          color: AppColors.secondaryText,
+                          fontSize: 14.sp,
+                        ),
                         filled: true,
-                        fillColor: Colors.grey[100],
+                        fillColor: AppColors.inputBackground,
                         border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
+                          borderRadius: BorderRadius.circular(8.r),
                           borderSide: BorderSide.none,
                         ),
-                        contentPadding: const EdgeInsets.symmetric(
-                          horizontal: 16,
-                          vertical: 12,
+                        contentPadding: EdgeInsets.symmetric(
+                          horizontal: 16.w,
+                          vertical: 12.h,
                         ),
                       ),
+                      style: TextStyle(
+                        fontSize: 16.sp,
+                        color: AppColors.primaryText,
+                      ),
                     ),
-                    const SizedBox(height: 16),
+                    SizedBox(height: 16.h),
                     TextFormField(
                       controller: _yearController,
                       decoration: InputDecoration(
                         labelText: 'Year',
                         hintText: 'e.g., 2020',
-                        hintStyle: TextStyle(color: Colors.grey[400]),
+                        hintStyle: TextStyle(
+                          color: AppColors.secondaryText,
+                          fontSize: 14.sp,
+                        ),
                         filled: true,
-                        fillColor: Colors.grey[100],
+                        fillColor: AppColors.inputBackground,
                         border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
+                          borderRadius: BorderRadius.circular(8.r),
                           borderSide: BorderSide.none,
                         ),
-                        contentPadding: const EdgeInsets.symmetric(
-                          horizontal: 16,
-                          vertical: 12,
+                        contentPadding: EdgeInsets.symmetric(
+                          horizontal: 16.w,
+                          vertical: 12.h,
                         ),
+                      ),
+                      style: TextStyle(
+                        fontSize: 16.sp,
+                        color: AppColors.primaryText,
                       ),
                       keyboardType: TextInputType.number,
                       maxLength: 4,
                     ),
-                    const SizedBox(height: 16),
+                    SizedBox(height: 16.h),
                     TextFormField(
                       controller: _colorController,
                       decoration: InputDecoration(
                         labelText: 'Color',
                         hintText: 'e.g., White',
-                        hintStyle: TextStyle(color: Colors.grey[400]),
+                        hintStyle: TextStyle(
+                          color: AppColors.secondaryText,
+                          fontSize: 14.sp,
+                        ),
                         filled: true,
-                        fillColor: Colors.grey[100],
+                        fillColor: AppColors.inputBackground,
                         border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
+                          borderRadius: BorderRadius.circular(8.r),
                           borderSide: BorderSide.none,
                         ),
-                        contentPadding: const EdgeInsets.symmetric(
-                          horizontal: 16,
-                          vertical: 12,
+                        contentPadding: EdgeInsets.symmetric(
+                          horizontal: 16.w,
+                          vertical: 12.h,
                         ),
                       ),
+                      style: TextStyle(
+                        fontSize: 16.sp,
+                        color: AppColors.primaryText,
+                      ),
                     ),
-                    const SizedBox(height: 24),
+                    SizedBox(height: 24.h),
                     SizedBox(
-                      height: 48,
+                      height: 48.h,
                       child: ElevatedButton(
                         onPressed: isLoading ? null : _submitForm,
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.black87,
-                          foregroundColor: Colors.white,
+                          backgroundColor: AppColors.accent,
+                          foregroundColor: AppColors.background,
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
+                            borderRadius: BorderRadius.circular(8.r),
                           ),
                         ),
                         child:
                             isLoading
-                                ? const SizedBox(
-                                  height: 20,
-                                  width: 20,
+                                ? SizedBox(
+                                  height: 20.h,
+                                  width: 20.w,
                                   child: CircularProgressIndicator(
                                     strokeWidth: 2,
-                                    valueColor: AlwaysStoppedAnimation<Color>(
-                                      Colors.white,
-                                    ),
+                                    valueColor:
+                                        const AlwaysStoppedAnimation<Color>(
+                                          AppColors.background,
+                                        ),
                                   ),
                                 )
-                                : const Text(
+                                : Text(
                                   'Add Vehicle',
-                                  style: TextStyle(fontSize: 16),
+                                  style: TextStyle(
+                                    fontSize: 16.sp,
+                                    color: AppColors.background,
+                                  ),
                                 ),
                       ),
                     ),

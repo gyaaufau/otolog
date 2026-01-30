@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../cubit/vehicle_cubit.dart';
 import '../cubit/vehicle_state.dart';
+import '../constants/theme.dart';
 import 'add_vehicle_screen.dart';
 import 'vehicle_detail_screen.dart';
 
@@ -32,31 +34,39 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('OtoLog'),
-        backgroundColor: Colors.white,
-        foregroundColor: Colors.black87,
+        backgroundColor: AppColors.background,
+        foregroundColor: AppColors.primaryText,
         elevation: 0,
       ),
       body: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: EdgeInsets.all(16.w),
             child: TextField(
               controller: _searchController,
               decoration: InputDecoration(
                 hintText: 'Search vehicles...',
-                hintStyle: TextStyle(color: Colors.grey[400]),
-                prefixIcon: Icon(Icons.search, color: Colors.grey[600]),
+                hintStyle: TextStyle(
+                  color: AppColors.secondaryText,
+                  fontSize: 14.sp,
+                ),
+                prefixIcon: Icon(
+                  Icons.search,
+                  color: AppColors.secondaryText,
+                  size: 20.sp,
+                ),
                 filled: true,
-                fillColor: Colors.grey[100],
+                fillColor: AppColors.inputBackground,
                 border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8),
+                  borderRadius: BorderRadius.circular(8.r),
                   borderSide: BorderSide.none,
                 ),
-                contentPadding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 12,
+                contentPadding: EdgeInsets.symmetric(
+                  horizontal: 16.w,
+                  vertical: 12.h,
                 ),
               ),
+              style: TextStyle(color: AppColors.primaryText, fontSize: 14.sp),
               onChanged: (value) {
                 context.read<VehicleCubit>().searchVehicles(value);
               },
@@ -75,23 +85,23 @@ class _HomeScreenState extends State<HomeScreen> {
                         children: [
                           Icon(
                             Icons.directions_car_outlined,
-                            size: 64,
-                            color: Colors.grey[300],
+                            size: 64.sp,
+                            color: AppColors.secondaryText,
                           ),
-                          const SizedBox(height: 16),
+                          SizedBox(height: 16.h),
                           Text(
                             'No vehicles yet',
                             style: TextStyle(
-                              fontSize: 16,
-                              color: Colors.grey[600],
+                              fontSize: 16.sp,
+                              color: AppColors.primaryText,
                             ),
                           ),
-                          const SizedBox(height: 8),
+                          SizedBox(height: 8.h),
                           Text(
                             'Tap + to add your first vehicle',
                             style: TextStyle(
-                              fontSize: 14,
-                              color: Colors.grey[400],
+                              fontSize: 14.sp,
+                              color: AppColors.secondaryText,
                             ),
                           ),
                         ],
@@ -99,35 +109,35 @@ class _HomeScreenState extends State<HomeScreen> {
                     );
                   }
                   return ListView.builder(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    padding: EdgeInsets.symmetric(horizontal: 16.w),
                     itemCount: state.vehicles.length,
                     itemBuilder: (context, index) {
                       final vehicle = state.vehicles[index];
                       return Container(
-                        margin: const EdgeInsets.only(bottom: 12),
+                        margin: EdgeInsets.only(bottom: 12.h),
                         decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(8),
-                          border: Border.all(color: Colors.grey[200]!),
+                          color: AppColors.surface,
+                          borderRadius: BorderRadius.circular(8.r),
+                          border: Border.all(color: AppColors.border),
                         ),
                         child: ListTile(
-                          contentPadding: const EdgeInsets.symmetric(
-                            horizontal: 16,
-                            vertical: 8,
+                          contentPadding: EdgeInsets.symmetric(
+                            horizontal: 16.w,
+                            vertical: 8.h,
                           ),
                           leading: Container(
-                            width: 48,
-                            height: 48,
+                            width: 48.w,
+                            height: 48.h,
                             decoration: BoxDecoration(
-                              color: Colors.grey[100],
-                              borderRadius: BorderRadius.circular(8),
+                              color: AppColors.accent.withOpacity(0.2),
+                              borderRadius: BorderRadius.circular(8.r),
                             ),
                             child: Center(
                               child: Text(
                                 vehicle.name[0].toUpperCase(),
                                 style: TextStyle(
-                                  color: Colors.grey[700],
-                                  fontSize: 20,
+                                  color: AppColors.accent,
+                                  fontSize: 20.sp,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
@@ -135,24 +145,26 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                           title: Text(
                             vehicle.name,
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontWeight: FontWeight.w600,
-                              fontSize: 16,
+                              fontSize: 16.sp,
+                              color: AppColors.primaryText,
                             ),
                           ),
                           subtitle: Padding(
-                            padding: const EdgeInsets.only(top: 4),
+                            padding: EdgeInsets.only(top: 4.h),
                             child: Text(
                               vehicle.plateNumber,
                               style: TextStyle(
-                                color: Colors.grey[500],
-                                fontSize: 14,
+                                color: AppColors.secondaryText,
+                                fontSize: 14.sp,
                               ),
                             ),
                           ),
                           trailing: Icon(
                             Icons.chevron_right,
-                            color: Colors.grey[400],
+                            color: AppColors.secondaryText,
+                            size: 20.sp,
                           ),
                           onTap: () {
                             Navigator.push(
@@ -176,21 +188,31 @@ class _HomeScreenState extends State<HomeScreen> {
                       children: [
                         Icon(
                           Icons.error_outline,
-                          size: 48,
-                          color: Colors.grey[400],
+                          size: 48.sp,
+                          color: AppColors.error,
                         ),
-                        const SizedBox(height: 16),
+                        SizedBox(height: 16.h),
                         Text(
                           state.message,
                           textAlign: TextAlign.center,
-                          style: TextStyle(color: Colors.grey[600]),
+                          style: TextStyle(
+                            color: AppColors.primaryText,
+                            fontSize: 14.sp,
+                          ),
                         ),
-                        const SizedBox(height: 16),
+                        SizedBox(height: 16.h),
                         OutlinedButton(
                           onPressed: () {
                             context.read<VehicleCubit>().loadVehicles();
                           },
-                          child: const Text('Retry'),
+                          style: OutlinedButton.styleFrom(
+                            foregroundColor: AppColors.accent,
+                            side: BorderSide(color: AppColors.accent),
+                          ),
+                          child: Text(
+                            'Retry',
+                            style: TextStyle(fontSize: 14.sp),
+                          ),
                         ),
                       ],
                     ),
@@ -203,14 +225,14 @@ class _HomeScreenState extends State<HomeScreen> {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.black87,
+        backgroundColor: AppColors.accent,
         onPressed: () {
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => const AddVehicleScreen()),
           );
         },
-        child: const Icon(Icons.add, color: Colors.white),
+        child: Icon(Icons.add, color: AppColors.background, size: 24.sp),
       ),
     );
   }

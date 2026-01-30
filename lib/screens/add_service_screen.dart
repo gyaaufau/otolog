@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import '../cubit/vehicle_cubit.dart';
 import '../cubit/vehicle_state.dart';
 import '../models/service_record.dart';
+import '../constants/theme.dart';
 
 class AddServiceScreen extends StatefulWidget {
   final int vehicleId;
@@ -93,8 +95,8 @@ class _AddServiceScreenState extends State<AddServiceScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Add Service Record'),
-        backgroundColor: Colors.white,
-        foregroundColor: Colors.black87,
+        backgroundColor: AppColors.background,
+        foregroundColor: AppColors.primaryText,
         elevation: 0,
       ),
       body: BlocListener<VehicleCubit, VehicleState>(
@@ -103,7 +105,7 @@ class _AddServiceScreenState extends State<AddServiceScreen> {
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(
                 content: Text('Service record added successfully'),
-                backgroundColor: Colors.black87,
+                backgroundColor: AppColors.success,
               ),
             );
             Navigator.pop(context);
@@ -111,7 +113,7 @@ class _AddServiceScreenState extends State<AddServiceScreen> {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text(state.message),
-                backgroundColor: Colors.red,
+                backgroundColor: AppColors.error,
               ),
             );
           }
@@ -120,7 +122,7 @@ class _AddServiceScreenState extends State<AddServiceScreen> {
           builder: (context, state) {
             final isLoading = state is VehicleLoading;
             return SingleChildScrollView(
-              padding: const EdgeInsets.all(16.0),
+              padding: EdgeInsets.all(16.w),
               child: Form(
                 key: _formKey,
                 child: Column(
@@ -135,21 +137,27 @@ class _AddServiceScreenState extends State<AddServiceScreen> {
                       decoration: InputDecoration(
                         labelText: 'Service Type *',
                         filled: true,
-                        fillColor: Colors.grey[100],
+                        fillColor: AppColors.inputBackground,
                         border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
+                          borderRadius: BorderRadius.circular(8.r),
                           borderSide: BorderSide.none,
                         ),
-                        contentPadding: const EdgeInsets.symmetric(
-                          horizontal: 16,
-                          vertical: 12,
+                        contentPadding: EdgeInsets.symmetric(
+                          horizontal: 16.w,
+                          vertical: 12.h,
                         ),
                       ),
                       items:
                           _serviceTypes.map((type) {
                             return DropdownMenuItem(
                               value: type,
-                              child: Text(type),
+                              child: Text(
+                                type,
+                                style: TextStyle(
+                                  fontSize: 16.sp,
+                                  color: AppColors.primaryText,
+                                ),
+                              ),
                             );
                           }).toList(),
                       onChanged: (value) {
@@ -164,7 +172,7 @@ class _AddServiceScreenState extends State<AddServiceScreen> {
                         return null;
                       },
                     ),
-                    const SizedBox(height: 16),
+                    SizedBox(height: 16.h),
                     // Date Picker
                     InkWell(
                       onTap: () => _selectDate(context),
@@ -172,132 +180,167 @@ class _AddServiceScreenState extends State<AddServiceScreen> {
                         decoration: InputDecoration(
                           labelText: 'Service Date *',
                           filled: true,
-                          fillColor: Colors.grey[100],
+                          fillColor: AppColors.inputBackground,
                           border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8),
+                            borderRadius: BorderRadius.circular(8.r),
                             borderSide: BorderSide.none,
                           ),
-                          contentPadding: const EdgeInsets.symmetric(
-                            horizontal: 16,
-                            vertical: 12,
+                          contentPadding: EdgeInsets.symmetric(
+                            horizontal: 16.w,
+                            vertical: 12.h,
                           ),
                         ),
                         child: Text(
                           DateFormat('dd MMM yyyy').format(_selectedDate),
-                          style: const TextStyle(fontSize: 16),
+                          style: TextStyle(
+                            fontSize: 16.sp,
+                            color: AppColors.primaryText,
+                          ),
                         ),
                       ),
                     ),
-                    const SizedBox(height: 16),
+                    SizedBox(height: 16.h),
                     // Cost
                     TextFormField(
                       controller: _costController,
                       decoration: InputDecoration(
                         labelText: 'Cost (Rp)',
                         hintText: 'e.g., 500000',
-                        hintStyle: TextStyle(color: Colors.grey[400]),
+                        hintStyle: TextStyle(
+                          color: AppColors.secondaryText,
+                          fontSize: 14.sp,
+                        ),
                         filled: true,
-                        fillColor: Colors.grey[100],
+                        fillColor: AppColors.inputBackground,
                         border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
+                          borderRadius: BorderRadius.circular(8.r),
                           borderSide: BorderSide.none,
                         ),
-                        contentPadding: const EdgeInsets.symmetric(
-                          horizontal: 16,
-                          vertical: 12,
+                        contentPadding: EdgeInsets.symmetric(
+                          horizontal: 16.w,
+                          vertical: 12.h,
                         ),
+                      ),
+                      style: TextStyle(
+                        fontSize: 16.sp,
+                        color: AppColors.primaryText,
                       ),
                       keyboardType: TextInputType.number,
                     ),
-                    const SizedBox(height: 16),
+                    SizedBox(height: 16.h),
                     // Mechanic
                     TextFormField(
                       controller: _mechanicController,
                       decoration: InputDecoration(
                         labelText: 'Mechanic',
                         hintText: 'e.g., Bengkel ABC',
-                        hintStyle: TextStyle(color: Colors.grey[400]),
+                        hintStyle: TextStyle(
+                          color: AppColors.secondaryText,
+                          fontSize: 14.sp,
+                        ),
                         filled: true,
-                        fillColor: Colors.grey[100],
+                        fillColor: AppColors.inputBackground,
                         border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
+                          borderRadius: BorderRadius.circular(8.r),
                           borderSide: BorderSide.none,
                         ),
-                        contentPadding: const EdgeInsets.symmetric(
-                          horizontal: 16,
-                          vertical: 12,
+                        contentPadding: EdgeInsets.symmetric(
+                          horizontal: 16.w,
+                          vertical: 12.h,
                         ),
                       ),
+                      style: TextStyle(
+                        fontSize: 16.sp,
+                        color: AppColors.primaryText,
+                      ),
                     ),
-                    const SizedBox(height: 16),
+                    SizedBox(height: 16.h),
                     // Description
                     TextFormField(
                       controller: _descriptionController,
                       decoration: InputDecoration(
                         labelText: 'Description',
                         hintText: 'e.g., Changed oil and filter',
-                        hintStyle: TextStyle(color: Colors.grey[400]),
+                        hintStyle: TextStyle(
+                          color: AppColors.secondaryText,
+                          fontSize: 14.sp,
+                        ),
                         filled: true,
-                        fillColor: Colors.grey[100],
+                        fillColor: AppColors.inputBackground,
                         border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
+                          borderRadius: BorderRadius.circular(8.r),
                           borderSide: BorderSide.none,
                         ),
-                        contentPadding: const EdgeInsets.symmetric(
-                          horizontal: 16,
-                          vertical: 12,
+                        contentPadding: EdgeInsets.symmetric(
+                          horizontal: 16.w,
+                          vertical: 12.h,
                         ),
+                      ),
+                      style: TextStyle(
+                        fontSize: 16.sp,
+                        color: AppColors.primaryText,
                       ),
                       maxLines: 2,
                     ),
-                    const SizedBox(height: 16),
+                    SizedBox(height: 16.h),
                     // Notes
                     TextFormField(
                       controller: _notesController,
                       decoration: InputDecoration(
                         labelText: 'Notes',
                         hintText: 'e.g., Next service in 6 months',
-                        hintStyle: TextStyle(color: Colors.grey[400]),
+                        hintStyle: TextStyle(
+                          color: AppColors.secondaryText,
+                          fontSize: 14.sp,
+                        ),
                         filled: true,
-                        fillColor: Colors.grey[100],
+                        fillColor: AppColors.inputBackground,
                         border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
+                          borderRadius: BorderRadius.circular(8.r),
                           borderSide: BorderSide.none,
                         ),
-                        contentPadding: const EdgeInsets.symmetric(
-                          horizontal: 16,
-                          vertical: 12,
+                        contentPadding: EdgeInsets.symmetric(
+                          horizontal: 16.w,
+                          vertical: 12.h,
                         ),
+                      ),
+                      style: TextStyle(
+                        fontSize: 16.sp,
+                        color: AppColors.primaryText,
                       ),
                       maxLines: 3,
                     ),
-                    const SizedBox(height: 24),
+                    SizedBox(height: 24.h),
                     SizedBox(
-                      height: 48,
+                      height: 48.h,
                       child: ElevatedButton(
                         onPressed: isLoading ? null : _submitForm,
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.black87,
-                          foregroundColor: Colors.white,
+                          backgroundColor: AppColors.accent,
+                          foregroundColor: AppColors.background,
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
+                            borderRadius: BorderRadius.circular(8.r),
                           ),
                         ),
                         child:
                             isLoading
-                                ? const SizedBox(
-                                  height: 20,
-                                  width: 20,
+                                ? SizedBox(
+                                  height: 20.h,
+                                  width: 20.w,
                                   child: CircularProgressIndicator(
                                     strokeWidth: 2,
-                                    valueColor: AlwaysStoppedAnimation<Color>(
-                                      Colors.white,
-                                    ),
+                                    valueColor:
+                                        const AlwaysStoppedAnimation<Color>(
+                                          AppColors.background,
+                                        ),
                                   ),
                                 )
-                                : const Text(
+                                : Text(
                                   'Add Service Record',
-                                  style: TextStyle(fontSize: 16),
+                                  style: TextStyle(
+                                    fontSize: 16.sp,
+                                    color: AppColors.background,
+                                  ),
                                 ),
                       ),
                     ),
