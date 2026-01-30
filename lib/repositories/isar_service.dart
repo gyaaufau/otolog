@@ -17,7 +17,7 @@ class IsarService {
     final isar = Isar.open(
       schemas: [VehicleSchema, ServiceRecordSchema],
       directory: dir.path,
-      inspector: true,
+      inspector: false,
     );
 
     return Future.value(isar);

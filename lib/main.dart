@@ -11,9 +11,9 @@ import 'screens/home_screen.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Initialize Isar database
-
+  // Initialize Isar database and wait for it to be ready
   final isarService = IsarService();
+  await isarService.db;
 
   runApp(MyApp(isarService: isarService));
 }
