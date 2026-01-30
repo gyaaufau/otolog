@@ -1,4 +1,6 @@
-import 'package:isar/isar.dart';
+import 'dart:developer';
+
+import 'package:isar_plus/isar_plus.dart';
 import 'package:path_provider/path_provider.dart';
 import '../models/vehicle.dart';
 import '../models/service_record.dart';
@@ -12,42 +14,42 @@ class IsarService {
 
   Future<Isar> openDB() async {
     final dir = await getApplicationDocumentsDirectory();
+    final isar = Isar.open(
+      schemas: [VehicleSchema, ServiceRecordSchema],
+      directory: dir.path,
+      inspector: true,
+    );
 
-    if (Isar.instanceNames.isEmpty) {
-      return await Isar.open(
-        [VehicleSchema, ServiceRecordSchema],
-        directory: dir.path,
-        inspector: true,
-      );
-    }
-
-    return Future.value(Isar.getInstance());
+    return Future.value(isar);
   }
 
   // Vehicle Operations
   Future<int> addVehicle(Vehicle vehicle) async {
     final isar = await db;
-    return await isar.writeTxn(() async {
+    return await isar.write((isar) {
       vehicle.createdAt = DateTime.now();
       vehicle.updatedAt = DateTime.now();
-      return await isar.vehicles.put(vehicle);
+      vehicle.id = isar.vehicles.autoIncrement();
+      isar.vehicles.put(vehicle);
+      return vehicle.id;
     });
   }
 
-  Future<int> updateVehicle(Vehicle vehicle) async {
+  Future<bool> updateVehicle(Vehicle vehicle) async {
     final isar = await db;
-    return await isar.writeTxn(() async {
+    return await isar.write((isar) {
       vehicle.updatedAt = DateTime.now();
-      return await isar.vehicles.put(vehicle);
+      isar.vehicles.put(vehicle);
+      return true;
     });
   }
 
   Future<bool> deleteVehicle(int id) async {
     final isar = await db;
-    return await isar.writeTxn(() async {
+    return await isar.write((isar) {
       // Delete all service records for this vehicle first
-      await isar.serviceRecords.filter().vehicleIdEqualTo(id).deleteAll();
-      return await isar.vehicles.delete(id);
+      isar.serviceRecords.where().vehicleIdEqualTo(id).deleteAll();
+      return isar.vehicles.delete(id);
     });
   }
 
@@ -58,13 +60,15 @@ class IsarService {
 
   Future<List<Vehicle>> getAllVehicles() async {
     final isar = await db;
+
+    log('Fetching all vehicles from Isar DB');
     return await isar.vehicles.where().sortByCreatedAtDesc().findAll();
   }
 
   Future<List<Vehicle>> searchVehicles(String query) async {
     final isar = await db;
     return await isar.vehicles
-        .filter()
+        .where()
         .nameContains(query, caseSensitive: false)
         .or()
         .plateNumberContains(query, caseSensitive: false)
@@ -74,25 +78,28 @@ class IsarService {
   // Service Record Operations
   Future<int> addServiceRecord(ServiceRecord record) async {
     final isar = await db;
-    return await isar.writeTxn(() async {
+    return await isar.write((isar) {
       record.createdAt = DateTime.now();
       record.updatedAt = DateTime.now();
-      return await isar.serviceRecords.put(record);
+      record.id = isar.serviceRecords.autoIncrement();
+      isar.serviceRecords.put(record);
+      return record.id;
     });
   }
 
-  Future<int> updateServiceRecord(ServiceRecord record) async {
+  Future<bool> updateServiceRecord(ServiceRecord record) async {
     final isar = await db;
-    return await isar.writeTxn(() async {
+    return await isar.write((isar) {
       record.updatedAt = DateTime.now();
-      return await isar.serviceRecords.put(record);
+      isar.serviceRecords.put(record);
+      return true;
     });
   }
 
   Future<bool> deleteServiceRecord(int id) async {
     final isar = await db;
-    return await isar.writeTxn(() async {
-      return await isar.serviceRecords.delete(id);
+    return await isar.write((isar) {
+      return isar.serviceRecords.delete(id);
     });
   }
 
@@ -104,7 +111,7 @@ class IsarService {
   Future<List<ServiceRecord>> getServiceRecordsByVehicle(int vehicleId) async {
     final isar = await db;
     return await isar.serviceRecords
-        .filter()
+        .where()
         .vehicleIdEqualTo(vehicleId)
         .sortByServiceDateDesc()
         .findAll();
@@ -119,10 +126,7 @@ class IsarService {
   Future<double> getTotalCostByVehicle(int vehicleId) async {
     final isar = await db;
     final records =
-        await isar.serviceRecords
-            .filter()
-            .vehicleIdEqualTo(vehicleId)
-            .findAll();
+        await isar.serviceRecords.where().vehicleIdEqualTo(vehicleId).findAll();
 
     return records.fold<double>(0, (sum, record) => sum + (record.cost ?? 0));
   }
@@ -137,7 +141,7 @@ class IsarService {
   Future<int> getServiceCountByVehicle(int vehicleId) async {
     final isar = await db;
     return await isar.serviceRecords
-        .filter()
+        .where()
         .vehicleIdEqualTo(vehicleId)
         .count();
   }
@@ -145,8 +149,8 @@ class IsarService {
   // Clear all data (for testing)
   Future<void> clearAll() async {
     final isar = await db;
-    await isar.writeTxn(() async {
-      await isar.clear();
+    await isar.write((isar) {
+      isar.clear();
     });
   }
 }

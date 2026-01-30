@@ -41,13 +41,15 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Vehicle Details'),
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        backgroundColor: Colors.white,
+        foregroundColor: Colors.black87,
+        elevation: 0,
         actions: [
           BlocBuilder<VehicleCubit, VehicleState>(
             builder: (context, state) {
               if (state is VehicleLoaded && state.vehicles.isNotEmpty) {
                 return IconButton(
-                  icon: const Icon(Icons.delete),
+                  icon: const Icon(Icons.delete_outline),
                   onPressed: () {
                     _showDeleteDialog(context, state.vehicles.first);
                   },
@@ -72,28 +74,33 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
               children: [
                 // Vehicle Info Card
                 Container(
-                  width: double.infinity,
                   margin: const EdgeInsets.all(16),
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.primaryContainer,
-                    borderRadius: BorderRadius.circular(12),
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(color: Colors.grey[200]!),
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Row(
                         children: [
-                          CircleAvatar(
-                            radius: 30,
-                            backgroundColor:
-                                Theme.of(context).colorScheme.primary,
-                            child: Text(
-                              vehicle.name[0].toUpperCase(),
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 24,
-                                fontWeight: FontWeight.bold,
+                          Container(
+                            width: 56,
+                            height: 56,
+                            decoration: BoxDecoration(
+                              color: Colors.grey[100],
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: Center(
+                              child: Text(
+                                vehicle.name[0].toUpperCase(),
+                                style: const TextStyle(
+                                  color: Colors.black87,
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                             ),
                           ),
@@ -105,15 +112,16 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
                                 Text(
                                   vehicle.name,
                                   style: const TextStyle(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w600,
                                   ),
                                 ),
+                                const SizedBox(height: 4),
                                 Text(
                                   vehicle.plateNumber,
                                   style: TextStyle(
-                                    fontSize: 16,
-                                    color: Colors.grey[700],
+                                    fontSize: 14,
+                                    color: Colors.grey[600],
                                   ),
                                 ),
                               ],
@@ -123,35 +131,65 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
                       ),
                       const SizedBox(height: 16),
                       if (vehicle.brand != null || vehicle.model != null)
-                        Row(
-                          children: [
-                            if (vehicle.brand != null) ...[
-                              const Icon(Icons.business, size: 20),
-                              const SizedBox(width: 8),
-                              Text(vehicle.brand!),
-                              const SizedBox(width: 16),
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 8),
+                          child: Row(
+                            children: [
+                              if (vehicle.brand != null) ...[
+                                Icon(
+                                  Icons.business_outlined,
+                                  size: 18,
+                                  color: Colors.grey[500],
+                                ),
+                                const SizedBox(width: 8),
+                                Text(
+                                  vehicle.brand!,
+                                  style: TextStyle(color: Colors.grey[700]),
+                                ),
+                                const SizedBox(width: 16),
+                              ],
+                              if (vehicle.model != null) ...[
+                                Icon(
+                                  Icons.category_outlined,
+                                  size: 18,
+                                  color: Colors.grey[500],
+                                ),
+                                const SizedBox(width: 8),
+                                Text(
+                                  vehicle.model!,
+                                  style: TextStyle(color: Colors.grey[700]),
+                                ),
+                              ],
                             ],
-                            if (vehicle.model != null) ...[
-                              const Icon(Icons.category, size: 20),
-                              const SizedBox(width: 8),
-                              Text(vehicle.model!),
-                            ],
-                          ],
+                          ),
                         ),
-                      const SizedBox(height: 8),
                       if (vehicle.year != null || vehicle.color != null)
                         Row(
                           children: [
                             if (vehicle.year != null) ...[
-                              const Icon(Icons.calendar_today, size: 20),
+                              Icon(
+                                Icons.calendar_today_outlined,
+                                size: 18,
+                                color: Colors.grey[500],
+                              ),
                               const SizedBox(width: 8),
-                              Text(vehicle.year!),
+                              Text(
+                                vehicle.year!,
+                                style: TextStyle(color: Colors.grey[700]),
+                              ),
                               const SizedBox(width: 16),
                             ],
                             if (vehicle.color != null) ...[
-                              const Icon(Icons.palette, size: 20),
+                              Icon(
+                                Icons.palette_outlined,
+                                size: 18,
+                                color: Colors.grey[500],
+                              ),
                               const SizedBox(width: 8),
-                              Text(vehicle.color!),
+                              Text(
+                                vehicle.color!,
+                                style: TextStyle(color: Colors.grey[700]),
+                              ),
                             ],
                           ],
                         ),
@@ -159,47 +197,67 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
                   ),
                 ),
                 // Statistics
-                Container(
+                Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: Row(
                     children: [
                       Expanded(
-                        child: Card(
-                          child: Padding(
-                            padding: const EdgeInsets.all(16),
-                            child: Column(
-                              children: [
-                                Text(
-                                  '$serviceCount',
-                                  style: const TextStyle(
-                                    fontSize: 24,
-                                    fontWeight: FontWeight.bold,
-                                  ),
+                        child: Container(
+                          padding: const EdgeInsets.all(16),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(8),
+                            border: Border.all(color: Colors.grey[200]!),
+                          ),
+                          child: Column(
+                            children: [
+                              Text(
+                                '$serviceCount',
+                                style: const TextStyle(
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.bold,
                                 ),
-                                const Text('Services'),
-                              ],
-                            ),
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                'Services',
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  color: Colors.grey[600],
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       ),
-                      const SizedBox(width: 16),
+                      const SizedBox(width: 12),
                       Expanded(
-                        child: Card(
-                          child: Padding(
-                            padding: const EdgeInsets.all(16),
-                            child: Column(
-                              children: [
-                                Text(
-                                  _formatCurrency(totalCost),
-                                  style: const TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                  textAlign: TextAlign.center,
+                        child: Container(
+                          padding: const EdgeInsets.all(16),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(8),
+                            border: Border.all(color: Colors.grey[200]!),
+                          ),
+                          child: Column(
+                            children: [
+                              Text(
+                                _formatCurrency(totalCost),
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
                                 ),
-                                const Text('Total Cost'),
-                              ],
-                            ),
+                                textAlign: TextAlign.center,
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                'Total Cost',
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  color: Colors.grey[600],
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       ),
@@ -216,15 +274,15 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Icon(
-                                  Icons.history,
-                                  size: 80,
-                                  color: Colors.grey[400],
+                                  Icons.history_outlined,
+                                  size: 64,
+                                  color: Colors.grey[300],
                                 ),
                                 const SizedBox(height: 16),
                                 Text(
                                   'No service records yet',
                                   style: TextStyle(
-                                    fontSize: 18,
+                                    fontSize: 16,
                                     color: Colors.grey[600],
                                   ),
                                 ),
@@ -233,7 +291,7 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
                                   'Tap + to add your first service record',
                                   style: TextStyle(
                                     fontSize: 14,
-                                    color: Colors.grey[500],
+                                    color: Colors.grey[400],
                                   ),
                                 ),
                               ],
@@ -244,50 +302,70 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
                             itemCount: serviceRecords.length,
                             itemBuilder: (context, index) {
                               final record = serviceRecords[index];
-                              return Card(
-                                margin: const EdgeInsets.only(bottom: 8),
+                              return Container(
+                                margin: const EdgeInsets.only(bottom: 12),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(8),
+                                  border: Border.all(color: Colors.grey[200]!),
+                                ),
                                 child: ListTile(
-                                  leading: CircleAvatar(
-                                    backgroundColor: _getServiceTypeColor(
-                                      record.serviceType,
+                                  contentPadding: const EdgeInsets.symmetric(
+                                    horizontal: 16,
+                                    vertical: 8,
+                                  ),
+                                  leading: Container(
+                                    width: 48,
+                                    height: 48,
+                                    decoration: BoxDecoration(
+                                      color: _getServiceTypeColor(
+                                        record.serviceType,
+                                      ),
+                                      borderRadius: BorderRadius.circular(8),
                                     ),
                                     child: Icon(
                                       _getServiceTypeIcon(record.serviceType),
                                       color: Colors.white,
+                                      size: 24,
                                     ),
                                   ),
                                   title: Text(
                                     record.serviceType,
                                     style: const TextStyle(
-                                      fontWeight: FontWeight.bold,
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 15,
                                     ),
                                   ),
-                                  subtitle: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(_formatDate(record.serviceDate)),
-                                      if (record.description != null)
+                                  subtitle: Padding(
+                                    padding: const EdgeInsets.only(top: 4),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
                                         Text(
-                                          record.description!,
-                                          maxLines: 1,
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                      if (record.cost != null)
-                                        Text(
-                                          _formatCurrency(record.cost!),
+                                          _formatDate(record.serviceDate),
                                           style: TextStyle(
-                                            color:
-                                                Theme.of(
-                                                  context,
-                                                ).colorScheme.primary,
-                                            fontWeight: FontWeight.bold,
+                                            fontSize: 13,
+                                            color: Colors.grey[600],
                                           ),
                                         ),
-                                    ],
+                                        if (record.cost != null)
+                                          Text(
+                                            _formatCurrency(record.cost!),
+                                            style: TextStyle(
+                                              fontSize: 13,
+                                              color: Colors.grey[800],
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                      ],
+                                    ),
                                   ),
                                   trailing: IconButton(
-                                    icon: const Icon(Icons.delete),
+                                    icon: Icon(
+                                      Icons.delete_outline,
+                                      color: Colors.grey[400],
+                                    ),
                                     onPressed: () {
                                       _showDeleteServiceDialog(context, record);
                                     },
@@ -307,12 +385,12 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Icon(Icons.error_outline, size: 60, color: Colors.red),
+                  Icon(Icons.error_outline, size: 48, color: Colors.grey[400]),
                   const SizedBox(height: 16),
                   Text(
                     state.message,
                     textAlign: TextAlign.center,
-                    style: const TextStyle(color: Colors.red),
+                    style: TextStyle(color: Colors.grey[600]),
                   ),
                 ],
               ),
@@ -322,6 +400,7 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
         },
       ),
       floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.black87,
         onPressed: () {
           Navigator.push(
             context,
@@ -331,7 +410,7 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
             ),
           );
         },
-        child: const Icon(Icons.add),
+        child: const Icon(Icons.add, color: Colors.white),
       ),
     );
   }

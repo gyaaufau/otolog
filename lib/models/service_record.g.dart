@@ -3,1227 +3,1377 @@
 part of 'service_record.dart';
 
 // **************************************************************************
-// IsarCollectionGenerator
+// _IsarCollectionGenerator
 // **************************************************************************
 
 // coverage:ignore-file
-// ignore_for_file: duplicate_ignore, non_constant_identifier_names, constant_identifier_names, invalid_use_of_protected_member, unnecessary_cast, prefer_const_constructors, lines_longer_than_80_chars, require_trailing_commas, inference_failure_on_function_invocation, unnecessary_parenthesis, unnecessary_raw_strings, unnecessary_null_checks, join_return_with_assignment, prefer_final_locals, avoid_js_rounded_ints, avoid_positional_boolean_parameters, always_specify_types
+// ignore_for_file: duplicate_ignore, invalid_use_of_protected_member, lines_longer_than_80_chars, constant_identifier_names, avoid_js_rounded_ints, no_leading_underscores_for_local_identifiers, require_trailing_commas, unnecessary_parenthesis, unnecessary_raw_strings, unnecessary_null_in_if_null_operators, library_private_types_in_public_api, prefer_const_constructors
+// ignore_for_file: type=lint
 
 extension GetServiceRecordCollection on Isar {
-  IsarCollection<ServiceRecord> get serviceRecords => this.collection();
+  IsarCollection<int, ServiceRecord> get serviceRecords => this.collection();
 }
 
-const ServiceRecordSchema = CollectionSchema(
-  name: r'ServiceRecord',
-  id: 1320320961809859071,
-  properties: {
-    r'cost': PropertySchema(
-      id: 0,
-      name: r'cost',
-      type: IsarType.double,
-    ),
-    r'createdAt': PropertySchema(
-      id: 1,
-      name: r'createdAt',
-      type: IsarType.dateTime,
-    ),
-    r'description': PropertySchema(
-      id: 2,
-      name: r'description',
-      type: IsarType.string,
-    ),
-    r'mechanic': PropertySchema(
-      id: 3,
-      name: r'mechanic',
-      type: IsarType.string,
-    ),
-    r'notes': PropertySchema(
-      id: 4,
-      name: r'notes',
-      type: IsarType.string,
-    ),
-    r'serviceDate': PropertySchema(
-      id: 5,
-      name: r'serviceDate',
-      type: IsarType.dateTime,
-    ),
-    r'serviceType': PropertySchema(
-      id: 6,
-      name: r'serviceType',
-      type: IsarType.string,
-    ),
-    r'updatedAt': PropertySchema(
-      id: 7,
-      name: r'updatedAt',
-      type: IsarType.dateTime,
-    ),
-    r'vehicleId': PropertySchema(
-      id: 8,
-      name: r'vehicleId',
-      type: IsarType.long,
-    )
-  },
-  estimateSize: _serviceRecordEstimateSize,
-  serialize: _serviceRecordSerialize,
-  deserialize: _serviceRecordDeserialize,
-  deserializeProp: _serviceRecordDeserializeProp,
-  idName: r'id',
-  indexes: {},
-  links: {},
-  embeddedSchemas: {},
-  getId: _serviceRecordGetId,
-  getLinks: _serviceRecordGetLinks,
-  attach: _serviceRecordAttach,
-  version: '3.1.0+1',
+final ServiceRecordSchema = IsarGeneratedSchema(
+  schema: IsarSchema(
+    name: 'ServiceRecord',
+    idName: 'id',
+    embedded: false,
+    properties: [
+      IsarPropertySchema(name: 'vehicleId', type: IsarType.long),
+      IsarPropertySchema(name: 'serviceType', type: IsarType.string),
+      IsarPropertySchema(name: 'serviceDate', type: IsarType.dateTime),
+      IsarPropertySchema(name: 'description', type: IsarType.string),
+      IsarPropertySchema(name: 'cost', type: IsarType.double),
+      IsarPropertySchema(name: 'mechanic', type: IsarType.string),
+      IsarPropertySchema(name: 'notes', type: IsarType.string),
+      IsarPropertySchema(name: 'createdAt', type: IsarType.dateTime),
+      IsarPropertySchema(name: 'updatedAt', type: IsarType.dateTime),
+    ],
+    indexes: [],
+  ),
+  converter: IsarObjectConverter<int, ServiceRecord>(
+    serialize: serializeServiceRecord,
+    deserialize: deserializeServiceRecord,
+    deserializeProperty: deserializeServiceRecordProp,
+  ),
+  getEmbeddedSchemas: () => [],
 );
 
-int _serviceRecordEstimateSize(
-  ServiceRecord object,
-  List<int> offsets,
-  Map<Type, List<int>> allOffsets,
-) {
-  var bytesCount = offsets.last;
+@isarProtected
+int serializeServiceRecord(IsarWriter writer, ServiceRecord object) {
+  IsarCore.writeLong(writer, 1, object.vehicleId);
+  IsarCore.writeString(writer, 2, object.serviceType);
+  IsarCore.writeLong(
+    writer,
+    3,
+    object.serviceDate.toUtc().microsecondsSinceEpoch,
+  );
   {
     final value = object.description;
-    if (value != null) {
-      bytesCount += 3 + value.length * 3;
+    if (value == null) {
+      IsarCore.writeNull(writer, 4);
+    } else {
+      IsarCore.writeString(writer, 4, value);
     }
   }
+  IsarCore.writeDouble(writer, 5, object.cost ?? double.nan);
   {
     final value = object.mechanic;
-    if (value != null) {
-      bytesCount += 3 + value.length * 3;
+    if (value == null) {
+      IsarCore.writeNull(writer, 6);
+    } else {
+      IsarCore.writeString(writer, 6, value);
     }
   }
   {
     final value = object.notes;
-    if (value != null) {
-      bytesCount += 3 + value.length * 3;
+    if (value == null) {
+      IsarCore.writeNull(writer, 7);
+    } else {
+      IsarCore.writeString(writer, 7, value);
     }
   }
-  bytesCount += 3 + object.serviceType.length * 3;
-  return bytesCount;
-}
-
-void _serviceRecordSerialize(
-  ServiceRecord object,
-  IsarWriter writer,
-  List<int> offsets,
-  Map<Type, List<int>> allOffsets,
-) {
-  writer.writeDouble(offsets[0], object.cost);
-  writer.writeDateTime(offsets[1], object.createdAt);
-  writer.writeString(offsets[2], object.description);
-  writer.writeString(offsets[3], object.mechanic);
-  writer.writeString(offsets[4], object.notes);
-  writer.writeDateTime(offsets[5], object.serviceDate);
-  writer.writeString(offsets[6], object.serviceType);
-  writer.writeDateTime(offsets[7], object.updatedAt);
-  writer.writeLong(offsets[8], object.vehicleId);
-}
-
-ServiceRecord _serviceRecordDeserialize(
-  Id id,
-  IsarReader reader,
-  List<int> offsets,
-  Map<Type, List<int>> allOffsets,
-) {
-  final object = ServiceRecord(
-    cost: reader.readDoubleOrNull(offsets[0]),
-    description: reader.readStringOrNull(offsets[2]),
-    mechanic: reader.readStringOrNull(offsets[3]),
-    notes: reader.readStringOrNull(offsets[4]),
-    serviceDate: reader.readDateTime(offsets[5]),
-    serviceType: reader.readString(offsets[6]),
-    vehicleId: reader.readLong(offsets[8]),
+  IsarCore.writeLong(
+    writer,
+    8,
+    object.createdAt.toUtc().microsecondsSinceEpoch,
   );
-  object.createdAt = reader.readDateTime(offsets[1]);
-  object.id = id;
-  object.updatedAt = reader.readDateTime(offsets[7]);
-  return object;
-}
-
-P _serviceRecordDeserializeProp<P>(
-  IsarReader reader,
-  int propertyId,
-  int offset,
-  Map<Type, List<int>> allOffsets,
-) {
-  switch (propertyId) {
-    case 0:
-      return (reader.readDoubleOrNull(offset)) as P;
-    case 1:
-      return (reader.readDateTime(offset)) as P;
-    case 2:
-      return (reader.readStringOrNull(offset)) as P;
-    case 3:
-      return (reader.readStringOrNull(offset)) as P;
-    case 4:
-      return (reader.readStringOrNull(offset)) as P;
-    case 5:
-      return (reader.readDateTime(offset)) as P;
-    case 6:
-      return (reader.readString(offset)) as P;
-    case 7:
-      return (reader.readDateTime(offset)) as P;
-    case 8:
-      return (reader.readLong(offset)) as P;
-    default:
-      throw IsarError('Unknown property with id $propertyId');
-  }
-}
-
-Id _serviceRecordGetId(ServiceRecord object) {
+  IsarCore.writeLong(
+    writer,
+    9,
+    object.updatedAt.toUtc().microsecondsSinceEpoch,
+  );
   return object.id;
 }
 
-List<IsarLinkBase<dynamic>> _serviceRecordGetLinks(ServiceRecord object) {
-  return [];
-}
-
-void _serviceRecordAttach(
-    IsarCollection<dynamic> col, Id id, ServiceRecord object) {
-  object.id = id;
-}
-
-extension ServiceRecordQueryWhereSort
-    on QueryBuilder<ServiceRecord, ServiceRecord, QWhere> {
-  QueryBuilder<ServiceRecord, ServiceRecord, QAfterWhere> anyId() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addWhereClause(const IdWhereClause.any());
-    });
+@isarProtected
+ServiceRecord deserializeServiceRecord(IsarReader reader) {
+  final int _vehicleId;
+  _vehicleId = IsarCore.readLong(reader, 1);
+  final String _serviceType;
+  _serviceType = IsarCore.readString(reader, 2) ?? '';
+  final DateTime _serviceDate;
+  {
+    final value = IsarCore.readLong(reader, 3);
+    if (value == -9223372036854775808) {
+      _serviceDate =
+          DateTime.fromMillisecondsSinceEpoch(0, isUtc: true).toLocal();
+    } else {
+      _serviceDate =
+          DateTime.fromMicrosecondsSinceEpoch(value, isUtc: true).toLocal();
+    }
   }
+  final String? _description;
+  _description = IsarCore.readString(reader, 4);
+  final double? _cost;
+  {
+    final value = IsarCore.readDouble(reader, 5);
+    if (value.isNaN) {
+      _cost = null;
+    } else {
+      _cost = value;
+    }
+  }
+  final String? _mechanic;
+  _mechanic = IsarCore.readString(reader, 6);
+  final String? _notes;
+  _notes = IsarCore.readString(reader, 7);
+  final object = ServiceRecord(
+    vehicleId: _vehicleId,
+    serviceType: _serviceType,
+    serviceDate: _serviceDate,
+    description: _description,
+    cost: _cost,
+    mechanic: _mechanic,
+    notes: _notes,
+  );
+  object.id = IsarCore.readId(reader);
+  {
+    final value = IsarCore.readLong(reader, 8);
+    if (value == -9223372036854775808) {
+      object.createdAt =
+          DateTime.fromMillisecondsSinceEpoch(0, isUtc: true).toLocal();
+    } else {
+      object.createdAt =
+          DateTime.fromMicrosecondsSinceEpoch(value, isUtc: true).toLocal();
+    }
+  }
+  {
+    final value = IsarCore.readLong(reader, 9);
+    if (value == -9223372036854775808) {
+      object.updatedAt =
+          DateTime.fromMillisecondsSinceEpoch(0, isUtc: true).toLocal();
+    } else {
+      object.updatedAt =
+          DateTime.fromMicrosecondsSinceEpoch(value, isUtc: true).toLocal();
+    }
+  }
+  return object;
 }
 
-extension ServiceRecordQueryWhere
-    on QueryBuilder<ServiceRecord, ServiceRecord, QWhereClause> {
-  QueryBuilder<ServiceRecord, ServiceRecord, QAfterWhereClause> idEqualTo(
-      Id id) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addWhereClause(IdWhereClause.between(
-        lower: id,
-        upper: id,
-      ));
-    });
-  }
-
-  QueryBuilder<ServiceRecord, ServiceRecord, QAfterWhereClause> idNotEqualTo(
-      Id id) {
-    return QueryBuilder.apply(this, (query) {
-      if (query.whereSort == Sort.asc) {
-        return query
-            .addWhereClause(
-              IdWhereClause.lessThan(upper: id, includeUpper: false),
-            )
-            .addWhereClause(
-              IdWhereClause.greaterThan(lower: id, includeLower: false),
-            );
-      } else {
-        return query
-            .addWhereClause(
-              IdWhereClause.greaterThan(lower: id, includeLower: false),
-            )
-            .addWhereClause(
-              IdWhereClause.lessThan(upper: id, includeUpper: false),
-            );
+@isarProtected
+dynamic deserializeServiceRecordProp(IsarReader reader, int property) {
+  switch (property) {
+    case 0:
+      return IsarCore.readId(reader);
+    case 1:
+      return IsarCore.readLong(reader, 1);
+    case 2:
+      return IsarCore.readString(reader, 2) ?? '';
+    case 3:
+      {
+        final value = IsarCore.readLong(reader, 3);
+        if (value == -9223372036854775808) {
+          return DateTime.fromMillisecondsSinceEpoch(0, isUtc: true).toLocal();
+        } else {
+          return DateTime.fromMicrosecondsSinceEpoch(
+            value,
+            isUtc: true,
+          ).toLocal();
+        }
       }
-    });
+    case 4:
+      return IsarCore.readString(reader, 4);
+    case 5:
+      {
+        final value = IsarCore.readDouble(reader, 5);
+        if (value.isNaN) {
+          return null;
+        } else {
+          return value;
+        }
+      }
+    case 6:
+      return IsarCore.readString(reader, 6);
+    case 7:
+      return IsarCore.readString(reader, 7);
+    case 8:
+      {
+        final value = IsarCore.readLong(reader, 8);
+        if (value == -9223372036854775808) {
+          return DateTime.fromMillisecondsSinceEpoch(0, isUtc: true).toLocal();
+        } else {
+          return DateTime.fromMicrosecondsSinceEpoch(
+            value,
+            isUtc: true,
+          ).toLocal();
+        }
+      }
+    case 9:
+      {
+        final value = IsarCore.readLong(reader, 9);
+        if (value == -9223372036854775808) {
+          return DateTime.fromMillisecondsSinceEpoch(0, isUtc: true).toLocal();
+        } else {
+          return DateTime.fromMicrosecondsSinceEpoch(
+            value,
+            isUtc: true,
+          ).toLocal();
+        }
+      }
+    default:
+      throw ArgumentError('Unknown property: $property');
   }
+}
 
-  QueryBuilder<ServiceRecord, ServiceRecord, QAfterWhereClause> idGreaterThan(
-      Id id,
-      {bool include = false}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addWhereClause(
-        IdWhereClause.greaterThan(lower: id, includeLower: include),
-      );
-    });
-  }
+sealed class _ServiceRecordUpdate {
+  bool call({
+    required int id,
+    int? vehicleId,
+    String? serviceType,
+    DateTime? serviceDate,
+    String? description,
+    double? cost,
+    String? mechanic,
+    String? notes,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+  });
+}
 
-  QueryBuilder<ServiceRecord, ServiceRecord, QAfterWhereClause> idLessThan(
-      Id id,
-      {bool include = false}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addWhereClause(
-        IdWhereClause.lessThan(upper: id, includeUpper: include),
-      );
-    });
-  }
+class _ServiceRecordUpdateImpl implements _ServiceRecordUpdate {
+  const _ServiceRecordUpdateImpl(this.collection);
 
-  QueryBuilder<ServiceRecord, ServiceRecord, QAfterWhereClause> idBetween(
-    Id lowerId,
-    Id upperId, {
-    bool includeLower = true,
-    bool includeUpper = true,
+  final IsarCollection<int, ServiceRecord> collection;
+
+  @override
+  bool call({
+    required int id,
+    Object? vehicleId = ignore,
+    Object? serviceType = ignore,
+    Object? serviceDate = ignore,
+    Object? description = ignore,
+    Object? cost = ignore,
+    Object? mechanic = ignore,
+    Object? notes = ignore,
+    Object? createdAt = ignore,
+    Object? updatedAt = ignore,
   }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addWhereClause(IdWhereClause.between(
-        lower: lowerId,
-        includeLower: includeLower,
-        upper: upperId,
-        includeUpper: includeUpper,
-      ));
+    return collection.updateProperties(
+          [id],
+          {
+            if (vehicleId != ignore) 1: vehicleId as int?,
+            if (serviceType != ignore) 2: serviceType as String?,
+            if (serviceDate != ignore) 3: serviceDate as DateTime?,
+            if (description != ignore) 4: description as String?,
+            if (cost != ignore) 5: cost as double?,
+            if (mechanic != ignore) 6: mechanic as String?,
+            if (notes != ignore) 7: notes as String?,
+            if (createdAt != ignore) 8: createdAt as DateTime?,
+            if (updatedAt != ignore) 9: updatedAt as DateTime?,
+          },
+        ) >
+        0;
+  }
+}
+
+sealed class _ServiceRecordUpdateAll {
+  int call({
+    required List<int> id,
+    int? vehicleId,
+    String? serviceType,
+    DateTime? serviceDate,
+    String? description,
+    double? cost,
+    String? mechanic,
+    String? notes,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+  });
+}
+
+class _ServiceRecordUpdateAllImpl implements _ServiceRecordUpdateAll {
+  const _ServiceRecordUpdateAllImpl(this.collection);
+
+  final IsarCollection<int, ServiceRecord> collection;
+
+  @override
+  int call({
+    required List<int> id,
+    Object? vehicleId = ignore,
+    Object? serviceType = ignore,
+    Object? serviceDate = ignore,
+    Object? description = ignore,
+    Object? cost = ignore,
+    Object? mechanic = ignore,
+    Object? notes = ignore,
+    Object? createdAt = ignore,
+    Object? updatedAt = ignore,
+  }) {
+    return collection.updateProperties(id, {
+      if (vehicleId != ignore) 1: vehicleId as int?,
+      if (serviceType != ignore) 2: serviceType as String?,
+      if (serviceDate != ignore) 3: serviceDate as DateTime?,
+      if (description != ignore) 4: description as String?,
+      if (cost != ignore) 5: cost as double?,
+      if (mechanic != ignore) 6: mechanic as String?,
+      if (notes != ignore) 7: notes as String?,
+      if (createdAt != ignore) 8: createdAt as DateTime?,
+      if (updatedAt != ignore) 9: updatedAt as DateTime?,
     });
   }
+}
+
+extension ServiceRecordUpdate on IsarCollection<int, ServiceRecord> {
+  _ServiceRecordUpdate get update => _ServiceRecordUpdateImpl(this);
+
+  _ServiceRecordUpdateAll get updateAll => _ServiceRecordUpdateAllImpl(this);
+}
+
+sealed class _ServiceRecordQueryUpdate {
+  int call({
+    int? vehicleId,
+    String? serviceType,
+    DateTime? serviceDate,
+    String? description,
+    double? cost,
+    String? mechanic,
+    String? notes,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+  });
+}
+
+class _ServiceRecordQueryUpdateImpl implements _ServiceRecordQueryUpdate {
+  const _ServiceRecordQueryUpdateImpl(this.query, {this.limit});
+
+  final IsarQuery<ServiceRecord> query;
+  final int? limit;
+
+  @override
+  int call({
+    Object? vehicleId = ignore,
+    Object? serviceType = ignore,
+    Object? serviceDate = ignore,
+    Object? description = ignore,
+    Object? cost = ignore,
+    Object? mechanic = ignore,
+    Object? notes = ignore,
+    Object? createdAt = ignore,
+    Object? updatedAt = ignore,
+  }) {
+    return query.updateProperties(limit: limit, {
+      if (vehicleId != ignore) 1: vehicleId as int?,
+      if (serviceType != ignore) 2: serviceType as String?,
+      if (serviceDate != ignore) 3: serviceDate as DateTime?,
+      if (description != ignore) 4: description as String?,
+      if (cost != ignore) 5: cost as double?,
+      if (mechanic != ignore) 6: mechanic as String?,
+      if (notes != ignore) 7: notes as String?,
+      if (createdAt != ignore) 8: createdAt as DateTime?,
+      if (updatedAt != ignore) 9: updatedAt as DateTime?,
+    });
+  }
+}
+
+extension ServiceRecordQueryUpdate on IsarQuery<ServiceRecord> {
+  _ServiceRecordQueryUpdate get updateFirst =>
+      _ServiceRecordQueryUpdateImpl(this, limit: 1);
+
+  _ServiceRecordQueryUpdate get updateAll =>
+      _ServiceRecordQueryUpdateImpl(this);
+}
+
+class _ServiceRecordQueryBuilderUpdateImpl
+    implements _ServiceRecordQueryUpdate {
+  const _ServiceRecordQueryBuilderUpdateImpl(this.query, {this.limit});
+
+  final QueryBuilder<ServiceRecord, ServiceRecord, QOperations> query;
+  final int? limit;
+
+  @override
+  int call({
+    Object? vehicleId = ignore,
+    Object? serviceType = ignore,
+    Object? serviceDate = ignore,
+    Object? description = ignore,
+    Object? cost = ignore,
+    Object? mechanic = ignore,
+    Object? notes = ignore,
+    Object? createdAt = ignore,
+    Object? updatedAt = ignore,
+  }) {
+    final q = query.build();
+    try {
+      return q.updateProperties(limit: limit, {
+        if (vehicleId != ignore) 1: vehicleId as int?,
+        if (serviceType != ignore) 2: serviceType as String?,
+        if (serviceDate != ignore) 3: serviceDate as DateTime?,
+        if (description != ignore) 4: description as String?,
+        if (cost != ignore) 5: cost as double?,
+        if (mechanic != ignore) 6: mechanic as String?,
+        if (notes != ignore) 7: notes as String?,
+        if (createdAt != ignore) 8: createdAt as DateTime?,
+        if (updatedAt != ignore) 9: updatedAt as DateTime?,
+      });
+    } finally {
+      q.close();
+    }
+  }
+}
+
+extension ServiceRecordQueryBuilderUpdate
+    on QueryBuilder<ServiceRecord, ServiceRecord, QOperations> {
+  _ServiceRecordQueryUpdate get updateFirst =>
+      _ServiceRecordQueryBuilderUpdateImpl(this, limit: 1);
+
+  _ServiceRecordQueryUpdate get updateAll =>
+      _ServiceRecordQueryBuilderUpdateImpl(this);
 }
 
 extension ServiceRecordQueryFilter
     on QueryBuilder<ServiceRecord, ServiceRecord, QFilterCondition> {
-  QueryBuilder<ServiceRecord, ServiceRecord, QAfterFilterCondition>
-      costIsNull() {
+  QueryBuilder<ServiceRecord, ServiceRecord, QAfterFilterCondition> idEqualTo(
+    int value,
+  ) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNull(
-        property: r'cost',
-      ));
+      return query.addFilterCondition(
+        EqualCondition(property: 0, value: value),
+      );
     });
   }
 
   QueryBuilder<ServiceRecord, ServiceRecord, QAfterFilterCondition>
-      costIsNotNull() {
+  idGreaterThan(int value) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNotNull(
-        property: r'cost',
-      ));
+      return query.addFilterCondition(
+        GreaterCondition(property: 0, value: value),
+      );
+    });
+  }
+
+  QueryBuilder<ServiceRecord, ServiceRecord, QAfterFilterCondition>
+  idGreaterThanOrEqualTo(int value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        GreaterOrEqualCondition(property: 0, value: value),
+      );
+    });
+  }
+
+  QueryBuilder<ServiceRecord, ServiceRecord, QAfterFilterCondition> idLessThan(
+    int value,
+  ) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(LessCondition(property: 0, value: value));
+    });
+  }
+
+  QueryBuilder<ServiceRecord, ServiceRecord, QAfterFilterCondition>
+  idLessThanOrEqualTo(int value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        LessOrEqualCondition(property: 0, value: value),
+      );
+    });
+  }
+
+  QueryBuilder<ServiceRecord, ServiceRecord, QAfterFilterCondition> idBetween(
+    int lower,
+    int upper,
+  ) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        BetweenCondition(property: 0, lower: lower, upper: upper),
+      );
+    });
+  }
+
+  QueryBuilder<ServiceRecord, ServiceRecord, QAfterFilterCondition>
+  vehicleIdEqualTo(int value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        EqualCondition(property: 1, value: value),
+      );
+    });
+  }
+
+  QueryBuilder<ServiceRecord, ServiceRecord, QAfterFilterCondition>
+  vehicleIdGreaterThan(int value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        GreaterCondition(property: 1, value: value),
+      );
+    });
+  }
+
+  QueryBuilder<ServiceRecord, ServiceRecord, QAfterFilterCondition>
+  vehicleIdGreaterThanOrEqualTo(int value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        GreaterOrEqualCondition(property: 1, value: value),
+      );
+    });
+  }
+
+  QueryBuilder<ServiceRecord, ServiceRecord, QAfterFilterCondition>
+  vehicleIdLessThan(int value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(LessCondition(property: 1, value: value));
+    });
+  }
+
+  QueryBuilder<ServiceRecord, ServiceRecord, QAfterFilterCondition>
+  vehicleIdLessThanOrEqualTo(int value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        LessOrEqualCondition(property: 1, value: value),
+      );
+    });
+  }
+
+  QueryBuilder<ServiceRecord, ServiceRecord, QAfterFilterCondition>
+  vehicleIdBetween(int lower, int upper) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        BetweenCondition(property: 1, lower: lower, upper: upper),
+      );
+    });
+  }
+
+  QueryBuilder<ServiceRecord, ServiceRecord, QAfterFilterCondition>
+  serviceTypeEqualTo(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        EqualCondition(property: 2, value: value, caseSensitive: caseSensitive),
+      );
+    });
+  }
+
+  QueryBuilder<ServiceRecord, ServiceRecord, QAfterFilterCondition>
+  serviceTypeGreaterThan(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        GreaterCondition(
+          property: 2,
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<ServiceRecord, ServiceRecord, QAfterFilterCondition>
+  serviceTypeGreaterThanOrEqualTo(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        GreaterOrEqualCondition(
+          property: 2,
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<ServiceRecord, ServiceRecord, QAfterFilterCondition>
+  serviceTypeLessThan(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        LessCondition(property: 2, value: value, caseSensitive: caseSensitive),
+      );
+    });
+  }
+
+  QueryBuilder<ServiceRecord, ServiceRecord, QAfterFilterCondition>
+  serviceTypeLessThanOrEqualTo(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        LessOrEqualCondition(
+          property: 2,
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<ServiceRecord, ServiceRecord, QAfterFilterCondition>
+  serviceTypeBetween(String lower, String upper, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        BetweenCondition(
+          property: 2,
+          lower: lower,
+          upper: upper,
+          caseSensitive: caseSensitive,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<ServiceRecord, ServiceRecord, QAfterFilterCondition>
+  serviceTypeStartsWith(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        StartsWithCondition(
+          property: 2,
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<ServiceRecord, ServiceRecord, QAfterFilterCondition>
+  serviceTypeEndsWith(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        EndsWithCondition(
+          property: 2,
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<ServiceRecord, ServiceRecord, QAfterFilterCondition>
+  serviceTypeContains(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        ContainsCondition(
+          property: 2,
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<ServiceRecord, ServiceRecord, QAfterFilterCondition>
+  serviceTypeMatches(String pattern, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        MatchesCondition(
+          property: 2,
+          wildcard: pattern,
+          caseSensitive: caseSensitive,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<ServiceRecord, ServiceRecord, QAfterFilterCondition>
+  serviceTypeIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        const EqualCondition(property: 2, value: ''),
+      );
+    });
+  }
+
+  QueryBuilder<ServiceRecord, ServiceRecord, QAfterFilterCondition>
+  serviceTypeIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        const GreaterCondition(property: 2, value: ''),
+      );
+    });
+  }
+
+  QueryBuilder<ServiceRecord, ServiceRecord, QAfterFilterCondition>
+  serviceDateEqualTo(DateTime value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        EqualCondition(property: 3, value: value),
+      );
+    });
+  }
+
+  QueryBuilder<ServiceRecord, ServiceRecord, QAfterFilterCondition>
+  serviceDateGreaterThan(DateTime value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        GreaterCondition(property: 3, value: value),
+      );
+    });
+  }
+
+  QueryBuilder<ServiceRecord, ServiceRecord, QAfterFilterCondition>
+  serviceDateGreaterThanOrEqualTo(DateTime value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        GreaterOrEqualCondition(property: 3, value: value),
+      );
+    });
+  }
+
+  QueryBuilder<ServiceRecord, ServiceRecord, QAfterFilterCondition>
+  serviceDateLessThan(DateTime value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(LessCondition(property: 3, value: value));
+    });
+  }
+
+  QueryBuilder<ServiceRecord, ServiceRecord, QAfterFilterCondition>
+  serviceDateLessThanOrEqualTo(DateTime value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        LessOrEqualCondition(property: 3, value: value),
+      );
+    });
+  }
+
+  QueryBuilder<ServiceRecord, ServiceRecord, QAfterFilterCondition>
+  serviceDateBetween(DateTime lower, DateTime upper) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        BetweenCondition(property: 3, lower: lower, upper: upper),
+      );
+    });
+  }
+
+  QueryBuilder<ServiceRecord, ServiceRecord, QAfterFilterCondition>
+  descriptionIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const IsNullCondition(property: 4));
+    });
+  }
+
+  QueryBuilder<ServiceRecord, ServiceRecord, QAfterFilterCondition>
+  descriptionIsNotNull() {
+    return QueryBuilder.apply(not(), (query) {
+      return query.addFilterCondition(const IsNullCondition(property: 4));
+    });
+  }
+
+  QueryBuilder<ServiceRecord, ServiceRecord, QAfterFilterCondition>
+  descriptionEqualTo(String? value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        EqualCondition(property: 4, value: value, caseSensitive: caseSensitive),
+      );
+    });
+  }
+
+  QueryBuilder<ServiceRecord, ServiceRecord, QAfterFilterCondition>
+  descriptionGreaterThan(String? value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        GreaterCondition(
+          property: 4,
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<ServiceRecord, ServiceRecord, QAfterFilterCondition>
+  descriptionGreaterThanOrEqualTo(String? value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        GreaterOrEqualCondition(
+          property: 4,
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<ServiceRecord, ServiceRecord, QAfterFilterCondition>
+  descriptionLessThan(String? value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        LessCondition(property: 4, value: value, caseSensitive: caseSensitive),
+      );
+    });
+  }
+
+  QueryBuilder<ServiceRecord, ServiceRecord, QAfterFilterCondition>
+  descriptionLessThanOrEqualTo(String? value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        LessOrEqualCondition(
+          property: 4,
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<ServiceRecord, ServiceRecord, QAfterFilterCondition>
+  descriptionBetween(
+    String? lower,
+    String? upper, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        BetweenCondition(
+          property: 4,
+          lower: lower,
+          upper: upper,
+          caseSensitive: caseSensitive,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<ServiceRecord, ServiceRecord, QAfterFilterCondition>
+  descriptionStartsWith(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        StartsWithCondition(
+          property: 4,
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<ServiceRecord, ServiceRecord, QAfterFilterCondition>
+  descriptionEndsWith(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        EndsWithCondition(
+          property: 4,
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<ServiceRecord, ServiceRecord, QAfterFilterCondition>
+  descriptionContains(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        ContainsCondition(
+          property: 4,
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<ServiceRecord, ServiceRecord, QAfterFilterCondition>
+  descriptionMatches(String pattern, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        MatchesCondition(
+          property: 4,
+          wildcard: pattern,
+          caseSensitive: caseSensitive,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<ServiceRecord, ServiceRecord, QAfterFilterCondition>
+  descriptionIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        const EqualCondition(property: 4, value: ''),
+      );
+    });
+  }
+
+  QueryBuilder<ServiceRecord, ServiceRecord, QAfterFilterCondition>
+  descriptionIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        const GreaterCondition(property: 4, value: ''),
+      );
+    });
+  }
+
+  QueryBuilder<ServiceRecord, ServiceRecord, QAfterFilterCondition>
+  costIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const IsNullCondition(property: 5));
+    });
+  }
+
+  QueryBuilder<ServiceRecord, ServiceRecord, QAfterFilterCondition>
+  costIsNotNull() {
+    return QueryBuilder.apply(not(), (query) {
+      return query.addFilterCondition(const IsNullCondition(property: 5));
     });
   }
 
   QueryBuilder<ServiceRecord, ServiceRecord, QAfterFilterCondition> costEqualTo(
     double? value, {
-    double epsilon = Query.epsilon,
+    double epsilon = Filter.epsilon,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'cost',
-        value: value,
-        epsilon: epsilon,
-      ));
+      return query.addFilterCondition(
+        EqualCondition(property: 5, value: value, epsilon: epsilon),
+      );
     });
   }
 
   QueryBuilder<ServiceRecord, ServiceRecord, QAfterFilterCondition>
-      costGreaterThan(
-    double? value, {
-    bool include = false,
-    double epsilon = Query.epsilon,
-  }) {
+  costGreaterThan(double? value, {double epsilon = Filter.epsilon}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'cost',
-        value: value,
-        epsilon: epsilon,
-      ));
+      return query.addFilterCondition(
+        GreaterCondition(property: 5, value: value, epsilon: epsilon),
+      );
     });
   }
 
   QueryBuilder<ServiceRecord, ServiceRecord, QAfterFilterCondition>
-      costLessThan(
-    double? value, {
-    bool include = false,
-    double epsilon = Query.epsilon,
-  }) {
+  costGreaterThanOrEqualTo(double? value, {double epsilon = Filter.epsilon}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'cost',
-        value: value,
-        epsilon: epsilon,
-      ));
+      return query.addFilterCondition(
+        GreaterOrEqualCondition(property: 5, value: value, epsilon: epsilon),
+      );
+    });
+  }
+
+  QueryBuilder<ServiceRecord, ServiceRecord, QAfterFilterCondition>
+  costLessThan(double? value, {double epsilon = Filter.epsilon}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        LessCondition(property: 5, value: value, epsilon: epsilon),
+      );
+    });
+  }
+
+  QueryBuilder<ServiceRecord, ServiceRecord, QAfterFilterCondition>
+  costLessThanOrEqualTo(double? value, {double epsilon = Filter.epsilon}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        LessOrEqualCondition(property: 5, value: value, epsilon: epsilon),
+      );
     });
   }
 
   QueryBuilder<ServiceRecord, ServiceRecord, QAfterFilterCondition> costBetween(
     double? lower,
     double? upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-    double epsilon = Query.epsilon,
+    double epsilon = Filter.epsilon,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'cost',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-        epsilon: epsilon,
-      ));
+      return query.addFilterCondition(
+        BetweenCondition(
+          property: 5,
+          lower: lower,
+          upper: upper,
+
+          epsilon: epsilon,
+        ),
+      );
     });
   }
 
   QueryBuilder<ServiceRecord, ServiceRecord, QAfterFilterCondition>
-      createdAtEqualTo(DateTime value) {
+  mechanicIsNull() {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'createdAt',
-        value: value,
-      ));
+      return query.addFilterCondition(const IsNullCondition(property: 6));
     });
   }
 
   QueryBuilder<ServiceRecord, ServiceRecord, QAfterFilterCondition>
-      createdAtGreaterThan(
-    DateTime value, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'createdAt',
-        value: value,
-      ));
+  mechanicIsNotNull() {
+    return QueryBuilder.apply(not(), (query) {
+      return query.addFilterCondition(const IsNullCondition(property: 6));
     });
   }
 
   QueryBuilder<ServiceRecord, ServiceRecord, QAfterFilterCondition>
-      createdAtLessThan(
-    DateTime value, {
-    bool include = false,
-  }) {
+  mechanicEqualTo(String? value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'createdAt',
-        value: value,
-      ));
+      return query.addFilterCondition(
+        EqualCondition(property: 6, value: value, caseSensitive: caseSensitive),
+      );
     });
   }
 
   QueryBuilder<ServiceRecord, ServiceRecord, QAfterFilterCondition>
-      createdAtBetween(
-    DateTime lower,
-    DateTime upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-  }) {
+  mechanicGreaterThan(String? value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'createdAt',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-      ));
+      return query.addFilterCondition(
+        GreaterCondition(
+          property: 6,
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
   QueryBuilder<ServiceRecord, ServiceRecord, QAfterFilterCondition>
-      descriptionIsNull() {
+  mechanicGreaterThanOrEqualTo(String? value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNull(
-        property: r'description',
-      ));
+      return query.addFilterCondition(
+        GreaterOrEqualCondition(
+          property: 6,
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
   QueryBuilder<ServiceRecord, ServiceRecord, QAfterFilterCondition>
-      descriptionIsNotNull() {
+  mechanicLessThan(String? value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNotNull(
-        property: r'description',
-      ));
+      return query.addFilterCondition(
+        LessCondition(property: 6, value: value, caseSensitive: caseSensitive),
+      );
     });
   }
 
   QueryBuilder<ServiceRecord, ServiceRecord, QAfterFilterCondition>
-      descriptionEqualTo(
-    String? value, {
-    bool caseSensitive = true,
-  }) {
+  mechanicLessThanOrEqualTo(String? value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'description',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        LessOrEqualCondition(
+          property: 6,
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
   QueryBuilder<ServiceRecord, ServiceRecord, QAfterFilterCondition>
-      descriptionGreaterThan(
-    String? value, {
-    bool include = false,
-    bool caseSensitive = true,
-  }) {
+  mechanicBetween(String? lower, String? upper, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'description',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        BetweenCondition(
+          property: 6,
+          lower: lower,
+          upper: upper,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
   QueryBuilder<ServiceRecord, ServiceRecord, QAfterFilterCondition>
-      descriptionLessThan(
-    String? value, {
-    bool include = false,
-    bool caseSensitive = true,
-  }) {
+  mechanicStartsWith(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'description',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        StartsWithCondition(
+          property: 6,
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
   QueryBuilder<ServiceRecord, ServiceRecord, QAfterFilterCondition>
-      descriptionBetween(
-    String? lower,
-    String? upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-    bool caseSensitive = true,
-  }) {
+  mechanicEndsWith(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'description',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        EndsWithCondition(
+          property: 6,
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
   QueryBuilder<ServiceRecord, ServiceRecord, QAfterFilterCondition>
-      descriptionStartsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
+  mechanicContains(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.startsWith(
-        property: r'description',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        ContainsCondition(
+          property: 6,
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
   QueryBuilder<ServiceRecord, ServiceRecord, QAfterFilterCondition>
-      descriptionEndsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
+  mechanicMatches(String pattern, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.endsWith(
-        property: r'description',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        MatchesCondition(
+          property: 6,
+          wildcard: pattern,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
   QueryBuilder<ServiceRecord, ServiceRecord, QAfterFilterCondition>
-      descriptionContains(String value, {bool caseSensitive = true}) {
+  mechanicIsEmpty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.contains(
-        property: r'description',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        const EqualCondition(property: 6, value: ''),
+      );
     });
   }
 
   QueryBuilder<ServiceRecord, ServiceRecord, QAfterFilterCondition>
-      descriptionMatches(String pattern, {bool caseSensitive = true}) {
+  mechanicIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.matches(
-        property: r'description',
-        wildcard: pattern,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        const GreaterCondition(property: 6, value: ''),
+      );
     });
   }
 
   QueryBuilder<ServiceRecord, ServiceRecord, QAfterFilterCondition>
-      descriptionIsEmpty() {
+  notesIsNull() {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'description',
-        value: '',
-      ));
+      return query.addFilterCondition(const IsNullCondition(property: 7));
     });
   }
 
   QueryBuilder<ServiceRecord, ServiceRecord, QAfterFilterCondition>
-      descriptionIsNotEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        property: r'description',
-        value: '',
-      ));
-    });
-  }
-
-  QueryBuilder<ServiceRecord, ServiceRecord, QAfterFilterCondition> idEqualTo(
-      Id value) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'id',
-        value: value,
-      ));
+  notesIsNotNull() {
+    return QueryBuilder.apply(not(), (query) {
+      return query.addFilterCondition(const IsNullCondition(property: 7));
     });
   }
 
   QueryBuilder<ServiceRecord, ServiceRecord, QAfterFilterCondition>
-      idGreaterThan(
-    Id value, {
-    bool include = false,
-  }) {
+  notesEqualTo(String? value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'id',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<ServiceRecord, ServiceRecord, QAfterFilterCondition> idLessThan(
-    Id value, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'id',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<ServiceRecord, ServiceRecord, QAfterFilterCondition> idBetween(
-    Id lower,
-    Id upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'id',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-      ));
+      return query.addFilterCondition(
+        EqualCondition(property: 7, value: value, caseSensitive: caseSensitive),
+      );
     });
   }
 
   QueryBuilder<ServiceRecord, ServiceRecord, QAfterFilterCondition>
-      mechanicIsNull() {
+  notesGreaterThan(String? value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNull(
-        property: r'mechanic',
-      ));
+      return query.addFilterCondition(
+        GreaterCondition(
+          property: 7,
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
   QueryBuilder<ServiceRecord, ServiceRecord, QAfterFilterCondition>
-      mechanicIsNotNull() {
+  notesGreaterThanOrEqualTo(String? value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNotNull(
-        property: r'mechanic',
-      ));
+      return query.addFilterCondition(
+        GreaterOrEqualCondition(
+          property: 7,
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
   QueryBuilder<ServiceRecord, ServiceRecord, QAfterFilterCondition>
-      mechanicEqualTo(
-    String? value, {
-    bool caseSensitive = true,
-  }) {
+  notesLessThan(String? value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'mechanic',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        LessCondition(property: 7, value: value, caseSensitive: caseSensitive),
+      );
     });
   }
 
   QueryBuilder<ServiceRecord, ServiceRecord, QAfterFilterCondition>
-      mechanicGreaterThan(
-    String? value, {
-    bool include = false,
-    bool caseSensitive = true,
-  }) {
+  notesLessThanOrEqualTo(String? value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'mechanic',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        LessOrEqualCondition(
+          property: 7,
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
   QueryBuilder<ServiceRecord, ServiceRecord, QAfterFilterCondition>
-      mechanicLessThan(
-    String? value, {
-    bool include = false,
-    bool caseSensitive = true,
-  }) {
+  notesBetween(String? lower, String? upper, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'mechanic',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        BetweenCondition(
+          property: 7,
+          lower: lower,
+          upper: upper,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
   QueryBuilder<ServiceRecord, ServiceRecord, QAfterFilterCondition>
-      mechanicBetween(
-    String? lower,
-    String? upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-    bool caseSensitive = true,
-  }) {
+  notesStartsWith(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'mechanic',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        StartsWithCondition(
+          property: 7,
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
   QueryBuilder<ServiceRecord, ServiceRecord, QAfterFilterCondition>
-      mechanicStartsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
+  notesEndsWith(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.startsWith(
-        property: r'mechanic',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        EndsWithCondition(
+          property: 7,
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
   QueryBuilder<ServiceRecord, ServiceRecord, QAfterFilterCondition>
-      mechanicEndsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
+  notesContains(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.endsWith(
-        property: r'mechanic',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        ContainsCondition(
+          property: 7,
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
   QueryBuilder<ServiceRecord, ServiceRecord, QAfterFilterCondition>
-      mechanicContains(String value, {bool caseSensitive = true}) {
+  notesMatches(String pattern, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.contains(
-        property: r'mechanic',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        MatchesCondition(
+          property: 7,
+          wildcard: pattern,
+          caseSensitive: caseSensitive,
+        ),
+      );
     });
   }
 
   QueryBuilder<ServiceRecord, ServiceRecord, QAfterFilterCondition>
-      mechanicMatches(String pattern, {bool caseSensitive = true}) {
+  notesIsEmpty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.matches(
-        property: r'mechanic',
-        wildcard: pattern,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        const EqualCondition(property: 7, value: ''),
+      );
     });
   }
 
   QueryBuilder<ServiceRecord, ServiceRecord, QAfterFilterCondition>
-      mechanicIsEmpty() {
+  notesIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'mechanic',
-        value: '',
-      ));
+      return query.addFilterCondition(
+        const GreaterCondition(property: 7, value: ''),
+      );
     });
   }
 
   QueryBuilder<ServiceRecord, ServiceRecord, QAfterFilterCondition>
-      mechanicIsNotEmpty() {
+  createdAtEqualTo(DateTime value) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        property: r'mechanic',
-        value: '',
-      ));
+      return query.addFilterCondition(
+        EqualCondition(property: 8, value: value),
+      );
     });
   }
 
   QueryBuilder<ServiceRecord, ServiceRecord, QAfterFilterCondition>
-      notesIsNull() {
+  createdAtGreaterThan(DateTime value) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNull(
-        property: r'notes',
-      ));
+      return query.addFilterCondition(
+        GreaterCondition(property: 8, value: value),
+      );
     });
   }
 
   QueryBuilder<ServiceRecord, ServiceRecord, QAfterFilterCondition>
-      notesIsNotNull() {
+  createdAtGreaterThanOrEqualTo(DateTime value) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNotNull(
-        property: r'notes',
-      ));
+      return query.addFilterCondition(
+        GreaterOrEqualCondition(property: 8, value: value),
+      );
     });
   }
 
   QueryBuilder<ServiceRecord, ServiceRecord, QAfterFilterCondition>
-      notesEqualTo(
-    String? value, {
-    bool caseSensitive = true,
-  }) {
+  createdAtLessThan(DateTime value) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'notes',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(LessCondition(property: 8, value: value));
     });
   }
 
   QueryBuilder<ServiceRecord, ServiceRecord, QAfterFilterCondition>
-      notesGreaterThan(
-    String? value, {
-    bool include = false,
-    bool caseSensitive = true,
-  }) {
+  createdAtLessThanOrEqualTo(DateTime value) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'notes',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        LessOrEqualCondition(property: 8, value: value),
+      );
     });
   }
 
   QueryBuilder<ServiceRecord, ServiceRecord, QAfterFilterCondition>
-      notesLessThan(
-    String? value, {
-    bool include = false,
-    bool caseSensitive = true,
-  }) {
+  createdAtBetween(DateTime lower, DateTime upper) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'notes',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        BetweenCondition(property: 8, lower: lower, upper: upper),
+      );
     });
   }
 
   QueryBuilder<ServiceRecord, ServiceRecord, QAfterFilterCondition>
-      notesBetween(
-    String? lower,
-    String? upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-    bool caseSensitive = true,
-  }) {
+  updatedAtEqualTo(DateTime value) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'notes',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        EqualCondition(property: 9, value: value),
+      );
     });
   }
 
   QueryBuilder<ServiceRecord, ServiceRecord, QAfterFilterCondition>
-      notesStartsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
+  updatedAtGreaterThan(DateTime value) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.startsWith(
-        property: r'notes',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        GreaterCondition(property: 9, value: value),
+      );
     });
   }
 
   QueryBuilder<ServiceRecord, ServiceRecord, QAfterFilterCondition>
-      notesEndsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
+  updatedAtGreaterThanOrEqualTo(DateTime value) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.endsWith(
-        property: r'notes',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        GreaterOrEqualCondition(property: 9, value: value),
+      );
     });
   }
 
   QueryBuilder<ServiceRecord, ServiceRecord, QAfterFilterCondition>
-      notesContains(String value, {bool caseSensitive = true}) {
+  updatedAtLessThan(DateTime value) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.contains(
-        property: r'notes',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(LessCondition(property: 9, value: value));
     });
   }
 
   QueryBuilder<ServiceRecord, ServiceRecord, QAfterFilterCondition>
-      notesMatches(String pattern, {bool caseSensitive = true}) {
+  updatedAtLessThanOrEqualTo(DateTime value) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.matches(
-        property: r'notes',
-        wildcard: pattern,
-        caseSensitive: caseSensitive,
-      ));
+      return query.addFilterCondition(
+        LessOrEqualCondition(property: 9, value: value),
+      );
     });
   }
 
   QueryBuilder<ServiceRecord, ServiceRecord, QAfterFilterCondition>
-      notesIsEmpty() {
+  updatedAtBetween(DateTime lower, DateTime upper) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'notes',
-        value: '',
-      ));
-    });
-  }
-
-  QueryBuilder<ServiceRecord, ServiceRecord, QAfterFilterCondition>
-      notesIsNotEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        property: r'notes',
-        value: '',
-      ));
-    });
-  }
-
-  QueryBuilder<ServiceRecord, ServiceRecord, QAfterFilterCondition>
-      serviceDateEqualTo(DateTime value) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'serviceDate',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<ServiceRecord, ServiceRecord, QAfterFilterCondition>
-      serviceDateGreaterThan(
-    DateTime value, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'serviceDate',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<ServiceRecord, ServiceRecord, QAfterFilterCondition>
-      serviceDateLessThan(
-    DateTime value, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'serviceDate',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<ServiceRecord, ServiceRecord, QAfterFilterCondition>
-      serviceDateBetween(
-    DateTime lower,
-    DateTime upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'serviceDate',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-      ));
-    });
-  }
-
-  QueryBuilder<ServiceRecord, ServiceRecord, QAfterFilterCondition>
-      serviceTypeEqualTo(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'serviceType',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<ServiceRecord, ServiceRecord, QAfterFilterCondition>
-      serviceTypeGreaterThan(
-    String value, {
-    bool include = false,
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'serviceType',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<ServiceRecord, ServiceRecord, QAfterFilterCondition>
-      serviceTypeLessThan(
-    String value, {
-    bool include = false,
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'serviceType',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<ServiceRecord, ServiceRecord, QAfterFilterCondition>
-      serviceTypeBetween(
-    String lower,
-    String upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'serviceType',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<ServiceRecord, ServiceRecord, QAfterFilterCondition>
-      serviceTypeStartsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.startsWith(
-        property: r'serviceType',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<ServiceRecord, ServiceRecord, QAfterFilterCondition>
-      serviceTypeEndsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.endsWith(
-        property: r'serviceType',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<ServiceRecord, ServiceRecord, QAfterFilterCondition>
-      serviceTypeContains(String value, {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.contains(
-        property: r'serviceType',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<ServiceRecord, ServiceRecord, QAfterFilterCondition>
-      serviceTypeMatches(String pattern, {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.matches(
-        property: r'serviceType',
-        wildcard: pattern,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<ServiceRecord, ServiceRecord, QAfterFilterCondition>
-      serviceTypeIsEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'serviceType',
-        value: '',
-      ));
-    });
-  }
-
-  QueryBuilder<ServiceRecord, ServiceRecord, QAfterFilterCondition>
-      serviceTypeIsNotEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        property: r'serviceType',
-        value: '',
-      ));
-    });
-  }
-
-  QueryBuilder<ServiceRecord, ServiceRecord, QAfterFilterCondition>
-      updatedAtEqualTo(DateTime value) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'updatedAt',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<ServiceRecord, ServiceRecord, QAfterFilterCondition>
-      updatedAtGreaterThan(
-    DateTime value, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'updatedAt',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<ServiceRecord, ServiceRecord, QAfterFilterCondition>
-      updatedAtLessThan(
-    DateTime value, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'updatedAt',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<ServiceRecord, ServiceRecord, QAfterFilterCondition>
-      updatedAtBetween(
-    DateTime lower,
-    DateTime upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'updatedAt',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-      ));
-    });
-  }
-
-  QueryBuilder<ServiceRecord, ServiceRecord, QAfterFilterCondition>
-      vehicleIdEqualTo(int value) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'vehicleId',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<ServiceRecord, ServiceRecord, QAfterFilterCondition>
-      vehicleIdGreaterThan(
-    int value, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'vehicleId',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<ServiceRecord, ServiceRecord, QAfterFilterCondition>
-      vehicleIdLessThan(
-    int value, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'vehicleId',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<ServiceRecord, ServiceRecord, QAfterFilterCondition>
-      vehicleIdBetween(
-    int lower,
-    int upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'vehicleId',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-      ));
+      return query.addFilterCondition(
+        BetweenCondition(property: 9, lower: lower, upper: upper),
+      );
     });
   }
 }
@@ -1231,379 +1381,550 @@ extension ServiceRecordQueryFilter
 extension ServiceRecordQueryObject
     on QueryBuilder<ServiceRecord, ServiceRecord, QFilterCondition> {}
 
-extension ServiceRecordQueryLinks
-    on QueryBuilder<ServiceRecord, ServiceRecord, QFilterCondition> {}
-
 extension ServiceRecordQuerySortBy
     on QueryBuilder<ServiceRecord, ServiceRecord, QSortBy> {
-  QueryBuilder<ServiceRecord, ServiceRecord, QAfterSortBy> sortByCost() {
+  QueryBuilder<ServiceRecord, ServiceRecord, QAfterSortBy> sortById() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'cost', Sort.asc);
+      return query.addSortBy(0);
     });
   }
 
-  QueryBuilder<ServiceRecord, ServiceRecord, QAfterSortBy> sortByCostDesc() {
+  QueryBuilder<ServiceRecord, ServiceRecord, QAfterSortBy> sortByIdDesc() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'cost', Sort.desc);
-    });
-  }
-
-  QueryBuilder<ServiceRecord, ServiceRecord, QAfterSortBy> sortByCreatedAt() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'createdAt', Sort.asc);
-    });
-  }
-
-  QueryBuilder<ServiceRecord, ServiceRecord, QAfterSortBy>
-      sortByCreatedAtDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'createdAt', Sort.desc);
-    });
-  }
-
-  QueryBuilder<ServiceRecord, ServiceRecord, QAfterSortBy> sortByDescription() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'description', Sort.asc);
-    });
-  }
-
-  QueryBuilder<ServiceRecord, ServiceRecord, QAfterSortBy>
-      sortByDescriptionDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'description', Sort.desc);
-    });
-  }
-
-  QueryBuilder<ServiceRecord, ServiceRecord, QAfterSortBy> sortByMechanic() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'mechanic', Sort.asc);
-    });
-  }
-
-  QueryBuilder<ServiceRecord, ServiceRecord, QAfterSortBy>
-      sortByMechanicDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'mechanic', Sort.desc);
-    });
-  }
-
-  QueryBuilder<ServiceRecord, ServiceRecord, QAfterSortBy> sortByNotes() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'notes', Sort.asc);
-    });
-  }
-
-  QueryBuilder<ServiceRecord, ServiceRecord, QAfterSortBy> sortByNotesDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'notes', Sort.desc);
-    });
-  }
-
-  QueryBuilder<ServiceRecord, ServiceRecord, QAfterSortBy> sortByServiceDate() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'serviceDate', Sort.asc);
-    });
-  }
-
-  QueryBuilder<ServiceRecord, ServiceRecord, QAfterSortBy>
-      sortByServiceDateDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'serviceDate', Sort.desc);
-    });
-  }
-
-  QueryBuilder<ServiceRecord, ServiceRecord, QAfterSortBy> sortByServiceType() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'serviceType', Sort.asc);
-    });
-  }
-
-  QueryBuilder<ServiceRecord, ServiceRecord, QAfterSortBy>
-      sortByServiceTypeDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'serviceType', Sort.desc);
-    });
-  }
-
-  QueryBuilder<ServiceRecord, ServiceRecord, QAfterSortBy> sortByUpdatedAt() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'updatedAt', Sort.asc);
-    });
-  }
-
-  QueryBuilder<ServiceRecord, ServiceRecord, QAfterSortBy>
-      sortByUpdatedAtDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'updatedAt', Sort.desc);
+      return query.addSortBy(0, sort: Sort.desc);
     });
   }
 
   QueryBuilder<ServiceRecord, ServiceRecord, QAfterSortBy> sortByVehicleId() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'vehicleId', Sort.asc);
+      return query.addSortBy(1);
     });
   }
 
   QueryBuilder<ServiceRecord, ServiceRecord, QAfterSortBy>
-      sortByVehicleIdDesc() {
+  sortByVehicleIdDesc() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'vehicleId', Sort.desc);
+      return query.addSortBy(1, sort: Sort.desc);
+    });
+  }
+
+  QueryBuilder<ServiceRecord, ServiceRecord, QAfterSortBy> sortByServiceType({
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(2, caseSensitive: caseSensitive);
+    });
+  }
+
+  QueryBuilder<ServiceRecord, ServiceRecord, QAfterSortBy>
+  sortByServiceTypeDesc({bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(2, sort: Sort.desc, caseSensitive: caseSensitive);
+    });
+  }
+
+  QueryBuilder<ServiceRecord, ServiceRecord, QAfterSortBy> sortByServiceDate() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(3);
+    });
+  }
+
+  QueryBuilder<ServiceRecord, ServiceRecord, QAfterSortBy>
+  sortByServiceDateDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(3, sort: Sort.desc);
+    });
+  }
+
+  QueryBuilder<ServiceRecord, ServiceRecord, QAfterSortBy> sortByDescription({
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(4, caseSensitive: caseSensitive);
+    });
+  }
+
+  QueryBuilder<ServiceRecord, ServiceRecord, QAfterSortBy>
+  sortByDescriptionDesc({bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(4, sort: Sort.desc, caseSensitive: caseSensitive);
+    });
+  }
+
+  QueryBuilder<ServiceRecord, ServiceRecord, QAfterSortBy> sortByCost() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(5);
+    });
+  }
+
+  QueryBuilder<ServiceRecord, ServiceRecord, QAfterSortBy> sortByCostDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(5, sort: Sort.desc);
+    });
+  }
+
+  QueryBuilder<ServiceRecord, ServiceRecord, QAfterSortBy> sortByMechanic({
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(6, caseSensitive: caseSensitive);
+    });
+  }
+
+  QueryBuilder<ServiceRecord, ServiceRecord, QAfterSortBy> sortByMechanicDesc({
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(6, sort: Sort.desc, caseSensitive: caseSensitive);
+    });
+  }
+
+  QueryBuilder<ServiceRecord, ServiceRecord, QAfterSortBy> sortByNotes({
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(7, caseSensitive: caseSensitive);
+    });
+  }
+
+  QueryBuilder<ServiceRecord, ServiceRecord, QAfterSortBy> sortByNotesDesc({
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(7, sort: Sort.desc, caseSensitive: caseSensitive);
+    });
+  }
+
+  QueryBuilder<ServiceRecord, ServiceRecord, QAfterSortBy> sortByCreatedAt() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(8);
+    });
+  }
+
+  QueryBuilder<ServiceRecord, ServiceRecord, QAfterSortBy>
+  sortByCreatedAtDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(8, sort: Sort.desc);
+    });
+  }
+
+  QueryBuilder<ServiceRecord, ServiceRecord, QAfterSortBy> sortByUpdatedAt() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(9);
+    });
+  }
+
+  QueryBuilder<ServiceRecord, ServiceRecord, QAfterSortBy>
+  sortByUpdatedAtDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(9, sort: Sort.desc);
     });
   }
 }
 
 extension ServiceRecordQuerySortThenBy
     on QueryBuilder<ServiceRecord, ServiceRecord, QSortThenBy> {
-  QueryBuilder<ServiceRecord, ServiceRecord, QAfterSortBy> thenByCost() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'cost', Sort.asc);
-    });
-  }
-
-  QueryBuilder<ServiceRecord, ServiceRecord, QAfterSortBy> thenByCostDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'cost', Sort.desc);
-    });
-  }
-
-  QueryBuilder<ServiceRecord, ServiceRecord, QAfterSortBy> thenByCreatedAt() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'createdAt', Sort.asc);
-    });
-  }
-
-  QueryBuilder<ServiceRecord, ServiceRecord, QAfterSortBy>
-      thenByCreatedAtDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'createdAt', Sort.desc);
-    });
-  }
-
-  QueryBuilder<ServiceRecord, ServiceRecord, QAfterSortBy> thenByDescription() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'description', Sort.asc);
-    });
-  }
-
-  QueryBuilder<ServiceRecord, ServiceRecord, QAfterSortBy>
-      thenByDescriptionDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'description', Sort.desc);
-    });
-  }
-
   QueryBuilder<ServiceRecord, ServiceRecord, QAfterSortBy> thenById() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'id', Sort.asc);
+      return query.addSortBy(0);
     });
   }
 
   QueryBuilder<ServiceRecord, ServiceRecord, QAfterSortBy> thenByIdDesc() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'id', Sort.desc);
-    });
-  }
-
-  QueryBuilder<ServiceRecord, ServiceRecord, QAfterSortBy> thenByMechanic() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'mechanic', Sort.asc);
-    });
-  }
-
-  QueryBuilder<ServiceRecord, ServiceRecord, QAfterSortBy>
-      thenByMechanicDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'mechanic', Sort.desc);
-    });
-  }
-
-  QueryBuilder<ServiceRecord, ServiceRecord, QAfterSortBy> thenByNotes() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'notes', Sort.asc);
-    });
-  }
-
-  QueryBuilder<ServiceRecord, ServiceRecord, QAfterSortBy> thenByNotesDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'notes', Sort.desc);
-    });
-  }
-
-  QueryBuilder<ServiceRecord, ServiceRecord, QAfterSortBy> thenByServiceDate() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'serviceDate', Sort.asc);
-    });
-  }
-
-  QueryBuilder<ServiceRecord, ServiceRecord, QAfterSortBy>
-      thenByServiceDateDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'serviceDate', Sort.desc);
-    });
-  }
-
-  QueryBuilder<ServiceRecord, ServiceRecord, QAfterSortBy> thenByServiceType() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'serviceType', Sort.asc);
-    });
-  }
-
-  QueryBuilder<ServiceRecord, ServiceRecord, QAfterSortBy>
-      thenByServiceTypeDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'serviceType', Sort.desc);
-    });
-  }
-
-  QueryBuilder<ServiceRecord, ServiceRecord, QAfterSortBy> thenByUpdatedAt() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'updatedAt', Sort.asc);
-    });
-  }
-
-  QueryBuilder<ServiceRecord, ServiceRecord, QAfterSortBy>
-      thenByUpdatedAtDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'updatedAt', Sort.desc);
+      return query.addSortBy(0, sort: Sort.desc);
     });
   }
 
   QueryBuilder<ServiceRecord, ServiceRecord, QAfterSortBy> thenByVehicleId() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'vehicleId', Sort.asc);
+      return query.addSortBy(1);
     });
   }
 
   QueryBuilder<ServiceRecord, ServiceRecord, QAfterSortBy>
-      thenByVehicleIdDesc() {
+  thenByVehicleIdDesc() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'vehicleId', Sort.desc);
+      return query.addSortBy(1, sort: Sort.desc);
+    });
+  }
+
+  QueryBuilder<ServiceRecord, ServiceRecord, QAfterSortBy> thenByServiceType({
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(2, caseSensitive: caseSensitive);
+    });
+  }
+
+  QueryBuilder<ServiceRecord, ServiceRecord, QAfterSortBy>
+  thenByServiceTypeDesc({bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(2, sort: Sort.desc, caseSensitive: caseSensitive);
+    });
+  }
+
+  QueryBuilder<ServiceRecord, ServiceRecord, QAfterSortBy> thenByServiceDate() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(3);
+    });
+  }
+
+  QueryBuilder<ServiceRecord, ServiceRecord, QAfterSortBy>
+  thenByServiceDateDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(3, sort: Sort.desc);
+    });
+  }
+
+  QueryBuilder<ServiceRecord, ServiceRecord, QAfterSortBy> thenByDescription({
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(4, caseSensitive: caseSensitive);
+    });
+  }
+
+  QueryBuilder<ServiceRecord, ServiceRecord, QAfterSortBy>
+  thenByDescriptionDesc({bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(4, sort: Sort.desc, caseSensitive: caseSensitive);
+    });
+  }
+
+  QueryBuilder<ServiceRecord, ServiceRecord, QAfterSortBy> thenByCost() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(5);
+    });
+  }
+
+  QueryBuilder<ServiceRecord, ServiceRecord, QAfterSortBy> thenByCostDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(5, sort: Sort.desc);
+    });
+  }
+
+  QueryBuilder<ServiceRecord, ServiceRecord, QAfterSortBy> thenByMechanic({
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(6, caseSensitive: caseSensitive);
+    });
+  }
+
+  QueryBuilder<ServiceRecord, ServiceRecord, QAfterSortBy> thenByMechanicDesc({
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(6, sort: Sort.desc, caseSensitive: caseSensitive);
+    });
+  }
+
+  QueryBuilder<ServiceRecord, ServiceRecord, QAfterSortBy> thenByNotes({
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(7, caseSensitive: caseSensitive);
+    });
+  }
+
+  QueryBuilder<ServiceRecord, ServiceRecord, QAfterSortBy> thenByNotesDesc({
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(7, sort: Sort.desc, caseSensitive: caseSensitive);
+    });
+  }
+
+  QueryBuilder<ServiceRecord, ServiceRecord, QAfterSortBy> thenByCreatedAt() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(8);
+    });
+  }
+
+  QueryBuilder<ServiceRecord, ServiceRecord, QAfterSortBy>
+  thenByCreatedAtDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(8, sort: Sort.desc);
+    });
+  }
+
+  QueryBuilder<ServiceRecord, ServiceRecord, QAfterSortBy> thenByUpdatedAt() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(9);
+    });
+  }
+
+  QueryBuilder<ServiceRecord, ServiceRecord, QAfterSortBy>
+  thenByUpdatedAtDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(9, sort: Sort.desc);
     });
   }
 }
 
 extension ServiceRecordQueryWhereDistinct
     on QueryBuilder<ServiceRecord, ServiceRecord, QDistinct> {
-  QueryBuilder<ServiceRecord, ServiceRecord, QDistinct> distinctByCost() {
+  QueryBuilder<ServiceRecord, ServiceRecord, QAfterDistinct>
+  distinctByVehicleId() {
     return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'cost');
+      return query.addDistinctBy(1);
     });
   }
 
-  QueryBuilder<ServiceRecord, ServiceRecord, QDistinct> distinctByCreatedAt() {
+  QueryBuilder<ServiceRecord, ServiceRecord, QAfterDistinct>
+  distinctByServiceType({bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'createdAt');
+      return query.addDistinctBy(2, caseSensitive: caseSensitive);
     });
   }
 
-  QueryBuilder<ServiceRecord, ServiceRecord, QDistinct> distinctByDescription(
-      {bool caseSensitive = true}) {
+  QueryBuilder<ServiceRecord, ServiceRecord, QAfterDistinct>
+  distinctByServiceDate() {
     return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'description', caseSensitive: caseSensitive);
+      return query.addDistinctBy(3);
     });
   }
 
-  QueryBuilder<ServiceRecord, ServiceRecord, QDistinct> distinctByMechanic(
-      {bool caseSensitive = true}) {
+  QueryBuilder<ServiceRecord, ServiceRecord, QAfterDistinct>
+  distinctByDescription({bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'mechanic', caseSensitive: caseSensitive);
+      return query.addDistinctBy(4, caseSensitive: caseSensitive);
     });
   }
 
-  QueryBuilder<ServiceRecord, ServiceRecord, QDistinct> distinctByNotes(
-      {bool caseSensitive = true}) {
+  QueryBuilder<ServiceRecord, ServiceRecord, QAfterDistinct> distinctByCost() {
     return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'notes', caseSensitive: caseSensitive);
+      return query.addDistinctBy(5);
     });
   }
 
-  QueryBuilder<ServiceRecord, ServiceRecord, QDistinct>
-      distinctByServiceDate() {
+  QueryBuilder<ServiceRecord, ServiceRecord, QAfterDistinct>
+  distinctByMechanic({bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'serviceDate');
+      return query.addDistinctBy(6, caseSensitive: caseSensitive);
     });
   }
 
-  QueryBuilder<ServiceRecord, ServiceRecord, QDistinct> distinctByServiceType(
-      {bool caseSensitive = true}) {
+  QueryBuilder<ServiceRecord, ServiceRecord, QAfterDistinct> distinctByNotes({
+    bool caseSensitive = true,
+  }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'serviceType', caseSensitive: caseSensitive);
+      return query.addDistinctBy(7, caseSensitive: caseSensitive);
     });
   }
 
-  QueryBuilder<ServiceRecord, ServiceRecord, QDistinct> distinctByUpdatedAt() {
+  QueryBuilder<ServiceRecord, ServiceRecord, QAfterDistinct>
+  distinctByCreatedAt() {
     return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'updatedAt');
+      return query.addDistinctBy(8);
     });
   }
 
-  QueryBuilder<ServiceRecord, ServiceRecord, QDistinct> distinctByVehicleId() {
+  QueryBuilder<ServiceRecord, ServiceRecord, QAfterDistinct>
+  distinctByUpdatedAt() {
     return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'vehicleId');
+      return query.addDistinctBy(9);
     });
   }
 }
 
-extension ServiceRecordQueryProperty
-    on QueryBuilder<ServiceRecord, ServiceRecord, QQueryProperty> {
-  QueryBuilder<ServiceRecord, int, QQueryOperations> idProperty() {
+extension ServiceRecordQueryProperty1
+    on QueryBuilder<ServiceRecord, ServiceRecord, QProperty> {
+  QueryBuilder<ServiceRecord, int, QAfterProperty> idProperty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'id');
+      return query.addProperty(0);
     });
   }
 
-  QueryBuilder<ServiceRecord, double?, QQueryOperations> costProperty() {
+  QueryBuilder<ServiceRecord, int, QAfterProperty> vehicleIdProperty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'cost');
+      return query.addProperty(1);
     });
   }
 
-  QueryBuilder<ServiceRecord, DateTime, QQueryOperations> createdAtProperty() {
+  QueryBuilder<ServiceRecord, String, QAfterProperty> serviceTypeProperty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'createdAt');
+      return query.addProperty(2);
     });
   }
 
-  QueryBuilder<ServiceRecord, String?, QQueryOperations> descriptionProperty() {
+  QueryBuilder<ServiceRecord, DateTime, QAfterProperty> serviceDateProperty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'description');
+      return query.addProperty(3);
     });
   }
 
-  QueryBuilder<ServiceRecord, String?, QQueryOperations> mechanicProperty() {
+  QueryBuilder<ServiceRecord, String?, QAfterProperty> descriptionProperty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'mechanic');
+      return query.addProperty(4);
     });
   }
 
-  QueryBuilder<ServiceRecord, String?, QQueryOperations> notesProperty() {
+  QueryBuilder<ServiceRecord, double?, QAfterProperty> costProperty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'notes');
+      return query.addProperty(5);
     });
   }
 
-  QueryBuilder<ServiceRecord, DateTime, QQueryOperations>
-      serviceDateProperty() {
+  QueryBuilder<ServiceRecord, String?, QAfterProperty> mechanicProperty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'serviceDate');
+      return query.addProperty(6);
     });
   }
 
-  QueryBuilder<ServiceRecord, String, QQueryOperations> serviceTypeProperty() {
+  QueryBuilder<ServiceRecord, String?, QAfterProperty> notesProperty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'serviceType');
+      return query.addProperty(7);
     });
   }
 
-  QueryBuilder<ServiceRecord, DateTime, QQueryOperations> updatedAtProperty() {
+  QueryBuilder<ServiceRecord, DateTime, QAfterProperty> createdAtProperty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'updatedAt');
+      return query.addProperty(8);
     });
   }
 
-  QueryBuilder<ServiceRecord, int, QQueryOperations> vehicleIdProperty() {
+  QueryBuilder<ServiceRecord, DateTime, QAfterProperty> updatedAtProperty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'vehicleId');
+      return query.addProperty(9);
+    });
+  }
+}
+
+extension ServiceRecordQueryProperty2<R>
+    on QueryBuilder<ServiceRecord, R, QAfterProperty> {
+  QueryBuilder<ServiceRecord, (R, int), QAfterProperty> idProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addProperty(0);
+    });
+  }
+
+  QueryBuilder<ServiceRecord, (R, int), QAfterProperty> vehicleIdProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addProperty(1);
+    });
+  }
+
+  QueryBuilder<ServiceRecord, (R, String), QAfterProperty>
+  serviceTypeProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addProperty(2);
+    });
+  }
+
+  QueryBuilder<ServiceRecord, (R, DateTime), QAfterProperty>
+  serviceDateProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addProperty(3);
+    });
+  }
+
+  QueryBuilder<ServiceRecord, (R, String?), QAfterProperty>
+  descriptionProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addProperty(4);
+    });
+  }
+
+  QueryBuilder<ServiceRecord, (R, double?), QAfterProperty> costProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addProperty(5);
+    });
+  }
+
+  QueryBuilder<ServiceRecord, (R, String?), QAfterProperty> mechanicProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addProperty(6);
+    });
+  }
+
+  QueryBuilder<ServiceRecord, (R, String?), QAfterProperty> notesProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addProperty(7);
+    });
+  }
+
+  QueryBuilder<ServiceRecord, (R, DateTime), QAfterProperty>
+  createdAtProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addProperty(8);
+    });
+  }
+
+  QueryBuilder<ServiceRecord, (R, DateTime), QAfterProperty>
+  updatedAtProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addProperty(9);
+    });
+  }
+}
+
+extension ServiceRecordQueryProperty3<R1, R2>
+    on QueryBuilder<ServiceRecord, (R1, R2), QAfterProperty> {
+  QueryBuilder<ServiceRecord, (R1, R2, int), QOperations> idProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addProperty(0);
+    });
+  }
+
+  QueryBuilder<ServiceRecord, (R1, R2, int), QOperations> vehicleIdProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addProperty(1);
+    });
+  }
+
+  QueryBuilder<ServiceRecord, (R1, R2, String), QOperations>
+  serviceTypeProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addProperty(2);
+    });
+  }
+
+  QueryBuilder<ServiceRecord, (R1, R2, DateTime), QOperations>
+  serviceDateProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addProperty(3);
+    });
+  }
+
+  QueryBuilder<ServiceRecord, (R1, R2, String?), QOperations>
+  descriptionProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addProperty(4);
+    });
+  }
+
+  QueryBuilder<ServiceRecord, (R1, R2, double?), QOperations> costProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addProperty(5);
+    });
+  }
+
+  QueryBuilder<ServiceRecord, (R1, R2, String?), QOperations>
+  mechanicProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addProperty(6);
+    });
+  }
+
+  QueryBuilder<ServiceRecord, (R1, R2, String?), QOperations> notesProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addProperty(7);
+    });
+  }
+
+  QueryBuilder<ServiceRecord, (R1, R2, DateTime), QOperations>
+  createdAtProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addProperty(8);
+    });
+  }
+
+  QueryBuilder<ServiceRecord, (R1, R2, DateTime), QOperations>
+  updatedAtProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addProperty(9);
     });
   }
 }

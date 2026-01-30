@@ -58,7 +58,6 @@ class VehicleCubit extends Cubit<VehicleState> {
       await _isarService.addVehicle(vehicle);
       final vehicles = await _isarService.getAllVehicles();
       emit(VehicleLoaded(vehicles: vehicles));
-      emit(const VehicleOperationSuccess('Vehicle added successfully'));
     } catch (e) {
       emit(VehicleError('Failed to add vehicle: ${e.toString()}'));
     }
@@ -71,7 +70,6 @@ class VehicleCubit extends Cubit<VehicleState> {
       await _isarService.updateVehicle(vehicle);
       final vehicles = await _isarService.getAllVehicles();
       emit(VehicleLoaded(vehicles: vehicles));
-      emit(const VehicleOperationSuccess('Vehicle updated successfully'));
     } catch (e) {
       emit(VehicleError('Failed to update vehicle: ${e.toString()}'));
     }
@@ -84,7 +82,6 @@ class VehicleCubit extends Cubit<VehicleState> {
       await _isarService.deleteVehicle(vehicleId);
       final vehicles = await _isarService.getAllVehicles();
       emit(VehicleLoaded(vehicles: vehicles));
-      emit(const VehicleOperationSuccess('Vehicle deleted successfully'));
     } catch (e) {
       emit(VehicleError('Failed to delete vehicle: ${e.toString()}'));
     }
@@ -112,7 +109,6 @@ class VehicleCubit extends Cubit<VehicleState> {
     try {
       await _isarService.addServiceRecord(record);
       await loadVehicleWithServices(record.vehicleId);
-      emit(const VehicleOperationSuccess('Service record added successfully'));
     } catch (e) {
       emit(VehicleError('Failed to add service record: ${e.toString()}'));
     }
@@ -124,9 +120,6 @@ class VehicleCubit extends Cubit<VehicleState> {
     try {
       await _isarService.updateServiceRecord(record);
       await loadVehicleWithServices(record.vehicleId);
-      emit(
-        const VehicleOperationSuccess('Service record updated successfully'),
-      );
     } catch (e) {
       emit(VehicleError('Failed to update service record: ${e.toString()}'));
     }
@@ -138,9 +131,6 @@ class VehicleCubit extends Cubit<VehicleState> {
     try {
       await _isarService.deleteServiceRecord(recordId);
       await loadVehicleWithServices(vehicleId);
-      emit(
-        const VehicleOperationSuccess('Service record deleted successfully'),
-      );
     } catch (e) {
       emit(VehicleError('Failed to delete service record: ${e.toString()}'));
     }

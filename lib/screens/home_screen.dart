@@ -31,8 +31,10 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('OtoLog - Vehicle Service History'),
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        title: const Text('OtoLog'),
+        backgroundColor: Colors.white,
+        foregroundColor: Colors.black87,
+        elevation: 0,
       ),
       body: Column(
         children: [
@@ -42,11 +44,18 @@ class _HomeScreenState extends State<HomeScreen> {
               controller: _searchController,
               decoration: InputDecoration(
                 hintText: 'Search vehicles...',
-                prefixIcon: const Icon(Icons.search),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
+                hintStyle: TextStyle(color: Colors.grey[400]),
+                prefixIcon: Icon(Icons.search, color: Colors.grey[600]),
                 filled: true,
+                fillColor: Colors.grey[100],
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide: BorderSide.none,
+                ),
+                contentPadding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 12,
+                ),
               ),
               onChanged: (value) {
                 context.read<VehicleCubit>().searchVehicles(value);
@@ -65,15 +74,15 @@ class _HomeScreenState extends State<HomeScreen> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Icon(
-                            Icons.directions_car,
-                            size: 80,
-                            color: Colors.grey[400],
+                            Icons.directions_car_outlined,
+                            size: 64,
+                            color: Colors.grey[300],
                           ),
                           const SizedBox(height: 16),
                           Text(
                             'No vehicles yet',
                             style: TextStyle(
-                              fontSize: 18,
+                              fontSize: 16,
                               color: Colors.grey[600],
                             ),
                           ),
@@ -82,7 +91,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             'Tap + to add your first vehicle',
                             style: TextStyle(
                               fontSize: 14,
-                              color: Colors.grey[500],
+                              color: Colors.grey[400],
                             ),
                           ),
                         ],
@@ -90,40 +99,61 @@ class _HomeScreenState extends State<HomeScreen> {
                     );
                   }
                   return ListView.builder(
-                    padding: const EdgeInsets.all(8),
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
                     itemCount: state.vehicles.length,
                     itemBuilder: (context, index) {
                       final vehicle = state.vehicles[index];
-                      return Card(
-                        margin: const EdgeInsets.symmetric(
-                          horizontal: 8,
-                          vertical: 4,
+                      return Container(
+                        margin: const EdgeInsets.only(bottom: 12),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(8),
+                          border: Border.all(color: Colors.grey[200]!),
                         ),
                         child: ListTile(
-                          leading: CircleAvatar(
-                            backgroundColor:
-                                Theme.of(context).colorScheme.primary,
-                            child: Text(
-                              vehicle.name[0].toUpperCase(),
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
+                          contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 8,
+                          ),
+                          leading: Container(
+                            width: 48,
+                            height: 48,
+                            decoration: BoxDecoration(
+                              color: Colors.grey[100],
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: Center(
+                              child: Text(
+                                vehicle.name[0].toUpperCase(),
+                                style: TextStyle(
+                                  color: Colors.grey[700],
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                             ),
                           ),
                           title: Text(
                             vehicle.name,
-                            style: const TextStyle(fontWeight: FontWeight.bold),
+                            style: const TextStyle(
+                              fontWeight: FontWeight.w600,
+                              fontSize: 16,
+                            ),
                           ),
-                          subtitle: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text('Plate: ${vehicle.plateNumber}'),
-                              if (vehicle.brand != null)
-                                Text('Brand: ${vehicle.brand}'),
-                            ],
+                          subtitle: Padding(
+                            padding: const EdgeInsets.only(top: 4),
+                            child: Text(
+                              vehicle.plateNumber,
+                              style: TextStyle(
+                                color: Colors.grey[500],
+                                fontSize: 14,
+                              ),
+                            ),
                           ),
-                          trailing: const Icon(Icons.chevron_right),
+                          trailing: Icon(
+                            Icons.chevron_right,
+                            color: Colors.grey[400],
+                          ),
                           onTap: () {
                             Navigator.push(
                               context,
@@ -144,19 +174,19 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const Icon(
+                        Icon(
                           Icons.error_outline,
-                          size: 60,
-                          color: Colors.red,
+                          size: 48,
+                          color: Colors.grey[400],
                         ),
                         const SizedBox(height: 16),
                         Text(
                           state.message,
                           textAlign: TextAlign.center,
-                          style: const TextStyle(color: Colors.red),
+                          style: TextStyle(color: Colors.grey[600]),
                         ),
                         const SizedBox(height: 16),
-                        ElevatedButton(
+                        OutlinedButton(
                           onPressed: () {
                             context.read<VehicleCubit>().loadVehicles();
                           },
@@ -173,13 +203,14 @@ class _HomeScreenState extends State<HomeScreen> {
         ],
       ),
       floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.black87,
         onPressed: () {
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => const AddVehicleScreen()),
           );
         },
-        child: const Icon(Icons.add),
+        child: const Icon(Icons.add, color: Colors.white),
       ),
     );
   }

@@ -1,11 +1,10 @@
-import 'package:isar/isar.dart';
+import 'package:isar_plus/isar_plus.dart';
 
 part 'service_record.g.dart';
 
 @collection
 class ServiceRecord {
-  Id id = Isar.autoIncrement;
-
+  late int id;
   late int vehicleId;
   late String serviceType;
   late DateTime serviceDate;

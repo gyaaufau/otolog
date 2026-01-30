@@ -23,7 +23,6 @@ class _AddServiceScreenState extends State<AddServiceScreen> {
   final _notesController = TextEditingController();
 
   DateTime _selectedDate = DateTime.now();
-  bool _isLoading = false;
 
   final List<String> _serviceTypes = [
     'General Service',
@@ -85,10 +84,6 @@ class _AddServiceScreenState extends State<AddServiceScreen> {
                 : _notesController.text.trim(),
       );
 
-      setState(() {
-        _isLoading = true;
-      });
-
       context.read<VehicleCubit>().addServiceRecord(record);
     }
   }
@@ -98,22 +93,21 @@ class _AddServiceScreenState extends State<AddServiceScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Add Service Record'),
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        backgroundColor: Colors.white,
+        foregroundColor: Colors.black87,
+        elevation: 0,
       ),
       body: BlocListener<VehicleCubit, VehicleState>(
         listener: (context, state) {
-          if (state is VehicleOperationSuccess) {
+          if (state is VehicleLoaded) {
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(state.message),
-                backgroundColor: Colors.green,
+              const SnackBar(
+                content: Text('Service record added successfully'),
+                backgroundColor: Colors.black87,
               ),
             );
             Navigator.pop(context);
           } else if (state is VehicleError) {
-            setState(() {
-              _isLoading = false;
-            });
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text(state.message),
@@ -122,130 +116,196 @@ class _AddServiceScreenState extends State<AddServiceScreen> {
             );
           }
         },
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(16.0),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                // Service Type Dropdown
-                DropdownButtonFormField<String>(
-                  initialValue:
-                      _serviceTypeController.text.isEmpty
-                          ? null
-                          : _serviceTypeController.text,
-                  decoration: const InputDecoration(
-                    labelText: 'Service Type *',
-                    prefixIcon: Icon(Icons.build),
-                    border: OutlineInputBorder(),
-                  ),
-                  items:
-                      _serviceTypes.map((type) {
-                        return DropdownMenuItem(value: type, child: Text(type));
-                      }).toList(),
-                  onChanged: (value) {
-                    setState(() {
-                      _serviceTypeController.text = value ?? '';
-                    });
-                  },
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please select a service type';
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 16),
-                // Date Picker
-                InkWell(
-                  onTap: () => _selectDate(context),
-                  child: InputDecorator(
-                    decoration: const InputDecoration(
-                      labelText: 'Service Date *',
-                      prefixIcon: Icon(Icons.calendar_today),
-                      border: OutlineInputBorder(),
+        child: BlocBuilder<VehicleCubit, VehicleState>(
+          builder: (context, state) {
+            final isLoading = state is VehicleLoading;
+            return SingleChildScrollView(
+              padding: const EdgeInsets.all(16.0),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    // Service Type Dropdown
+                    DropdownButtonFormField<String>(
+                      initialValue:
+                          _serviceTypeController.text.isEmpty
+                              ? null
+                              : _serviceTypeController.text,
+                      decoration: InputDecoration(
+                        labelText: 'Service Type *',
+                        filled: true,
+                        fillColor: Colors.grey[100],
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                          borderSide: BorderSide.none,
+                        ),
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 12,
+                        ),
+                      ),
+                      items:
+                          _serviceTypes.map((type) {
+                            return DropdownMenuItem(
+                              value: type,
+                              child: Text(type),
+                            );
+                          }).toList(),
+                      onChanged: (value) {
+                        setState(() {
+                          _serviceTypeController.text = value ?? '';
+                        });
+                      },
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please select a service type';
+                        }
+                        return null;
+                      },
                     ),
-                    child: Text(
-                      DateFormat('dd MMM yyyy').format(_selectedDate),
-                      style: const TextStyle(fontSize: 16),
+                    const SizedBox(height: 16),
+                    // Date Picker
+                    InkWell(
+                      onTap: () => _selectDate(context),
+                      child: InputDecorator(
+                        decoration: InputDecoration(
+                          labelText: 'Service Date *',
+                          filled: true,
+                          fillColor: Colors.grey[100],
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8),
+                            borderSide: BorderSide.none,
+                          ),
+                          contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 12,
+                          ),
+                        ),
+                        child: Text(
+                          DateFormat('dd MMM yyyy').format(_selectedDate),
+                          style: const TextStyle(fontSize: 16),
+                        ),
+                      ),
                     ),
-                  ),
-                ),
-                const SizedBox(height: 16),
-                // Cost
-                TextFormField(
-                  controller: _costController,
-                  decoration: const InputDecoration(
-                    labelText: 'Cost (Rp)',
-                    hintText: 'e.g., 500000',
-                    prefixIcon: Icon(Icons.attach_money),
-                    border: OutlineInputBorder(),
-                  ),
-                  keyboardType: TextInputType.number,
-                  inputFormatters: [
-                    // Allow only numbers
+                    const SizedBox(height: 16),
+                    // Cost
+                    TextFormField(
+                      controller: _costController,
+                      decoration: InputDecoration(
+                        labelText: 'Cost (Rp)',
+                        hintText: 'e.g., 500000',
+                        hintStyle: TextStyle(color: Colors.grey[400]),
+                        filled: true,
+                        fillColor: Colors.grey[100],
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                          borderSide: BorderSide.none,
+                        ),
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 12,
+                        ),
+                      ),
+                      keyboardType: TextInputType.number,
+                    ),
+                    const SizedBox(height: 16),
+                    // Mechanic
+                    TextFormField(
+                      controller: _mechanicController,
+                      decoration: InputDecoration(
+                        labelText: 'Mechanic',
+                        hintText: 'e.g., Bengkel ABC',
+                        hintStyle: TextStyle(color: Colors.grey[400]),
+                        filled: true,
+                        fillColor: Colors.grey[100],
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                          borderSide: BorderSide.none,
+                        ),
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 12,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    // Description
+                    TextFormField(
+                      controller: _descriptionController,
+                      decoration: InputDecoration(
+                        labelText: 'Description',
+                        hintText: 'e.g., Changed oil and filter',
+                        hintStyle: TextStyle(color: Colors.grey[400]),
+                        filled: true,
+                        fillColor: Colors.grey[100],
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                          borderSide: BorderSide.none,
+                        ),
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 12,
+                        ),
+                      ),
+                      maxLines: 2,
+                    ),
+                    const SizedBox(height: 16),
+                    // Notes
+                    TextFormField(
+                      controller: _notesController,
+                      decoration: InputDecoration(
+                        labelText: 'Notes',
+                        hintText: 'e.g., Next service in 6 months',
+                        hintStyle: TextStyle(color: Colors.grey[400]),
+                        filled: true,
+                        fillColor: Colors.grey[100],
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                          borderSide: BorderSide.none,
+                        ),
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 12,
+                        ),
+                      ),
+                      maxLines: 3,
+                    ),
+                    const SizedBox(height: 24),
+                    SizedBox(
+                      height: 48,
+                      child: ElevatedButton(
+                        onPressed: isLoading ? null : _submitForm,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.black87,
+                          foregroundColor: Colors.white,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                        ),
+                        child:
+                            isLoading
+                                ? const SizedBox(
+                                  height: 20,
+                                  width: 20,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                    valueColor: AlwaysStoppedAnimation<Color>(
+                                      Colors.white,
+                                    ),
+                                  ),
+                                )
+                                : const Text(
+                                  'Add Service Record',
+                                  style: TextStyle(fontSize: 16),
+                                ),
+                      ),
+                    ),
                   ],
                 ),
-                const SizedBox(height: 16),
-                // Mechanic
-                TextFormField(
-                  controller: _mechanicController,
-                  decoration: const InputDecoration(
-                    labelText: 'Mechanic',
-                    hintText: 'e.g., Bengkel ABC',
-                    prefixIcon: Icon(Icons.person),
-                    border: OutlineInputBorder(),
-                  ),
-                ),
-                const SizedBox(height: 16),
-                // Description
-                TextFormField(
-                  controller: _descriptionController,
-                  decoration: const InputDecoration(
-                    labelText: 'Description',
-                    hintText: 'e.g., Changed oil and filter',
-                    prefixIcon: Icon(Icons.description),
-                    border: OutlineInputBorder(),
-                  ),
-                  maxLines: 2,
-                ),
-                const SizedBox(height: 16),
-                // Notes
-                TextFormField(
-                  controller: _notesController,
-                  decoration: const InputDecoration(
-                    labelText: 'Notes',
-                    hintText: 'e.g., Next service in 6 months',
-                    prefixIcon: Icon(Icons.note),
-                    border: OutlineInputBorder(),
-                  ),
-                  maxLines: 3,
-                ),
-                const SizedBox(height: 24),
-                ElevatedButton(
-                  onPressed: _isLoading ? null : _submitForm,
-                  style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                  ),
-                  child:
-                      _isLoading
-                          ? const SizedBox(
-                            height: 20,
-                            width: 20,
-                            child: CircularProgressIndicator(strokeWidth: 2),
-                          )
-                          : const Text(
-                            'Add Service Record',
-                            style: TextStyle(fontSize: 16),
-                          ),
-                ),
-              ],
-            ),
-          ),
+              ),
+            );
+          },
         ),
       ),
     );

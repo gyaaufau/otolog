@@ -5,10 +5,10 @@
 import FlutterMacOS
 import Foundation
 
-import isar_flutter_libs
+import isar_plus_flutter_libs
 import path_provider_foundation
 
 func RegisterGeneratedPlugins(registry: FlutterPluginRegistry) {
-  IsarFlutterLibsPlugin.register(with: registry.registrar(forPlugin: "IsarFlutterLibsPlugin"))
+  IsarPlusFlutterLibsPlugin.register(with: registry.registrar(forPlugin: "IsarPlusFlutterLibsPlugin"))
   PathProviderPlugin.register(with: registry.registrar(forPlugin: "PathProviderPlugin"))
 }

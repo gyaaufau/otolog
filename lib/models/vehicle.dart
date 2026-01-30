@@ -1,11 +1,10 @@
-import 'package:isar/isar.dart';
+import 'package:isar_plus/isar_plus.dart';
 
 part 'vehicle.g.dart';
 
 @collection
 class Vehicle {
-  Id id = Isar.autoIncrement;
-
+  late int id;
   late String name;
   late String plateNumber;
   String? brand;
