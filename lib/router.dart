@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'screens/home_screen.dart';
-import 'screens/vehicle_detail_screen.dart';
-import 'screens/service_detail_screen.dart';
-import 'screens/add_vehicle_screen.dart';
-import 'screens/add_service_screen.dart';
-import 'screens/analytics_screen.dart';
-import 'screens/vehicles_screen.dart';
-import 'widgets/main_shell.dart';
+import '../screens/home_screen.dart';
+import '../screens/vehicle_detail_screen.dart';
+import '../screens/service_detail_screen.dart';
+import '../screens/add_vehicle_screen.dart';
+import '../screens/add_service_screen.dart';
+import '../screens/analytics_screen.dart';
+import '../screens/vehicles_screen.dart';
+import '../widgets/main_shell.dart';
 
 /// Route names for type-safe navigation
 class AppRoutes {
@@ -61,6 +61,22 @@ final goRouter = GoRouter(
                         return AddServiceScreen(vehicleId: vehicleId);
                       },
                     ),
+                    GoRoute(
+                      path: AppRoutes.serviceDetail,
+                      name: 'serviceDetail',
+                      builder: (context, state) {
+                        final vehicleId = int.parse(
+                          state.pathParameters['vehicleId']!,
+                        );
+                        final serviceId = int.parse(
+                          state.pathParameters['serviceId']!,
+                        );
+                        return ServiceDetailScreen(
+                          serviceId: serviceId,
+                          vehicleId: vehicleId,
+                        );
+                      },
+                    ),
                   ],
                 ),
                 GoRoute(
@@ -72,51 +88,31 @@ final goRouter = GoRouter(
             ),
           ],
         ),
-        GoRoute(
-          path: AppRoutes.vehicles,
-          name: 'vehicles',
-          pageBuilder:
-              (context, state) =>
-                  const NoTransitionPage(child: VehiclesScreen()),
+        // Vehicles branch
+        StatefulShellBranch(
+          routes: [
+            GoRoute(
+              path: AppRoutes.vehicles,
+              name: 'vehicles',
+              pageBuilder:
+                  (context, state) =>
+                      const NoTransitionPage(child: VehiclesScreen()),
+            ),
+          ],
         ),
-        GoRoute(
-          path: AppRoutes.analytics,
-          name: 'analytics',
-          pageBuilder:
-              (context, state) =>
-                  const NoTransitionPage(child: AnalyticsScreen()),
+        // Analytics branch
+        StatefulShellBranch(
+          routes: [
+            GoRoute(
+              path: AppRoutes.analytics,
+              name: 'analytics',
+              pageBuilder:
+                  (context, state) =>
+                      const NoTransitionPage(child: AnalyticsScreen()),
+            ),
+          ],
         ),
       ],
-    ),
-    GoRoute(
-      path: AppRoutes.vehicleDetail,
-      name: 'vehicleDetail',
-      builder: (context, state) {
-        final vehicleId = int.parse(state.pathParameters['vehicleId']!);
-        return VehicleDetailScreen(vehicleId: vehicleId);
-      },
-    ),
-    GoRoute(
-      path: AppRoutes.addVehicle,
-      name: 'addVehicle',
-      builder: (context, state) => const AddVehicleScreen(),
-    ),
-    GoRoute(
-      path: AppRoutes.addService,
-      name: 'addService',
-      builder: (context, state) {
-        final vehicleId = int.parse(state.pathParameters['vehicleId']!);
-        return AddServiceScreen(vehicleId: vehicleId);
-      },
-    ),
-    GoRoute(
-      path: AppRoutes.serviceDetail,
-      name: 'serviceDetail',
-      builder: (context, state) {
-        final vehicleId = int.parse(state.pathParameters['vehicleId']!);
-        final serviceId = int.parse(state.pathParameters['serviceId']!);
-        return ServiceDetailScreen(serviceId: serviceId, vehicleId: vehicleId);
-      },
     ),
   ],
   errorBuilder:

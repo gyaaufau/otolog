@@ -51,8 +51,8 @@ class MainShell extends StatelessWidget {
                   icon: Icons.directions_car_outlined,
                   activeIcon: Icons.directions_car,
                   label: 'Vehicles',
-                  route: AppRoutes.vehicles,
-                  isActive: location == AppRoutes.vehicles,
+                  index: 1,
+                  isActive: navigationShell.currentIndex == 1,
                 ),
                 _buildNavItem(
                   context: context,
