@@ -4,6 +4,7 @@ import 'screens/home_screen.dart';
 import 'screens/vehicle_detail_screen.dart';
 import 'screens/add_vehicle_screen.dart';
 import 'screens/add_service_screen.dart';
+import 'screens/analytics_screen.dart';
 
 /// Route names for type-safe navigation
 class AppRoutes {
@@ -11,6 +12,7 @@ class AppRoutes {
   static const String vehicleDetail = '/vehicle/:vehicleId';
   static const String addVehicle = '/add-vehicle';
   static const String addService = '/vehicle/:vehicleId/add-service';
+  static const String analytics = '/analytics';
 }
 
 /// GoRouter configuration for the app
@@ -43,6 +45,11 @@ final goRouter = GoRouter(
         final vehicleId = int.parse(state.pathParameters['vehicleId']!);
         return AddServiceScreen(vehicleId: vehicleId);
       },
+    ),
+    GoRoute(
+      path: AppRoutes.analytics,
+      name: 'analytics',
+      builder: (context, state) => const AnalyticsScreen(),
     ),
   ],
   errorBuilder:
