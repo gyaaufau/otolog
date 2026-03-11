@@ -25,14 +25,52 @@ final goRouter = GoRouter(
   initialLocation: AppRoutes.home,
   debugLogDiagnostics: true,
   routes: [
-    ShellRoute(
-      builder: (context, state, child) => MainShell(child: child),
-      routes: [
-        GoRoute(
-          path: AppRoutes.home,
-          name: 'home',
-          pageBuilder:
-              (context, state) => const NoTransitionPage(child: HomeScreen()),
+    StatefulShellRoute.indexedStack(
+      builder:
+          (context, state, navigationShell) =>
+              MainShell(navigationShell: navigationShell),
+      branches: [
+        // Home branch
+        StatefulShellBranch(
+          routes: [
+            GoRoute(
+              path: AppRoutes.home,
+              name: 'home',
+              pageBuilder:
+                  (context, state) =>
+                      const NoTransitionPage(child: HomeScreen()),
+              routes: [
+                // Nested routes within home branch
+                GoRoute(
+                  path: AppRoutes.vehicleDetail,
+                  name: 'vehicleDetail',
+                  builder: (context, state) {
+                    final vehicleId = int.parse(
+                      state.pathParameters['vehicleId']!,
+                    );
+                    return VehicleDetailScreen(vehicleId: vehicleId);
+                  },
+                  routes: [
+                    GoRoute(
+                      path: AppRoutes.addService,
+                      name: 'addService',
+                      builder: (context, state) {
+                        final vehicleId = int.parse(
+                          state.pathParameters['vehicleId']!,
+                        );
+                        return AddServiceScreen(vehicleId: vehicleId);
+                      },
+                    ),
+                  ],
+                ),
+                GoRoute(
+                  path: AppRoutes.addVehicle,
+                  name: 'addVehicle',
+                  builder: (context, state) => const AddVehicleScreen(),
+                ),
+              ],
+            ),
+          ],
         ),
         GoRoute(
           path: AppRoutes.vehicles,

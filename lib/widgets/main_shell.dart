@@ -2,19 +2,25 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import '../constants/theme.dart';
-import '../router.dart';
 
 class MainShell extends StatelessWidget {
-  final Widget child;
+  final StatefulNavigationShell navigationShell;
 
-  const MainShell({super.key, required this.child});
+  const MainShell({super.key, required this.navigationShell});
+
+  void _goBranch(int index) {
+    navigationShell.goBranch(
+      index,
+      // A common pattern is to use the current location to determine whether
+      // to navigate to the initial location of the branch or not.
+      initialLocation: navigationShell.currentIndex == index,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
-    final location = GoRouterState.of(context).uri.toString();
-
     return Scaffold(
-      body: child,
+      body: navigationShell,
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
           color: AppColors.surface,
@@ -37,8 +43,8 @@ class MainShell extends StatelessWidget {
                   icon: Icons.home_outlined,
                   activeIcon: Icons.home,
                   label: 'Home',
-                  route: AppRoutes.home,
-                  isActive: location == AppRoutes.home,
+                  index: 0,
+                  isActive: navigationShell.currentIndex == 0,
                 ),
                 _buildNavItem(
                   context: context,
@@ -53,8 +59,8 @@ class MainShell extends StatelessWidget {
                   icon: Icons.bar_chart_outlined,
                   activeIcon: Icons.bar_chart,
                   label: 'Analytics',
-                  route: AppRoutes.analytics,
-                  isActive: location == AppRoutes.analytics,
+                  index: 1,
+                  isActive: navigationShell.currentIndex == 1,
                 ),
               ],
             ),
@@ -69,11 +75,12 @@ class MainShell extends StatelessWidget {
     required IconData icon,
     required IconData activeIcon,
     required String label,
-    required String route,
+    required int index,
     required bool isActive,
   }) {
     return GestureDetector(
-      onTap: () => context.go(route),
+      behavior: HitTestBehavior.opaque,
+      onTap: () => _goBranch(index),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
