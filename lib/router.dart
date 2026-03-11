@@ -27,12 +27,15 @@ final goRouter = GoRouter(
         GoRoute(
           path: AppRoutes.home,
           name: 'home',
-          builder: (context, state) => const HomeScreen(),
+          pageBuilder:
+              (context, state) => const NoTransitionPage(child: HomeScreen()),
         ),
         GoRoute(
           path: AppRoutes.analytics,
           name: 'analytics',
-          builder: (context, state) => const AnalyticsScreen(),
+          pageBuilder:
+              (context, state) =>
+                  const NoTransitionPage(child: AnalyticsScreen()),
         ),
       ],
     ),

@@ -66,33 +66,24 @@ class MainShell extends StatelessWidget {
   }) {
     return GestureDetector(
       onTap: () => context.go(route),
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
-        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
-        decoration: BoxDecoration(
-          color:
-              isActive ? AppColors.accent.withOpacity(0.1) : Colors.transparent,
-          borderRadius: BorderRadius.circular(12.r),
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(
-              isActive ? activeIcon : icon,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            isActive ? activeIcon : icon,
+            color: isActive ? AppColors.accent : AppColors.secondaryText,
+            size: 24.sp,
+          ),
+          SizedBox(height: 4.h),
+          Text(
+            label,
+            style: TextStyle(
               color: isActive ? AppColors.accent : AppColors.secondaryText,
-              size: 24.sp,
+              fontSize: 12.sp,
+              fontWeight: isActive ? FontWeight.w600 : FontWeight.normal,
             ),
-            SizedBox(height: 4.h),
-            Text(
-              label,
-              style: TextStyle(
-                color: isActive ? AppColors.accent : AppColors.secondaryText,
-                fontSize: 12.sp,
-                fontWeight: isActive ? FontWeight.w600 : FontWeight.normal,
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
