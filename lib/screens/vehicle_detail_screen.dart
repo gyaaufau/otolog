@@ -220,7 +220,9 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
                   child: Row(
                     children: [
                       Expanded(
+                        flex: 1,
                         child: Container(
+                          height: 80.h,
                           padding: EdgeInsets.all(16.w),
                           decoration: BoxDecoration(
                             color: AppColors.surface,
@@ -251,7 +253,9 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
                       ),
                       SizedBox(width: 12.w),
                       Expanded(
+                        flex: 2,
                         child: Container(
+                          height: 80.h,
                           padding: EdgeInsets.all(16.w),
                           decoration: BoxDecoration(
                             color: AppColors.surface,
