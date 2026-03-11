@@ -22,6 +22,22 @@ class _AddVehicleScreenState extends State<AddVehicleScreen> {
   final _modelController = TextEditingController();
   final _yearController = TextEditingController();
   final _colorController = TextEditingController();
+  String? _selectedType;
+
+  static const List<String> _vehicleTypes = [
+    'Car',
+    'Motorcycle',
+    'Truck',
+    'Van',
+    'Bus',
+    'SUV',
+    'Sedan',
+    'Hatchback',
+    'Coupe',
+    'Convertible',
+    'Wagon',
+    'Other',
+  ];
 
   @override
   void dispose() {
@@ -55,6 +71,10 @@ class _AddVehicleScreenState extends State<AddVehicleScreen> {
             _colorController.text.trim().isEmpty
                 ? null
                 : _colorController.text.trim(),
+        type:
+            _selectedType?.trim().isEmpty ?? true
+                ? null
+                : _selectedType?.trim(),
       );
 
       context.read<VehicleCubit>().addVehicle(vehicle);
@@ -128,6 +148,50 @@ class _AddVehicleScreenState extends State<AddVehicleScreen> {
                           return 'Please enter a vehicle name';
                         }
                         return null;
+                      },
+                    ),
+                    SizedBox(height: 16.h),
+                    DropdownButtonFormField<String>(
+                      value: _selectedType,
+                      decoration: InputDecoration(
+                        labelText: 'Vehicle Type *',
+                        hintText: 'Select vehicle type',
+                        hintStyle: TextStyle(
+                          color: AppColors.secondaryText,
+                          fontSize: 14.sp,
+                        ),
+                        filled: true,
+                        fillColor: AppColors.inputBackground,
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8.r),
+                          borderSide: BorderSide.none,
+                        ),
+                        contentPadding: EdgeInsets.symmetric(
+                          horizontal: 16.w,
+                          vertical: 12.h,
+                        ),
+                      ),
+                      style: TextStyle(
+                        fontSize: 16.sp,
+                        color: AppColors.primaryText,
+                      ),
+                      items:
+                          _vehicleTypes.map((String type) {
+                            return DropdownMenuItem<String>(
+                              value: type,
+                              child: Text(type),
+                            );
+                          }).toList(),
+                      validator: (value) {
+                        if (value == null || value.trim().isEmpty) {
+                          return 'Please select a vehicle type';
+                        }
+                        return null;
+                      },
+                      onChanged: (String? newValue) {
+                        setState(() {
+                          _selectedType = newValue;
+                        });
                       },
                     ),
                     SizedBox(height: 16.h),

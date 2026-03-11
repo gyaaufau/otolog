@@ -18,6 +18,38 @@ class VehiclesScreen extends StatefulWidget {
 class _VehiclesScreenState extends State<VehiclesScreen> {
   final TextEditingController _searchController = TextEditingController();
 
+  IconData _getVehicleTypeIcon(String? type) {
+    if (type == null || type.trim().isEmpty) return Icons.directions_car;
+
+    final typeLower = type.trim().toLowerCase();
+    switch (typeLower) {
+      case 'car':
+        return Icons.directions_car;
+      case 'motor':
+        return Icons.two_wheeler;
+      case 'truck':
+        return Icons.local_shipping;
+      case 'van':
+        return Icons.airport_shuttle;
+      case 'bus':
+        return Icons.directions_bus;
+      case 'suv':
+        return Icons.sports_score;
+      case 'sedan':
+        return Icons.directions_car_filled;
+      case 'hatchback':
+        return Icons.car_repair;
+      case 'coupe':
+        return Icons.car_rental;
+      case 'convertible':
+        return Icons.directions_car_rounded;
+      case 'wagon':
+        return Icons.airport_shuttle;
+      default:
+        return Icons.directions_car;
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -154,13 +186,10 @@ class _VehiclesScreenState extends State<VehiclesScreen> {
                 borderRadius: BorderRadius.circular(12.r),
               ),
               child: Center(
-                child: Text(
-                  vehicle.name.isNotEmpty ? vehicle.name[0].toUpperCase() : 'V',
-                  style: TextStyle(
-                    color: AppColors.accent,
-                    fontSize: 24.sp,
-                    fontWeight: FontWeight.bold,
-                  ),
+                child: Icon(
+                  _getVehicleTypeIcon(vehicle.type),
+                  color: AppColors.accent,
+                  size: 28.sp,
                 ),
               ),
             ),
@@ -195,6 +224,26 @@ class _VehiclesScreenState extends State<VehiclesScreen> {
                       ),
                     ],
                   ),
+                  if (vehicle.type != null) ...[
+                    SizedBox(height: 4.h),
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.category_outlined,
+                          size: 14.sp,
+                          color: AppColors.secondaryText,
+                        ),
+                        SizedBox(width: 4.w),
+                        Text(
+                          vehicle.type!,
+                          style: TextStyle(
+                            color: AppColors.secondaryText,
+                            fontSize: 12.sp,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
                   if (vehicle.brand != null || vehicle.model != null) ...[
                     SizedBox(height: 4.h),
                     Row(

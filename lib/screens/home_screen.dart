@@ -18,6 +18,37 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  IconData _getVehicleTypeIcon(String? type) {
+    if (type == null) return Icons.directions_car;
+
+    switch (type!.toLowerCase()) {
+      case 'car':
+        return Icons.directions_car;
+      case 'motor':
+        return Icons.two_wheeler;
+      case 'truck':
+        return Icons.local_shipping;
+      case 'van':
+        return Icons.airport_shuttle;
+      case 'bus':
+        return Icons.directions_bus;
+      case 'suv':
+        return Icons.sports_score;
+      case 'sedan':
+        return Icons.directions_car_filled;
+      case 'hatchback':
+        return Icons.car_repair;
+      case 'coupe':
+        return Icons.car_rental;
+      case 'convertible':
+        return Icons.directions_car_rounded;
+      case 'wagon':
+        return Icons.airport_shuttle;
+      default:
+        return Icons.directions_car;
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -290,7 +321,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     Row(
                       children: [
                         Icon(
-                          Icons.directions_car,
+                          _getVehicleTypeIcon(latestVehicle.type),
                           size: 14.sp,
                           color: AppColors.accent,
                         ),
@@ -309,25 +340,26 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ],
                     ),
-                    // SizedBox(height: 6.h),
-                    // Container(
-                    //   padding: EdgeInsets.symmetric(
-                    //     horizontal: 8.w,
-                    //     vertical: 4.h,
-                    //   ),
-                    //   decoration: BoxDecoration(
-                    //     color: AppColors.accent.withOpacity(0.1),
-                    //     borderRadius: BorderRadius.circular(6.r),
-                    //   ),
-                    //   child: Text(
-                    //     latestService.serviceType,
-                    //     style: TextStyle(
-                    //       fontSize: 12.sp,
-                    //       fontWeight: FontWeight.w500,
-                    //       color: AppColors.accent,
-                    //     ),
-                    //   ),
-                    // ),
+                    SizedBox(height: 6.h),
+                    if (latestVehicle.type != null)
+                      Container(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 8.w,
+                          vertical: 4.h,
+                        ),
+                        decoration: BoxDecoration(
+                          color: AppColors.accent.withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(6.r),
+                        ),
+                        child: Text(
+                          latestVehicle.type!,
+                          style: TextStyle(
+                            fontSize: 12.sp,
+                            fontWeight: FontWeight.w500,
+                            color: AppColors.accent,
+                          ),
+                        ),
+                      ),
                   ],
                 ),
               ],
@@ -461,20 +493,34 @@ class _HomeScreenState extends State<HomeScreen> {
               Row(
                 children: [
                   Icon(
-                    Icons.directions_car,
+                    _getVehicleTypeIcon(vehicle.type),
                     size: 14.sp,
                     color: AppColors.secondaryText,
                   ),
                   SizedBox(width: 4.w),
                   Expanded(
-                    child: Text(
-                      vehicle.name,
-                      style: TextStyle(
-                        fontSize: 13.sp,
-                        color: AppColors.primaryText,
-                        fontWeight: FontWeight.w500,
-                      ),
-                      overflow: TextOverflow.ellipsis,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          vehicle.name,
+                          style: TextStyle(
+                            fontSize: 13.sp,
+                            color: AppColors.primaryText,
+                            fontWeight: FontWeight.w500,
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
+                        ),
+                        if (vehicle.type != null)
+                          Text(
+                            vehicle.type!,
+                            style: TextStyle(
+                              fontSize: 11.sp,
+                              color: AppColors.secondaryText,
+                            ),
+                          ),
+                      ],
                     ),
                   ),
                 ],

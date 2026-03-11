@@ -11,6 +11,7 @@ class Vehicle {
   String? model;
   String? year;
   String? color;
+  String? type;
   DateTime createdAt = DateTime.now();
   DateTime updatedAt = DateTime.now();
 
@@ -21,10 +22,11 @@ class Vehicle {
     this.model,
     this.year,
     this.color,
+    this.type,
   });
 
   @override
   String toString() {
-    return 'Vehicle{id: $id, name: $name, plateNumber: $plateNumber, brand: $brand, model: $model, year: $year, color: $color}';
+    return 'Vehicle{id: $id, name: $name, plateNumber: $plateNumber, brand: $brand, model: $model, year: $year, color: $color, type: $type}';
   }
 }

@@ -21,6 +21,37 @@ class VehicleDetailScreen extends StatefulWidget {
 }
 
 class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
+  IconData _getVehicleTypeIcon(String? type) {
+    if (type == null) return Icons.directions_car;
+
+    switch (type!.toLowerCase()) {
+      case 'car':
+        return Icons.directions_car;
+      case 'motorcycle':
+        return Icons.two_wheeler;
+      case 'truck':
+        return Icons.local_shipping;
+      case 'van':
+        return Icons.airport_shuttle;
+      case 'bus':
+        return Icons.directions_bus;
+      case 'suv':
+        return Icons.sports_score;
+      case 'sedan':
+        return Icons.directions_car_filled;
+      case 'hatchback':
+        return Icons.car_repair;
+      case 'coupe':
+        return Icons.car_rental;
+      case 'convertible':
+        return Icons.directions_car_rounded;
+      case 'wagon':
+        return Icons.airport_shuttle;
+      default:
+        return Icons.directions_car;
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -101,13 +132,10 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
                               borderRadius: BorderRadius.circular(8.r),
                             ),
                             child: Center(
-                              child: Text(
-                                vehicle.name[0].toUpperCase(),
-                                style: TextStyle(
-                                  color: AppColors.accent,
-                                  fontSize: 24.sp,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                              child: Icon(
+                                _getVehicleTypeIcon(vehicle.type),
+                                color: AppColors.accent,
+                                size: 28.sp,
                               ),
                             ),
                           ),
@@ -137,7 +165,28 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
                           ),
                         ],
                       ),
-                      SizedBox(height: 16.h),
+                      SizedBox(height: 8.h),
+                      if (vehicle.type != null)
+                        Padding(
+                          padding: EdgeInsets.only(bottom: 8.h),
+                          child: Row(
+                            children: [
+                              Icon(
+                                Icons.category_outlined,
+                                size: 18.sp,
+                                color: AppColors.secondaryText,
+                              ),
+                              SizedBox(width: 8.w),
+                              Text(
+                                vehicle.type!,
+                                style: TextStyle(
+                                  color: AppColors.primaryText,
+                                  fontSize: 14.sp,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
                       if (vehicle.brand != null || vehicle.model != null)
                         Padding(
                           padding: EdgeInsets.only(bottom: 8.h),
