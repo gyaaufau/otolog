@@ -42,6 +42,14 @@ class MainShell extends StatelessWidget {
                 ),
                 _buildNavItem(
                   context: context,
+                  icon: Icons.directions_car_outlined,
+                  activeIcon: Icons.directions_car,
+                  label: 'Vehicles',
+                  route: AppRoutes.vehicles,
+                  isActive: location == AppRoutes.vehicles,
+                ),
+                _buildNavItem(
+                  context: context,
                   icon: Icons.bar_chart_outlined,
                   activeIcon: Icons.bar_chart,
                   label: 'Analytics',

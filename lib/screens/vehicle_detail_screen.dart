@@ -399,7 +399,17 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
                                     },
                                   ),
                                   onTap: () {
-                                    _showServiceDetailDialog(context, record);
+                                    context.push(
+                                      AppRoutes.serviceDetail
+                                          .replaceAll(
+                                            ':vehicleId',
+                                            widget.vehicleId.toString(),
+                                          )
+                                          .replaceAll(
+                                            ':serviceId',
+                                            record.id.toString(),
+                                          ),
+                                    );
                                   },
                                 ),
                               );
@@ -542,85 +552,6 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
               ),
             ],
           ),
-    );
-  }
-
-  void _showServiceDetailDialog(BuildContext context, ServiceRecord record) {
-    showDialog(
-      context: context,
-      builder:
-          (context) => AlertDialog(
-            title: Text(record.serviceType),
-            content: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  _buildDetailRow(
-                    Icons.calendar_today,
-                    'Date',
-                    _formatDate(record.serviceDate),
-                  ),
-                  if (record.cost != null)
-                    _buildDetailRow(
-                      Icons.attach_money,
-                      'Cost',
-                      _formatCurrency(record.cost!),
-                    ),
-                  if (record.mechanic != null)
-                    _buildDetailRow(Icons.person, 'Mechanic', record.mechanic!),
-                  if (record.description != null)
-                    _buildDetailRow(
-                      Icons.description,
-                      'Description',
-                      record.description!,
-                    ),
-                  if (record.notes != null)
-                    _buildDetailRow(Icons.note, 'Notes', record.notes!),
-                ],
-              ),
-            ),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: const Text('Close'),
-              ),
-            ],
-          ),
-    );
-  }
-
-  Widget _buildDetailRow(IconData icon, String label, String value) {
-    return Padding(
-      padding: EdgeInsets.symmetric(vertical: 8.h),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Icon(icon, size: 20.sp, color: AppColors.secondaryText),
-          SizedBox(width: 12.w),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  label,
-                  style: TextStyle(
-                    fontSize: 12.sp,
-                    color: AppColors.secondaryText,
-                  ),
-                ),
-                Text(
-                  value,
-                  style: TextStyle(
-                    fontSize: 14.sp,
-                    color: AppColors.primaryText,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
     );
   }
 }

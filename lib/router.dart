@@ -2,15 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'screens/home_screen.dart';
 import 'screens/vehicle_detail_screen.dart';
+import 'screens/service_detail_screen.dart';
 import 'screens/add_vehicle_screen.dart';
 import 'screens/add_service_screen.dart';
 import 'screens/analytics_screen.dart';
+import 'screens/vehicles_screen.dart';
 import 'widgets/main_shell.dart';
 
 /// Route names for type-safe navigation
 class AppRoutes {
   static const String home = '/';
+  static const String vehicles = '/vehicles';
   static const String vehicleDetail = '/vehicle/:vehicleId';
+  static const String serviceDetail = '/vehicle/:vehicleId/service/:serviceId';
   static const String addVehicle = '/add-vehicle';
   static const String addService = '/vehicle/:vehicleId/add-service';
   static const String analytics = '/analytics';
@@ -29,6 +33,13 @@ final goRouter = GoRouter(
           name: 'home',
           pageBuilder:
               (context, state) => const NoTransitionPage(child: HomeScreen()),
+        ),
+        GoRoute(
+          path: AppRoutes.vehicles,
+          name: 'vehicles',
+          pageBuilder:
+              (context, state) =>
+                  const NoTransitionPage(child: VehiclesScreen()),
         ),
         GoRoute(
           path: AppRoutes.analytics,
@@ -58,6 +69,15 @@ final goRouter = GoRouter(
       builder: (context, state) {
         final vehicleId = int.parse(state.pathParameters['vehicleId']!);
         return AddServiceScreen(vehicleId: vehicleId);
+      },
+    ),
+    GoRoute(
+      path: AppRoutes.serviceDetail,
+      name: 'serviceDetail',
+      builder: (context, state) {
+        final vehicleId = int.parse(state.pathParameters['vehicleId']!);
+        final serviceId = int.parse(state.pathParameters['serviceId']!);
+        return ServiceDetailScreen(serviceId: serviceId, vehicleId: vehicleId);
       },
     ),
   ],
