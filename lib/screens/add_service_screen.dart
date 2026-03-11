@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
+import 'package:go_router/go_router.dart';
 import '../cubit/vehicle_cubit.dart';
 import '../cubit/vehicle_state.dart';
 import '../models/service_record.dart';
@@ -108,7 +109,7 @@ class _AddServiceScreenState extends State<AddServiceScreen> {
                 backgroundColor: AppColors.success,
               ),
             );
-            Navigator.pop(context);
+            context.pop();
           } else if (state is VehicleError) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(

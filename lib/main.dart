@@ -7,7 +7,7 @@ import 'models/service_record.dart';
 import 'models/vehicle.dart';
 import 'repositories/isar_service.dart';
 import 'cubit/vehicle_cubit.dart';
-import 'screens/home_screen.dart';
+import 'router.dart';
 import 'constants/theme.dart';
 
 Future<void> main() async {
@@ -34,7 +34,7 @@ class MyApp extends StatelessWidget {
       builder: (context, child) {
         return BlocProvider(
           create: (context) => VehicleCubit(isarService),
-          child: MaterialApp(
+          child: MaterialApp.router(
             title: 'OtoLog',
             debugShowCheckedModeBanner: false,
             theme: ThemeData(
@@ -138,7 +138,7 @@ class MyApp extends StatelessWidget {
                 ),
               ),
             ),
-            home: const HomeScreen(),
+            routerConfig: goRouter,
           ),
         );
       },
