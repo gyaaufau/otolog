@@ -5,6 +5,7 @@ import 'screens/vehicle_detail_screen.dart';
 import 'screens/add_vehicle_screen.dart';
 import 'screens/add_service_screen.dart';
 import 'screens/analytics_screen.dart';
+import 'widgets/main_shell.dart';
 
 /// Route names for type-safe navigation
 class AppRoutes {
@@ -20,10 +21,20 @@ final goRouter = GoRouter(
   initialLocation: AppRoutes.home,
   debugLogDiagnostics: true,
   routes: [
-    GoRoute(
-      path: AppRoutes.home,
-      name: 'home',
-      builder: (context, state) => const HomeScreen(),
+    ShellRoute(
+      builder: (context, state, child) => MainShell(child: child),
+      routes: [
+        GoRoute(
+          path: AppRoutes.home,
+          name: 'home',
+          builder: (context, state) => const HomeScreen(),
+        ),
+        GoRoute(
+          path: AppRoutes.analytics,
+          name: 'analytics',
+          builder: (context, state) => const AnalyticsScreen(),
+        ),
+      ],
     ),
     GoRoute(
       path: AppRoutes.vehicleDetail,
@@ -45,11 +56,6 @@ final goRouter = GoRouter(
         final vehicleId = int.parse(state.pathParameters['vehicleId']!);
         return AddServiceScreen(vehicleId: vehicleId);
       },
-    ),
-    GoRoute(
-      path: AppRoutes.analytics,
-      name: 'analytics',
-      builder: (context, state) => const AnalyticsScreen(),
     ),
   ],
   errorBuilder:
