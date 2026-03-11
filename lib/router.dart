@@ -39,52 +39,6 @@ final goRouter = GoRouter(
               pageBuilder:
                   (context, state) =>
                       const NoTransitionPage(child: HomeScreen()),
-              routes: [
-                // Nested routes within home branch
-                GoRoute(
-                  path: AppRoutes.vehicleDetail,
-                  name: 'vehicleDetail',
-                  builder: (context, state) {
-                    final vehicleId = int.parse(
-                      state.pathParameters['vehicleId']!,
-                    );
-                    return VehicleDetailScreen(vehicleId: vehicleId);
-                  },
-                  routes: [
-                    GoRoute(
-                      path: AppRoutes.addService,
-                      name: 'addService',
-                      builder: (context, state) {
-                        final vehicleId = int.parse(
-                          state.pathParameters['vehicleId']!,
-                        );
-                        return AddServiceScreen(vehicleId: vehicleId);
-                      },
-                    ),
-                    GoRoute(
-                      path: AppRoutes.serviceDetail,
-                      name: 'serviceDetail',
-                      builder: (context, state) {
-                        final vehicleId = int.parse(
-                          state.pathParameters['vehicleId']!,
-                        );
-                        final serviceId = int.parse(
-                          state.pathParameters['serviceId']!,
-                        );
-                        return ServiceDetailScreen(
-                          serviceId: serviceId,
-                          vehicleId: vehicleId,
-                        );
-                      },
-                    ),
-                  ],
-                ),
-                GoRoute(
-                  path: AppRoutes.addVehicle,
-                  name: 'addVehicle',
-                  builder: (context, state) => const AddVehicleScreen(),
-                ),
-              ],
             ),
           ],
         ),
@@ -113,6 +67,42 @@ final goRouter = GoRouter(
           ],
         ),
       ],
+    ),
+    // Detail screens (accessible from anywhere)
+    GoRoute(
+      path: AppRoutes.vehicleDetail,
+      name: 'vehicleDetail',
+      builder: (context, state) {
+        final vehicleId = int.parse(state.pathParameters['vehicleId']!);
+        return VehicleDetailScreen(vehicleId: vehicleId);
+      },
+      routes: [
+        GoRoute(
+          path: 'add-service',
+          name: 'addService',
+          builder: (context, state) {
+            final vehicleId = int.parse(state.pathParameters['vehicleId']!);
+            return AddServiceScreen(vehicleId: vehicleId);
+          },
+        ),
+        GoRoute(
+          path: 'service/:serviceId',
+          name: 'serviceDetail',
+          builder: (context, state) {
+            final vehicleId = int.parse(state.pathParameters['vehicleId']!);
+            final serviceId = int.parse(state.pathParameters['serviceId']!);
+            return ServiceDetailScreen(
+              serviceId: serviceId,
+              vehicleId: vehicleId,
+            );
+          },
+        ),
+      ],
+    ),
+    GoRoute(
+      path: AppRoutes.addVehicle,
+      name: 'addVehicle',
+      builder: (context, state) => const AddVehicleScreen(),
     ),
   ],
   errorBuilder:
