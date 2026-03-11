@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
+import 'package:go_router/go_router.dart';
 import '../cubit/vehicle_cubit.dart';
 import '../cubit/vehicle_state.dart';
 import '../models/vehicle.dart';
 import '../models/service_record.dart';
 import '../constants/theme.dart';
+import '../router.dart';
 import 'add_service_screen.dart';
 
 class VehicleDetailScreen extends StatefulWidget {
@@ -435,11 +437,10 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
       floatingActionButton: FloatingActionButton(
         backgroundColor: AppColors.accent,
         onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder:
-                  (context) => AddServiceScreen(vehicleId: widget.vehicleId),
+          context.push(
+            AppRoutes.addService.replaceAll(
+              ':vehicleId',
+              widget.vehicleId.toString(),
             ),
           );
         },
@@ -504,7 +505,7 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
                 onPressed: () {
                   Navigator.pop(context);
                   context.read<VehicleCubit>().deleteVehicle(vehicle.id);
-                  Navigator.pop(context);
+                  context.pop();
                 },
                 style: TextButton.styleFrom(foregroundColor: AppColors.error),
                 child: const Text('Delete'),

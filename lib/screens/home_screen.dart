@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import '../cubit/vehicle_cubit.dart';
 import '../cubit/vehicle_state.dart';
 import '../constants/theme.dart';
+import '../router.dart';
 import 'add_vehicle_screen.dart';
 import 'vehicle_detail_screen.dart';
 
@@ -167,13 +169,10 @@ class _HomeScreenState extends State<HomeScreen> {
                             size: 20.sp,
                           ),
                           onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder:
-                                    (context) => VehicleDetailScreen(
-                                      vehicleId: vehicle.id,
-                                    ),
+                            context.push(
+                              AppRoutes.vehicleDetail.replaceAll(
+                                ':vehicleId',
+                                vehicle.id.toString(),
                               ),
                             );
                           },
@@ -227,10 +226,7 @@ class _HomeScreenState extends State<HomeScreen> {
       floatingActionButton: FloatingActionButton(
         backgroundColor: AppColors.accent,
         onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const AddVehicleScreen()),
-          );
+          context.push(AppRoutes.addVehicle);
         },
         child: Icon(Icons.add, color: AppColors.background, size: 24.sp),
       ),
