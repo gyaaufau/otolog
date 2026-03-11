@@ -161,4 +161,35 @@ class VehicleCubit extends Cubit<VehicleState> {
       emit(VehicleError('Failed to load statistics: ${e.toString()}'));
     }
   }
+
+  // Load home screen data
+  Future<void> loadHomeData() async {
+    emit(const VehicleLoading());
+    try {
+      final vehicles = await _isarService.getAllVehicles();
+      final recentServices = await _isarService.getAllServiceRecords();
+      final totalCost = await _isarService.getTotalCostAllVehicles();
+
+      int totalServices = 0;
+      for (var vehicle in vehicles) {
+        totalServices += await _isarService.getServiceCountByVehicle(
+          vehicle.id,
+        );
+      }
+
+      // Get only last 5 recent services
+      final limitedRecentServices = recentServices.take(5).toList();
+
+      emit(
+        VehicleLoaded(
+          vehicles: vehicles,
+          serviceRecords: limitedRecentServices,
+          totalCost: totalCost,
+          serviceCount: totalServices,
+        ),
+      );
+    } catch (e) {
+      emit(VehicleError('Failed to load home data: ${e.toString()}'));
+    }
+  }
 }
