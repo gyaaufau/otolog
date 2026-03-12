@@ -24,7 +24,7 @@ class _HomeScreenState extends State<HomeScreen> {
     switch (type!.toLowerCase()) {
       case 'car':
         return Icons.directions_car;
-      case 'motor':
+      case 'motorcycle':
         return Icons.two_wheeler;
       case 'truck':
         return Icons.local_shipping;
