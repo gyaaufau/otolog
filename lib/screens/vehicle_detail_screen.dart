@@ -71,14 +71,125 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
     return DateFormat('dd MMM yyyy').format(date);
   }
 
+  Widget _buildDetailChip({required IconData icon, required String label}) {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
+      decoration: BoxDecoration(
+        color: AppColors.background,
+        borderRadius: BorderRadius.circular(8.r),
+        border: Border.all(color: AppColors.border, width: 0.5),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, size: 14.sp, color: AppColors.secondaryText),
+          SizedBox(width: 6.w),
+          Text(
+            label,
+            style: TextStyle(
+              fontSize: 12.sp,
+              color: AppColors.primaryText,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildDetailRow({
+    required IconData icon,
+    required String label,
+    required String value,
+  }) {
+    return Padding(
+      padding: EdgeInsets.only(bottom: 12.h),
+      child: Row(
+        children: [
+          Icon(icon, size: 18.sp, color: AppColors.secondaryText),
+          SizedBox(width: 12.w),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  label,
+                  style: TextStyle(
+                    fontSize: 11.sp,
+                    color: AppColors.secondaryText,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                SizedBox(height: 2.h),
+                Text(
+                  value,
+                  style: TextStyle(
+                    fontSize: 14.sp,
+                    color: AppColors.primaryText,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildStatCard({
+    required String value,
+    required String label,
+    required IconData icon,
+  }) {
+    return Container(
+      padding: EdgeInsets.all(16.w),
+      decoration: BoxDecoration(
+        color: AppColors.surface,
+        borderRadius: BorderRadius.circular(12.r),
+        border: Border.all(color: AppColors.border),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Icon(icon, size: 20.sp, color: AppColors.accent),
+          SizedBox(height: 8.h),
+          Text(
+            value,
+            style: TextStyle(
+              fontSize: 20.sp,
+              fontWeight: FontWeight.w700,
+              color: AppColors.primaryText,
+            ),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
+          SizedBox(height: 2.h),
+          Text(
+            label,
+            style: TextStyle(
+              fontSize: 11.sp,
+              color: AppColors.secondaryText,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Vehicle Details'),
+        title: const Text(
+          'Vehicle Details',
+          style: TextStyle(fontWeight: FontWeight.w600),
+        ),
         backgroundColor: AppColors.background,
         foregroundColor: AppColors.primaryText,
         elevation: 0,
+        centerTitle: false,
         actions: [
           BlocBuilder<VehicleCubit, VehicleState>(
             builder: (context, state) {
@@ -91,6 +202,7 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
                   onPressed: () {
                     _showDeleteDialog(context, state.vehicles.first);
                   },
+                  tooltip: 'Delete vehicle',
                 );
               }
               return const SizedBox.shrink();
@@ -112,31 +224,30 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
               children: [
                 // Vehicle Info Card
                 Container(
-                  margin: EdgeInsets.all(16.w),
-                  padding: EdgeInsets.all(16.w),
+                  margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+                  padding: EdgeInsets.all(20.w),
                   decoration: BoxDecoration(
                     color: AppColors.surface,
-                    borderRadius: BorderRadius.circular(8.r),
-                    border: Border.all(color: AppColors.border),
+                    borderRadius: BorderRadius.circular(16.r),
+                    border: Border.all(color: AppColors.border, width: 0.5),
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      // Header with icon and name
                       Row(
                         children: [
                           Container(
-                            width: 56.w,
-                            height: 56.h,
+                            width: 52.w,
+                            height: 52.h,
                             decoration: BoxDecoration(
-                              color: AppColors.accent.withOpacity(0.2),
-                              borderRadius: BorderRadius.circular(8.r),
+                              color: AppColors.accent.withOpacity(0.12),
+                              borderRadius: BorderRadius.circular(14.r),
                             ),
-                            child: Center(
-                              child: Icon(
-                                _getVehicleTypeIcon(vehicle.type),
-                                color: AppColors.accent,
-                                size: 28.sp,
-                              ),
+                            child: Icon(
+                              _getVehicleTypeIcon(vehicle.type),
+                              color: AppColors.accent,
+                              size: 26.sp,
                             ),
                           ),
                           SizedBox(width: 16.w),
@@ -147,8 +258,8 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
                                 Text(
                                   vehicle.name,
                                   style: TextStyle(
-                                    fontSize: 18.sp,
-                                    fontWeight: FontWeight.w600,
+                                    fontSize: 20.sp,
+                                    fontWeight: FontWeight.w700,
                                     color: AppColors.primaryText,
                                   ),
                                 ),
@@ -158,6 +269,8 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
                                   style: TextStyle(
                                     fontSize: 14.sp,
                                     color: AppColors.secondaryText,
+                                    letterSpacing: 0.5,
+                                    fontWeight: FontWeight.w500,
                                   ),
                                 ),
                               ],
@@ -165,102 +278,37 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
                           ),
                         ],
                       ),
-                      SizedBox(height: 8.h),
-                      if (vehicle.type != null)
+                      // Vehicle details grid
+                      if (vehicle.type != null ||
+                          vehicle.brand != null ||
+                          vehicle.model != null ||
+                          vehicle.year != null ||
+                          vehicle.color != null)
                         Padding(
-                          padding: EdgeInsets.only(bottom: 8.h),
-                          child: Row(
+                          padding: EdgeInsets.only(top: 24.h),
+                          child: Column(
                             children: [
-                              Icon(
-                                Icons.category_outlined,
-                                size: 18.sp,
-                                color: AppColors.secondaryText,
-                              ),
-                              SizedBox(width: 8.w),
-                              Text(
-                                vehicle.type!,
-                                style: TextStyle(
-                                  color: AppColors.primaryText,
-                                  fontSize: 14.sp,
+                              if (vehicle.brand != null ||
+                                  vehicle.model != null)
+                                _buildDetailRow(
+                                  icon: Icons.directions_car,
+                                  label: vehicle.brand ?? '',
+                                  value: vehicle.model ?? '',
                                 ),
-                              ),
+                              if (vehicle.type != null)
+                                _buildDetailRow(
+                                  icon: Icons.category_outlined,
+                                  label: 'Type',
+                                  value: vehicle.type!,
+                                ),
+                              if (vehicle.year != null || vehicle.color != null)
+                                _buildDetailRow(
+                                  icon: Icons.info_outline,
+                                  label: vehicle.year ?? '',
+                                  value: vehicle.color ?? '',
+                                ),
                             ],
                           ),
-                        ),
-                      if (vehicle.brand != null || vehicle.model != null)
-                        Padding(
-                          padding: EdgeInsets.only(bottom: 8.h),
-                          child: Row(
-                            children: [
-                              if (vehicle.brand != null) ...[
-                                Icon(
-                                  Icons.business_outlined,
-                                  size: 18.sp,
-                                  color: AppColors.secondaryText,
-                                ),
-                                SizedBox(width: 8.w),
-                                Text(
-                                  vehicle.brand!,
-                                  style: TextStyle(
-                                    color: AppColors.primaryText,
-                                    fontSize: 14.sp,
-                                  ),
-                                ),
-                                SizedBox(width: 16.w),
-                              ],
-                              if (vehicle.model != null) ...[
-                                Icon(
-                                  Icons.category_outlined,
-                                  size: 18.sp,
-                                  color: AppColors.secondaryText,
-                                ),
-                                SizedBox(width: 8.w),
-                                Text(
-                                  vehicle.model!,
-                                  style: TextStyle(
-                                    color: AppColors.primaryText,
-                                    fontSize: 14.sp,
-                                  ),
-                                ),
-                              ],
-                            ],
-                          ),
-                        ),
-                      if (vehicle.year != null || vehicle.color != null)
-                        Row(
-                          children: [
-                            if (vehicle.year != null) ...[
-                              Icon(
-                                Icons.calendar_today_outlined,
-                                size: 18.sp,
-                                color: AppColors.secondaryText,
-                              ),
-                              SizedBox(width: 8.w),
-                              Text(
-                                vehicle.year!,
-                                style: TextStyle(
-                                  color: AppColors.primaryText,
-                                  fontSize: 14.sp,
-                                ),
-                              ),
-                              SizedBox(width: 16.w),
-                            ],
-                            if (vehicle.color != null) ...[
-                              Icon(
-                                Icons.palette_outlined,
-                                size: 18.sp,
-                                color: AppColors.secondaryText,
-                              ),
-                              SizedBox(width: 8.w),
-                              Text(
-                                vehicle.color!,
-                                style: TextStyle(
-                                  color: AppColors.primaryText,
-                                  fontSize: 14.sp,
-                                ),
-                              ),
-                            ],
-                          ],
                         ),
                     ],
                   ),
@@ -271,76 +319,49 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
                   child: Row(
                     children: [
                       Expanded(
-                        flex: 1,
-                        child: Container(
-                          height: 80.h,
-                          padding: EdgeInsets.all(16.w),
-                          decoration: BoxDecoration(
-                            color: AppColors.surface,
-                            borderRadius: BorderRadius.circular(8.r),
-                            border: Border.all(color: AppColors.border),
-                          ),
-                          child: Column(
-                            children: [
-                              Text(
-                                '$serviceCount',
-                                style: TextStyle(
-                                  fontSize: 24.sp,
-                                  fontWeight: FontWeight.bold,
-                                  color: AppColors.primaryText,
-                                ),
-                              ),
-                              SizedBox(height: 4.h),
-                              Text(
-                                'Services',
-                                style: TextStyle(
-                                  fontSize: 12.sp,
-                                  color: AppColors.secondaryText,
-                                ),
-                              ),
-                            ],
-                          ),
+                        child: _buildStatCard(
+                          value: '$serviceCount',
+                          label: 'Services',
+                          icon: Icons.history,
                         ),
                       ),
                       SizedBox(width: 12.w),
                       Expanded(
-                        flex: 2,
-                        child: Container(
-                          height: 80.h,
-                          padding: EdgeInsets.all(16.w),
-                          decoration: BoxDecoration(
-                            color: AppColors.surface,
-                            borderRadius: BorderRadius.circular(8.r),
-                            border: Border.all(color: AppColors.border),
-                          ),
-                          child: Column(
-                            children: [
-                              Text(
-                                _formatCurrency(totalCost),
-                                style: TextStyle(
-                                  fontSize: 16.sp,
-                                  fontWeight: FontWeight.bold,
-                                  color: AppColors.primaryText,
-                                ),
-                                textAlign: TextAlign.center,
-                              ),
-                              SizedBox(height: 4.h),
-                              Text(
-                                'Total Cost',
-                                style: TextStyle(
-                                  fontSize: 12.sp,
-                                  color: AppColors.secondaryText,
-                                ),
-                              ),
-                            ],
-                          ),
+                        child: _buildStatCard(
+                          value: _formatCurrency(totalCost),
+                          label: 'Total Cost',
+                          icon: Icons.account_balance_wallet_outlined,
                         ),
                       ),
                     ],
                   ),
                 ),
-                SizedBox(height: 16.h),
-                // Service Records
+                SizedBox(height: 20.h),
+                // Service Records Section
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 16.w),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'Service Records',
+                        style: TextStyle(
+                          fontSize: 16.sp,
+                          fontWeight: FontWeight.w600,
+                          color: AppColors.primaryText,
+                        ),
+                      ),
+                      Text(
+                        '$serviceCount record${serviceCount != 1 ? 's' : ''}',
+                        style: TextStyle(
+                          fontSize: 12.sp,
+                          color: AppColors.secondaryText,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(height: 12.h),
                 Expanded(
                   child:
                       serviceRecords.isEmpty
@@ -348,24 +369,33 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Icon(
-                                  Icons.history_outlined,
-                                  size: 64.sp,
-                                  color: AppColors.secondaryText,
+                                Container(
+                                  width: 56.w,
+                                  height: 56.h,
+                                  decoration: BoxDecoration(
+                                    color: AppColors.accent.withOpacity(0.1),
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: Icon(
+                                    Icons.history_outlined,
+                                    size: 28.sp,
+                                    color: AppColors.accent,
+                                  ),
                                 ),
                                 SizedBox(height: 16.h),
                                 Text(
-                                  'No service records yet',
+                                  'No service records',
                                   style: TextStyle(
                                     fontSize: 16.sp,
                                     color: AppColors.primaryText,
+                                    fontWeight: FontWeight.w600,
                                   ),
                                 ),
-                                SizedBox(height: 8.h),
+                                SizedBox(height: 4.h),
                                 Text(
-                                  'Tap + to add your first service record',
+                                  'Start tracking your vehicle maintenance',
                                   style: TextStyle(
-                                    fontSize: 14.sp,
+                                    fontSize: 13.sp,
                                     color: AppColors.secondaryText,
                                   ),
                                 ),
@@ -378,88 +408,112 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
                             itemBuilder: (context, index) {
                               final record = serviceRecords[index];
                               return Container(
-                                margin: EdgeInsets.only(bottom: 12.h),
+                                margin: EdgeInsets.only(bottom: 8.h),
                                 decoration: BoxDecoration(
                                   color: AppColors.surface,
-                                  borderRadius: BorderRadius.circular(8.r),
+                                  borderRadius: BorderRadius.circular(10.r),
                                   border: Border.all(color: AppColors.border),
                                 ),
-                                child: ListTile(
-                                  contentPadding: EdgeInsets.symmetric(
-                                    horizontal: 16.w,
-                                    vertical: 8.h,
-                                  ),
-                                  leading: Container(
-                                    width: 48.w,
-                                    height: 48.h,
-                                    decoration: BoxDecoration(
-                                      color: _getServiceTypeColor(
-                                        record.serviceType,
-                                      ),
-                                      borderRadius: BorderRadius.circular(8.r),
-                                    ),
-                                    child: Icon(
-                                      _getServiceTypeIcon(record.serviceType),
-                                      color: Colors.white,
-                                      size: 24.sp,
-                                    ),
-                                  ),
-                                  title: Text(
-                                    record.serviceType,
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 15.sp,
-                                      color: AppColors.primaryText,
-                                    ),
-                                  ),
-                                  subtitle: Padding(
-                                    padding: EdgeInsets.only(top: 4.h),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          _formatDate(record.serviceDate),
-                                          style: TextStyle(
-                                            fontSize: 13.sp,
-                                            color: AppColors.secondaryText,
-                                          ),
-                                        ),
-                                        if (record.cost != null)
-                                          Text(
-                                            _formatCurrency(record.cost!),
-                                            style: TextStyle(
-                                              fontSize: 13.sp,
-                                              color: AppColors.primaryText,
-                                              fontWeight: FontWeight.w500,
+                                child: Material(
+                                  color: Colors.transparent,
+                                  child: InkWell(
+                                    borderRadius: BorderRadius.circular(10.r),
+                                    onTap: () {
+                                      context.push(
+                                        AppRoutes.serviceDetail
+                                            .replaceAll(
+                                              ':vehicleId',
+                                              widget.vehicleId.toString(),
+                                            )
+                                            .replaceAll(
+                                              ':serviceId',
+                                              record.id.toString(),
+                                            ),
+                                      );
+                                    },
+                                    child: Padding(
+                                      padding: EdgeInsets.all(12.w),
+                                      child: Row(
+                                        children: [
+                                          Container(
+                                            width: 40.w,
+                                            height: 40.h,
+                                            decoration: BoxDecoration(
+                                              color: _getServiceTypeColor(
+                                                record.serviceType,
+                                              ),
+                                              borderRadius:
+                                                  BorderRadius.circular(8.r),
+                                            ),
+                                            child: Icon(
+                                              _getServiceTypeIcon(
+                                                record.serviceType,
+                                              ),
+                                              color: Colors.white,
+                                              size: 20.sp,
                                             ),
                                           ),
-                                      ],
-                                    ),
-                                  ),
-                                  trailing: IconButton(
-                                    icon: Icon(
-                                      Icons.delete_outline,
-                                      color: AppColors.secondaryText,
-                                      size: 20.sp,
-                                    ),
-                                    onPressed: () {
-                                      _showDeleteServiceDialog(context, record);
-                                    },
-                                  ),
-                                  onTap: () {
-                                    context.push(
-                                      AppRoutes.serviceDetail
-                                          .replaceAll(
-                                            ':vehicleId',
-                                            widget.vehicleId.toString(),
-                                          )
-                                          .replaceAll(
-                                            ':serviceId',
-                                            record.id.toString(),
+                                          SizedBox(width: 12.w),
+                                          Expanded(
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  record.serviceType,
+                                                  style: TextStyle(
+                                                    fontWeight: FontWeight.w600,
+                                                    fontSize: 14.sp,
+                                                    color:
+                                                        AppColors.primaryText,
+                                                  ),
+                                                ),
+                                                SizedBox(height: 2.h),
+                                                Text(
+                                                  _formatDate(
+                                                    record.serviceDate,
+                                                  ),
+                                                  style: TextStyle(
+                                                    fontSize: 12.sp,
+                                                    color:
+                                                        AppColors.secondaryText,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
                                           ),
-                                    );
-                                  },
+                                          if (record.cost != null)
+                                            Text(
+                                              _formatCurrency(record.cost!),
+                                              style: TextStyle(
+                                                fontSize: 13.sp,
+                                                color: AppColors.primaryText,
+                                                fontWeight: FontWeight.w600,
+                                              ),
+                                            ),
+                                          SizedBox(width: 8.w),
+                                          IconButton(
+                                            icon: Icon(
+                                              Icons.delete_outline,
+                                              color: AppColors.secondaryText
+                                                  .withOpacity(0.6),
+                                              size: 18.sp,
+                                            ),
+                                            onPressed: () {
+                                              _showDeleteServiceDialog(
+                                                context,
+                                                record,
+                                              );
+                                            },
+                                            visualDensity:
+                                                VisualDensity.compact,
+                                            padding: EdgeInsets.all(4.w),
+                                            constraints: BoxConstraints(),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
                                 ),
                               );
                             },
@@ -493,7 +547,7 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
           return const SizedBox.shrink();
         },
       ),
-      floatingActionButton: FloatingActionButton(
+      floatingActionButton: FloatingActionButton.extended(
         backgroundColor: AppColors.accent,
         onPressed: () {
           context.push(
@@ -503,7 +557,15 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
             ),
           );
         },
-        child: Icon(Icons.add, color: AppColors.background, size: 24.sp),
+        icon: Icon(Icons.add, color: AppColors.background, size: 20.sp),
+        label: Text(
+          'Add Service',
+          style: TextStyle(
+            color: AppColors.background,
+            fontSize: 14.sp,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
       ),
     );
   }
