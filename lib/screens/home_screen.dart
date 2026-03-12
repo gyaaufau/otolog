@@ -111,56 +111,74 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildHeader() {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+    return BlocBuilder<VehicleCubit, VehicleState>(
+      builder: (context, state) {
+        IconData headerIcon = Icons.directions_car;
+
+        if (state is VehicleLoaded &&
+            state.serviceRecords != null &&
+            state.serviceRecords!.isNotEmpty) {
+          // Find the most recent service and use its vehicle type for the icon
+          final latestService = state.serviceRecords!.reduce(
+            (a, b) => a.serviceDate.isAfter(b.serviceDate) ? a : b,
+          );
+          final vehicle = _getVehicleById(
+            state.vehicles,
+            latestService.vehicleId,
+          );
+          if (vehicle != null) {
+            headerIcon = _getVehicleTypeIcon(vehicle.type);
+          }
+        }
+
+        return Padding(
+          padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                _getGreeting(),
-                style: TextStyle(
-                  fontSize: 14.sp,
-                  color: AppColors.secondaryText,
-                ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    _getGreeting(),
+                    style: TextStyle(
+                      fontSize: 14.sp,
+                      color: AppColors.secondaryText,
+                    ),
+                  ),
+                  SizedBox(height: 4.h),
+                  Text(
+                    'Dashboard',
+                    style: TextStyle(
+                      fontSize: 24.sp,
+                      fontWeight: FontWeight.bold,
+                      color: AppColors.primaryText,
+                    ),
+                  ),
+                ],
               ),
-              SizedBox(height: 4.h),
-              Text(
-                'Dashboard',
-                style: TextStyle(
-                  fontSize: 24.sp,
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.primaryText,
+              Container(
+                width: 48.w,
+                height: 48.h,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [
+                      AppColors.accent.withOpacity(0.2),
+                      AppColors.accent.withOpacity(0.1),
+                    ],
+                  ),
+                  borderRadius: BorderRadius.circular(12.r),
+                  border: Border.all(
+                    color: AppColors.accent.withOpacity(0.3),
+                    width: 1,
+                  ),
                 ),
+                child: Icon(headerIcon, color: AppColors.accent, size: 24.sp),
               ),
             ],
           ),
-          Container(
-            width: 48.w,
-            height: 48.h,
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  AppColors.accent.withOpacity(0.2),
-                  AppColors.accent.withOpacity(0.1),
-                ],
-              ),
-              borderRadius: BorderRadius.circular(12.r),
-              border: Border.all(
-                color: AppColors.accent.withOpacity(0.3),
-                width: 1,
-              ),
-            ),
-            child: Icon(
-              Icons.directions_car,
-              color: AppColors.accent,
-              size: 24.sp,
-            ),
-          ),
-        ],
-      ),
+        );
+      },
     );
   }
 

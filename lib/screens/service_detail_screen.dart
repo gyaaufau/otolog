@@ -117,6 +117,38 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
     }
   }
 
+  IconData _getVehicleTypeIcon(String? type) {
+    if (type == null || type.trim().isEmpty) return Icons.directions_car;
+
+    final typeLower = type.trim().toLowerCase();
+    switch (typeLower) {
+      case 'car':
+        return Icons.directions_car;
+      case 'motorcycle':
+        return Icons.two_wheeler;
+      case 'truck':
+        return Icons.local_shipping;
+      case 'van':
+        return Icons.airport_shuttle;
+      case 'bus':
+        return Icons.directions_bus;
+      case 'suv':
+        return Icons.sports_score;
+      case 'sedan':
+        return Icons.directions_car_filled;
+      case 'hatchback':
+        return Icons.car_repair;
+      case 'coupe':
+        return Icons.car_rental;
+      case 'convertible':
+        return Icons.directions_car_rounded;
+      case 'wagon':
+        return Icons.airport_shuttle;
+      default:
+        return Icons.directions_car;
+    }
+  }
+
   void _showDeleteDialog(BuildContext context) {
     if (_serviceRecord == null) return;
 
@@ -324,7 +356,7 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
                                       borderRadius: BorderRadius.circular(8.r),
                                     ),
                                     child: Icon(
-                                      Icons.directions_car,
+                                      _getVehicleTypeIcon(_vehicle?.type),
                                       color: AppColors.accent,
                                       size: 20.sp,
                                     ),
