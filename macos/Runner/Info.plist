@@ -26,6 +26,8 @@
 	<string>$(PRODUCT_COPYRIGHT)</string>
 	<key>NSMainNibFile</key>
 	<string>MainMenu</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>This app needs access to your photo library to add vehicle photos.</string>
 	<key>NSPrincipalClass</key>
 	<string>NSApplication</string>
 </dict>
