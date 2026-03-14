@@ -1,6 +1,7 @@
 import 'package:get_it/get_it.dart';
 import '../../repositories/isar_service.dart';
 import '../../cubit/vehicle_cubit.dart';
+import '../../cubit/analytics_cubit.dart';
 
 final getIt = GetIt.instance;
 
@@ -14,6 +15,9 @@ Future<void> initServiceLocator() async {
 
   // Register cubits
   getIt.registerFactory<VehicleCubit>(() => VehicleCubit(getIt<IsarService>()));
+  getIt.registerFactory<AnalyticsCubit>(
+    () => AnalyticsCubit(getIt<IsarService>()),
+  );
 }
 
 /// Reset the service locator (useful for testing)
