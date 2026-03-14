@@ -6,8 +6,8 @@ import 'package:go_router/go_router.dart';
 import '../cubit/vehicle_cubit.dart';
 import '../cubit/vehicle_state.dart';
 import '../models/vehicle.dart';
-import '../constants/theme.dart';
-import '../commons/utils/image_picker_helper.dart';
+import '../resources/theme.dart';
+import '../shared/commons/utils/image_picker_helper.dart';
 
 class AddVehicleScreen extends StatefulWidget {
   const AddVehicleScreen({super.key});

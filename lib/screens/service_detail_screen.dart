@@ -7,7 +7,7 @@ import '../cubit/vehicle_cubit.dart';
 import '../cubit/vehicle_state.dart';
 import '../models/service_record.dart';
 import '../models/vehicle.dart';
-import '../constants/theme.dart';
+import '../resources/theme.dart';
 import '../router.dart';
 
 class ServiceDetailScreen extends StatefulWidget {

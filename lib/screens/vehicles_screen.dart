@@ -4,7 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import '../cubit/vehicle_cubit.dart';
 import '../cubit/vehicle_state.dart';
-import '../constants/theme.dart';
+import '../resources/theme.dart';
 import '../router.dart';
 import '../models/vehicle.dart';
 

@@ -6,7 +6,7 @@ import 'package:go_router/go_router.dart';
 import '../cubit/vehicle_cubit.dart';
 import '../cubit/vehicle_state.dart';
 import '../models/service_record.dart';
-import '../constants/theme.dart';
+import '../resources/theme.dart';
 
 class AddServiceScreen extends StatefulWidget {
   final int vehicleId;
