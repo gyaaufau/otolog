@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'shared/core/service_locator.dart';
 import 'cubit/vehicle_cubit.dart';
+import 'cubit/analytics_cubit.dart';
 import 'router.dart';
 import 'resources/theme.dart';
 
@@ -25,8 +26,11 @@ class MyApp extends StatelessWidget {
       minTextAdapt: true,
       splitScreenMode: true,
       builder: (context, child) {
-        return BlocProvider(
-          create: (context) => getIt<VehicleCubit>(),
+        return MultiBlocProvider(
+          providers: [
+            BlocProvider(create: (context) => getIt<VehicleCubit>()),
+            BlocProvider(create: (context) => getIt<AnalyticsCubit>()),
+          ],
           child: MaterialApp.router(
             title: 'OtoLog',
             debugShowCheckedModeBanner: false,
