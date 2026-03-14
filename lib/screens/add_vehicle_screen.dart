@@ -1,14 +1,13 @@
 import 'dart:io';
-import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
-import 'package:image_picker/image_picker.dart';
 import '../cubit/vehicle_cubit.dart';
 import '../cubit/vehicle_state.dart';
 import '../models/vehicle.dart';
 import '../constants/theme.dart';
+import '../commons/utils/image_picker_helper.dart';
 
 class AddVehicleScreen extends StatefulWidget {
   const AddVehicleScreen({super.key});
@@ -27,6 +26,7 @@ class _AddVehicleScreenState extends State<AddVehicleScreen> {
   final _colorController = TextEditingController();
   final _vinController = TextEditingController();
   final _odometerController = TextEditingController();
+  final _imagePickerHelper = ImagePickerHelper();
 
   String? _selectedType;
   String? _selectedFuelType;
@@ -102,49 +102,12 @@ class _AddVehicleScreenState extends State<AddVehicleScreen> {
     super.dispose();
   }
 
-  bool get _isMacOS => Theme.of(context).platform == TargetPlatform.macOS;
-  bool get _isWeb => kIsWeb;
-  bool get _isMobile => !_isMacOS && !_isWeb;
-
   Future<void> _pickImage() async {
-    // Check if image picker is supported on current platform
-    if (_isMacOS) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text(
-              'Image picker is not available on macOS. Please add vehicle photos on mobile devices.',
-            ),
-            backgroundColor: AppColors.warning,
-            duration: Duration(seconds: 3),
-          ),
-        );
-      }
-      return;
-    }
-
-    try {
-      final picker = ImagePicker();
-      final pickedFile = await picker.pickImage(
-        source: ImageSource.gallery,
-        imageQuality: 80,
-        maxWidth: 1024,
-      );
-
-      if (pickedFile != null) {
-        setState(() {
-          _imageFile = File(pickedFile.path);
-        });
-      }
-    } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Failed to pick image: $e'),
-            backgroundColor: AppColors.error,
-          ),
-        );
-      }
+    final imageFile = await _imagePickerHelper.pickImageFromGallery(context);
+    if (imageFile != null) {
+      setState(() {
+        _imageFile = imageFile;
+      });
     }
   }
 
@@ -244,8 +207,10 @@ class _AddVehicleScreenState extends State<AddVehicleScreen> {
   }
 
   Widget _buildImagePicker() {
+    final isMacOS = ImagePickerHelper.isMacOS(context);
+
     return GestureDetector(
-      onTap: _isMacOS ? null : _pickImage,
+      onTap: isMacOS ? null : _pickImage,
       child: Container(
         height: 200.h,
         decoration: BoxDecoration(
@@ -253,8 +218,8 @@ class _AddVehicleScreenState extends State<AddVehicleScreen> {
           borderRadius: BorderRadius.circular(12.r),
           border: Border.all(
             color:
-                _isMacOS ? AppColors.border.withOpacity(0.5) : AppColors.border,
-            width: _isMacOS ? 1 : 2,
+                isMacOS ? AppColors.border.withOpacity(0.5) : AppColors.border,
+            width: isMacOS ? 1 : 2,
           ),
         ),
         child:
@@ -271,31 +236,29 @@ class _AddVehicleScreenState extends State<AddVehicleScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Icon(
-                      _isMacOS ? Icons.block : Icons.add_photo_alternate,
+                      isMacOS ? Icons.block : Icons.add_photo_alternate,
                       size: 48.sp,
                       color:
-                          _isMacOS
-                              ? AppColors.warning
-                              : AppColors.secondaryText,
+                          isMacOS ? AppColors.warning : AppColors.secondaryText,
                     ),
                     SizedBox(height: 12.h),
                     Text(
-                      _isMacOS
+                      isMacOS
                           ? 'Photo upload not available on macOS'
                           : 'Tap to add vehicle photo',
                       style: TextStyle(
                         fontSize: 14.sp,
                         color:
-                            _isMacOS
+                            isMacOS
                                 ? AppColors.warning
                                 : AppColors.secondaryText,
                         fontWeight:
-                            _isMacOS ? FontWeight.w500 : FontWeight.normal,
+                            isMacOS ? FontWeight.w500 : FontWeight.normal,
                       ),
                       textAlign: TextAlign.center,
                     ),
                     SizedBox(height: 8.h),
-                    if (_isMacOS)
+                    if (isMacOS)
                       Padding(
                         padding: EdgeInsets.symmetric(horizontal: 16.w),
                         child: Text(
