@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import '../../constants/theme.dart';
+import '../../../resources/theme.dart';
 
 /// Helper class for handling image picking functionality
 class ImagePickerHelper {

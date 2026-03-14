@@ -1,29 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:isar_plus/isar_plus.dart';
-import 'package:path_provider/path_provider.dart';
-import 'models/service_record.dart';
-import 'models/vehicle.dart';
-import 'repositories/isar_service.dart';
+import 'shared/core/service_locator.dart';
 import 'cubit/vehicle_cubit.dart';
 import 'router.dart';
-import 'constants/theme.dart';
+import 'resources/theme.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Initialize Isar database and wait for it to be ready
-  final isarService = IsarService();
-  await isarService.db;
+  // Initialize service locator with all dependencies
+  await initServiceLocator();
 
-  runApp(MyApp(isarService: isarService));
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  final IsarService isarService;
-
-  const MyApp({super.key, required this.isarService});
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +26,7 @@ class MyApp extends StatelessWidget {
       splitScreenMode: true,
       builder: (context, child) {
         return BlocProvider(
-          create: (context) => VehicleCubit(isarService),
+          create: (context) => getIt<VehicleCubit>(),
           child: MaterialApp.router(
             title: 'OtoLog',
             debugShowCheckedModeBanner: false,

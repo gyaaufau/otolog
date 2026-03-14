@@ -7,7 +7,7 @@ import '../cubit/vehicle_cubit.dart';
 import '../cubit/vehicle_state.dart';
 import '../models/vehicle.dart';
 import '../models/service_record.dart';
-import '../constants/theme.dart';
+import '../resources/theme.dart';
 import '../router.dart';
 import 'add_service_screen.dart';
 
