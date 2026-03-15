@@ -140,6 +140,243 @@ class _AddVehicleScreenState extends State<AddVehicleScreen> {
     }
   }
 
+  void _showVehicleTypeBottomSheet() {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: AppColors.surface,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
+      ),
+      isScrollControlled: true,
+      builder: (context) {
+        return Container(
+          constraints: BoxConstraints(
+            maxHeight: MediaQuery.of(context).size.height * 0.7,
+          ),
+          padding: EdgeInsets.symmetric(vertical: 20.h),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: 40.w,
+                height: 4.h,
+                margin: EdgeInsets.only(bottom: 20.h),
+                decoration: BoxDecoration(
+                  color: AppColors.border,
+                  borderRadius: BorderRadius.circular(2.r),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 20.w),
+                child: Text(
+                  'Select Vehicle Type',
+                  style: TextStyle(
+                    fontSize: 18.sp,
+                    fontWeight: FontWeight.w600,
+                    color: AppColors.primaryText,
+                  ),
+                ),
+              ),
+              SizedBox(height: 16.h),
+              Expanded(
+                child: ListView.builder(
+                  itemCount: _vehicleTypes.length,
+                  itemBuilder: (context, index) {
+                    final type = _vehicleTypes[index];
+                    final isSelected = _selectedType == type;
+                    return ListTile(
+                      title: Text(
+                        type,
+                        style: TextStyle(
+                          fontSize: 16.sp,
+                          color: AppColors.primaryText,
+                          fontWeight:
+                              isSelected ? FontWeight.w600 : FontWeight.normal,
+                        ),
+                      ),
+                      trailing:
+                          isSelected
+                              ? Icon(
+                                Icons.check,
+                                color: AppColors.accent,
+                                size: 20.sp,
+                              )
+                              : null,
+                      onTap: () {
+                        setState(() {
+                          _selectedType = type;
+                        });
+                        Navigator.pop(context);
+                      },
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  void _showFuelTypeBottomSheet() {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: AppColors.surface,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
+      ),
+      isScrollControlled: true,
+      builder: (context) {
+        return Container(
+          constraints: BoxConstraints(
+            maxHeight: MediaQuery.of(context).size.height * 0.7,
+          ),
+          padding: EdgeInsets.symmetric(vertical: 20.h),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: 40.w,
+                height: 4.h,
+                margin: EdgeInsets.only(bottom: 20.h),
+                decoration: BoxDecoration(
+                  color: AppColors.border,
+                  borderRadius: BorderRadius.circular(2.r),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 20.w),
+                child: Text(
+                  'Select Fuel Type',
+                  style: TextStyle(
+                    fontSize: 18.sp,
+                    fontWeight: FontWeight.w600,
+                    color: AppColors.primaryText,
+                  ),
+                ),
+              ),
+              SizedBox(height: 16.h),
+              Expanded(
+                child: ListView.builder(
+                  itemCount: _fuelTypes.length,
+                  itemBuilder: (context, index) {
+                    final type = _fuelTypes[index];
+                    final isSelected = _selectedFuelType == type;
+                    return ListTile(
+                      title: Text(
+                        type,
+                        style: TextStyle(
+                          fontSize: 16.sp,
+                          color: AppColors.primaryText,
+                          fontWeight:
+                              isSelected ? FontWeight.w600 : FontWeight.normal,
+                        ),
+                      ),
+                      trailing:
+                          isSelected
+                              ? Icon(
+                                Icons.check,
+                                color: AppColors.accent,
+                                size: 20.sp,
+                              )
+                              : null,
+                      onTap: () {
+                        setState(() {
+                          _selectedFuelType = type;
+                        });
+                        Navigator.pop(context);
+                      },
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  void _showTransmissionTypeBottomSheet() {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: AppColors.surface,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
+      ),
+      isScrollControlled: true,
+      builder: (context) {
+        return Container(
+          constraints: BoxConstraints(
+            maxHeight: MediaQuery.of(context).size.height * 0.7,
+          ),
+          padding: EdgeInsets.symmetric(vertical: 20.h),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: 40.w,
+                height: 4.h,
+                margin: EdgeInsets.only(bottom: 20.h),
+                decoration: BoxDecoration(
+                  color: AppColors.border,
+                  borderRadius: BorderRadius.circular(2.r),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 20.w),
+                child: Text(
+                  'Select Transmission Type',
+                  style: TextStyle(
+                    fontSize: 18.sp,
+                    fontWeight: FontWeight.w600,
+                    color: AppColors.primaryText,
+                  ),
+                ),
+              ),
+              SizedBox(height: 16.h),
+              Expanded(
+                child: ListView.builder(
+                  itemCount: _transmissionTypes.length,
+                  itemBuilder: (context, index) {
+                    final type = _transmissionTypes[index];
+                    final isSelected = _selectedTransmissionType == type;
+                    return ListTile(
+                      title: Text(
+                        type,
+                        style: TextStyle(
+                          fontSize: 16.sp,
+                          color: AppColors.primaryText,
+                          fontWeight:
+                              isSelected ? FontWeight.w600 : FontWeight.normal,
+                        ),
+                      ),
+                      trailing:
+                          isSelected
+                              ? Icon(
+                                Icons.check,
+                                color: AppColors.accent,
+                                size: 20.sp,
+                              )
+                              : null,
+                      onTap: () {
+                        setState(() {
+                          _selectedTransmissionType = type;
+                        });
+                        Navigator.pop(context);
+                      },
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
   void _submitForm() {
     if (_formKey.currentState!.validate()) {
       final vehicle = Vehicle(
@@ -430,51 +667,69 @@ class _AddVehicleScreenState extends State<AddVehicleScreen> {
                     ),
                     SizedBox(height: 16.h),
 
-                    DropdownButtonFormField<String>(
-                      value: _selectedType,
-                      decoration: InputDecoration(
-                        labelText: 'Vehicle Type *',
-                        hintText: 'Select vehicle type',
-                        prefixIcon: Icon(Icons.category, size: 20.sp),
-                        hintStyle: TextStyle(
-                          color: AppColors.secondaryText,
-                          fontSize: 14.sp,
-                        ),
-                        filled: true,
-                        fillColor: AppColors.inputBackground,
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12.r),
-                          borderSide: BorderSide.none,
-                        ),
-                        contentPadding: EdgeInsets.symmetric(
+                    GestureDetector(
+                      onTap: _showVehicleTypeBottomSheet,
+                      child: Container(
+                        padding: EdgeInsets.symmetric(
                           horizontal: 16.w,
                           vertical: 12.h,
                         ),
+                        decoration: BoxDecoration(
+                          color: AppColors.inputBackground,
+                          borderRadius: BorderRadius.circular(12.r),
+                        ),
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.category,
+                              color: AppColors.secondaryText,
+                              size: 20.sp,
+                            ),
+                            SizedBox(width: 12.w),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Vehicle Type *',
+                                    style: TextStyle(
+                                      fontSize: 12.sp,
+                                      color: AppColors.secondaryText,
+                                    ),
+                                  ),
+                                  SizedBox(height: 4.h),
+                                  Text(
+                                    _selectedType ?? 'Select vehicle type',
+                                    style: TextStyle(
+                                      fontSize: 16.sp,
+                                      color:
+                                          _selectedType != null
+                                              ? AppColors.primaryText
+                                              : AppColors.secondaryText,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Icon(
+                              Icons.arrow_drop_down,
+                              color: AppColors.secondaryText,
+                            ),
+                          ],
+                        ),
                       ),
-                      style: TextStyle(
-                        fontSize: 16.sp,
-                        color: AppColors.primaryText,
-                      ),
-                      dropdownColor: AppColors.surface,
-                      items:
-                          _vehicleTypes.map((String type) {
-                            return DropdownMenuItem<String>(
-                              value: type,
-                              child: Text(type),
-                            );
-                          }).toList(),
-                      validator: (value) {
-                        if (value == null || value.trim().isEmpty) {
-                          return 'Please select a vehicle type';
-                        }
-                        return null;
-                      },
-                      onChanged: (String? newValue) {
-                        setState(() {
-                          _selectedType = newValue;
-                        });
-                      },
                     ),
+                    if (_selectedType == null)
+                      Padding(
+                        padding: EdgeInsets.only(left: 16.w, top: 4.h),
+                        child: Text(
+                          'Please select a vehicle type',
+                          style: TextStyle(
+                            fontSize: 12.sp,
+                            color: AppColors.error,
+                          ),
+                        ),
+                      ),
                     SizedBox(height: 16.h),
 
                     TextFormField(
@@ -643,88 +898,112 @@ class _AddVehicleScreenState extends State<AddVehicleScreen> {
                     ),
                     SizedBox(height: 16.h),
 
-                    DropdownButtonFormField<String>(
-                      value: _selectedFuelType,
-                      decoration: InputDecoration(
-                        labelText: 'Fuel Type',
-                        hintText: 'Select fuel type',
-                        prefixIcon: Icon(Icons.local_gas_station, size: 20.sp),
-                        hintStyle: TextStyle(
-                          color: AppColors.secondaryText,
-                          fontSize: 14.sp,
-                        ),
-                        filled: true,
-                        fillColor: AppColors.inputBackground,
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12.r),
-                          borderSide: BorderSide.none,
-                        ),
-                        contentPadding: EdgeInsets.symmetric(
+                    GestureDetector(
+                      onTap: _showFuelTypeBottomSheet,
+                      child: Container(
+                        padding: EdgeInsets.symmetric(
                           horizontal: 16.w,
                           vertical: 12.h,
                         ),
+                        decoration: BoxDecoration(
+                          color: AppColors.inputBackground,
+                          borderRadius: BorderRadius.circular(12.r),
+                        ),
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.local_gas_station,
+                              color: AppColors.secondaryText,
+                              size: 20.sp,
+                            ),
+                            SizedBox(width: 12.w),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Fuel Type',
+                                    style: TextStyle(
+                                      fontSize: 12.sp,
+                                      color: AppColors.secondaryText,
+                                    ),
+                                  ),
+                                  SizedBox(height: 4.h),
+                                  Text(
+                                    _selectedFuelType ?? 'Select fuel type',
+                                    style: TextStyle(
+                                      fontSize: 16.sp,
+                                      color:
+                                          _selectedFuelType != null
+                                              ? AppColors.primaryText
+                                              : AppColors.secondaryText,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Icon(
+                              Icons.arrow_drop_down,
+                              color: AppColors.secondaryText,
+                            ),
+                          ],
+                        ),
                       ),
-                      style: TextStyle(
-                        fontSize: 16.sp,
-                        color: AppColors.primaryText,
-                      ),
-                      dropdownColor: AppColors.surface,
-                      items:
-                          _fuelTypes.map((String type) {
-                            return DropdownMenuItem<String>(
-                              value: type,
-                              child: Text(type),
-                            );
-                          }).toList(),
-                      onChanged: (String? newValue) {
-                        setState(() {
-                          _selectedFuelType = newValue;
-                        });
-                      },
                     ),
                     SizedBox(height: 16.h),
 
-                    DropdownButtonFormField<String>(
-                      value: _selectedTransmissionType,
-                      decoration: InputDecoration(
-                        labelText: 'Transmission Type',
-                        hintText: 'Select transmission type',
-                        prefixIcon: Icon(
-                          Icons.settings_input_component,
-                          size: 20.sp,
-                        ),
-                        hintStyle: TextStyle(
-                          color: AppColors.secondaryText,
-                          fontSize: 14.sp,
-                        ),
-                        filled: true,
-                        fillColor: AppColors.inputBackground,
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12.r),
-                          borderSide: BorderSide.none,
-                        ),
-                        contentPadding: EdgeInsets.symmetric(
+                    GestureDetector(
+                      onTap: _showTransmissionTypeBottomSheet,
+                      child: Container(
+                        padding: EdgeInsets.symmetric(
                           horizontal: 16.w,
                           vertical: 12.h,
                         ),
+                        decoration: BoxDecoration(
+                          color: AppColors.inputBackground,
+                          borderRadius: BorderRadius.circular(12.r),
+                        ),
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.settings_input_component,
+                              color: AppColors.secondaryText,
+                              size: 20.sp,
+                            ),
+                            SizedBox(width: 12.w),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Transmission Type',
+                                    style: TextStyle(
+                                      fontSize: 12.sp,
+                                      color: AppColors.secondaryText,
+                                    ),
+                                  ),
+                                  SizedBox(height: 4.h),
+                                  Text(
+                                    _selectedTransmissionType ??
+                                        'Select transmission type',
+                                    style: TextStyle(
+                                      fontSize: 16.sp,
+                                      color:
+                                          _selectedTransmissionType != null
+                                              ? AppColors.primaryText
+                                              : AppColors.secondaryText,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Icon(
+                              Icons.arrow_drop_down,
+                              color: AppColors.secondaryText,
+                            ),
+                          ],
+                        ),
                       ),
-                      style: TextStyle(
-                        fontSize: 16.sp,
-                        color: AppColors.primaryText,
-                      ),
-                      dropdownColor: AppColors.surface,
-                      items:
-                          _transmissionTypes.map((String type) {
-                            return DropdownMenuItem<String>(
-                              value: type,
-                              child: Text(type),
-                            );
-                          }).toList(),
-                      onChanged: (String? newValue) {
-                        setState(() {
-                          _selectedTransmissionType = newValue;
-                        });
-                      },
                     ),
                     SizedBox(height: 16.h),
 
