@@ -467,66 +467,72 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
                           padding: EdgeInsets.only(top: 24.h),
                           child: Column(
                             children: [
-                              if (vehicle.type != null)
-                                _buildDetailRow(
-                                  icon: Icons.category_outlined,
-                                  label: 'Type',
-                                  value: vehicle.type!,
-                                ),
-                              if (vehicle.brand != null)
-                                _buildDetailRow(
-                                  icon: Icons.business,
-                                  label: 'Brand',
-                                  value: vehicle.brand!,
-                                ),
-                              if (vehicle.model != null)
-                                _buildDetailRow(
-                                  icon: Icons.model_training,
-                                  label: 'Model',
-                                  value: vehicle.model!,
-                                ),
-                              if (vehicle.year != null)
-                                _buildDetailRow(
-                                  icon: Icons.calendar_today,
-                                  label: 'Year',
-                                  value: vehicle.year!,
-                                ),
-                              if (vehicle.color != null)
-                                _buildDetailRow(
-                                  icon: Icons.palette,
-                                  label: 'Color',
-                                  value: vehicle.color!,
-                                ),
-                              if (vehicle.vin != null)
-                                _buildDetailRow(
-                                  icon: Icons.vpn_key,
-                                  label: 'VIN',
-                                  value: vehicle.vin!,
-                                ),
-                              if (vehicle.fuelType != null)
-                                _buildDetailRow(
-                                  icon: Icons.local_gas_station,
-                                  label: 'Fuel Type',
-                                  value: vehicle.fuelType!,
-                                ),
-                              if (vehicle.transmissionType != null)
-                                _buildDetailRow(
-                                  icon: Icons.settings_input_component,
-                                  label: 'Transmission',
-                                  value: vehicle.transmissionType!,
-                                ),
-                              if (vehicle.odometer != null)
-                                _buildDetailRow(
-                                  icon: Icons.speed,
-                                  label: 'Odometer',
-                                  value: '${vehicle.odometer} km',
-                                ),
-                              if (vehicle.purchaseDate != null)
-                                _buildDetailRow(
-                                  icon: Icons.event,
-                                  label: 'Purchase Date',
-                                  value: _formatDate(vehicle.purchaseDate!),
-                                ),
+                              _buildDetailRow(
+                                icon: Icons.category_outlined,
+                                label: 'Type',
+                                value: vehicle.type ?? 'Not set',
+                              ),
+                              _buildDetailRow(
+                                icon: Icons.business,
+                                label: 'Brand',
+                                value: vehicle.brand ?? 'Not set',
+                              ),
+                              _buildDetailRow(
+                                icon: Icons.model_training,
+                                label: 'Model',
+                                value: vehicle.model ?? 'Not set',
+                              ),
+                              _buildDetailRow(
+                                icon: Icons.calendar_today,
+                                label: 'Year',
+                                value: vehicle.year ?? 'Not set',
+                              ),
+                              _buildDetailRow(
+                                icon: Icons.palette,
+                                label: 'Color',
+                                value: vehicle.color ?? 'Not set',
+                              ),
+                              _buildDetailRow(
+                                icon: Icons.vpn_key,
+                                label: 'VIN',
+                                value: vehicle.vin ?? 'Not set',
+                              ),
+                              _buildDetailRow(
+                                icon: Icons.local_gas_station,
+                                label: 'Fuel Type',
+                                value: vehicle.fuelType ?? 'Not set',
+                              ),
+                              _buildDetailRow(
+                                icon: Icons.settings_input_component,
+                                label: 'Transmission',
+                                value: vehicle.transmissionType ?? 'Not set',
+                              ),
+                              _buildDetailRow(
+                                icon: Icons.speed,
+                                label: 'Odometer',
+                                value:
+                                    vehicle.odometer != null
+                                        ? '${vehicle.odometer} km'
+                                        : 'Not set',
+                              ),
+                              _buildDetailRow(
+                                icon: Icons.event,
+                                label: 'Purchase Date',
+                                value:
+                                    vehicle.purchaseDate != null
+                                        ? _formatDate(vehicle.purchaseDate!)
+                                        : 'Not set',
+                              ),
+                              _buildDetailRow(
+                                icon: Icons.add_circle_outline,
+                                label: 'Created',
+                                value: _formatDate(vehicle.createdAt),
+                              ),
+                              _buildDetailRow(
+                                icon: Icons.update,
+                                label: 'Last Updated',
+                                value: _formatDate(vehicle.updatedAt),
+                              ),
                             ],
                           ),
                         ),
