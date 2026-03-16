@@ -28,8 +28,8 @@ class MyApp extends StatelessWidget {
       builder: (context, child) {
         return MultiBlocProvider(
           providers: [
-            BlocProvider(create: (context) => getIt<VehicleCubit>()),
-            BlocProvider(create: (context) => getIt<AnalyticsCubit>()),
+            BlocProvider(create: (context) => sl<VehicleCubit>()),
+            BlocProvider(create: (context) => sl<AnalyticsCubit>()),
           ],
           child: MaterialApp.router(
             title: 'OtoLog',

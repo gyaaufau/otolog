@@ -4,6 +4,7 @@ import '../screens/home_screen.dart';
 import '../screens/vehicle_detail_screen.dart';
 import '../screens/service_detail_screen.dart';
 import '../screens/add_vehicle_screen.dart';
+import '../screens/edit_vehicle_screen.dart';
 import '../screens/add_service_screen.dart';
 import '../screens/analytics_screen.dart';
 import '../screens/vehicles_screen.dart';
@@ -16,6 +17,7 @@ class AppRoutes {
   static const String vehicleDetail = '/vehicle/:vehicleId';
   static const String serviceDetail = '/vehicle/:vehicleId/service/:serviceId';
   static const String addVehicle = '/add-vehicle';
+  static const String editVehicle = '/vehicle/:vehicleId/edit';
   static const String addService = '/vehicle/:vehicleId/add-service';
   static const String analytics = '/analytics';
 }
@@ -77,6 +79,14 @@ final goRouter = GoRouter(
         return VehicleDetailScreen(vehicleId: vehicleId);
       },
       routes: [
+        GoRoute(
+          path: 'edit',
+          name: 'editVehicle',
+          builder: (context, state) {
+            final vehicleId = int.parse(state.pathParameters['vehicleId']!);
+            return EditVehicleScreen(vehicleId: vehicleId);
+          },
+        ),
         GoRoute(
           path: 'add-service',
           name: 'addService',

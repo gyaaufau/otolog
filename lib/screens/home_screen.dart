@@ -111,74 +111,38 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildHeader() {
-    return BlocBuilder<VehicleCubit, VehicleState>(
-      builder: (context, state) {
-        IconData headerIcon = Icons.directions_car;
-
-        if (state is VehicleLoaded &&
-            state.serviceRecords != null &&
-            state.serviceRecords!.isNotEmpty) {
-          // Find the most recent service and use its vehicle type for the icon
-          final latestService = state.serviceRecords!.reduce(
-            (a, b) => a.serviceDate.isAfter(b.serviceDate) ? a : b,
-          );
-          final vehicle = _getVehicleById(
-            state.vehicles,
-            latestService.vehicleId,
-          );
-          if (vehicle != null) {
-            headerIcon = _getVehicleTypeIcon(vehicle.type);
-          }
-        }
-
-        return Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    _getGreeting(),
-                    style: TextStyle(
-                      fontSize: 14.sp,
-                      color: AppColors.secondaryText,
-                    ),
-                  ),
-                  SizedBox(height: 4.h),
-                  Text(
-                    'Dashboard',
-                    style: TextStyle(
-                      fontSize: 24.sp,
-                      fontWeight: FontWeight.bold,
-                      color: AppColors.primaryText,
-                    ),
-                  ),
-                ],
-              ),
-              Container(
-                width: 48.w,
-                height: 48.h,
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      AppColors.accent.withOpacity(0.2),
-                      AppColors.accent.withOpacity(0.1),
-                    ],
-                  ),
-                  borderRadius: BorderRadius.circular(12.r),
-                  border: Border.all(
-                    color: AppColors.accent.withOpacity(0.3),
-                    width: 1,
-                  ),
-                ),
-                child: Icon(headerIcon, color: AppColors.accent, size: 24.sp),
-              ),
-            ],
+    return Container(
+      width: double.infinity,
+      margin: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
+      padding: EdgeInsets.all(20.w),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            AppColors.accent.withOpacity(0.08),
+            AppColors.accent.withOpacity(0.02),
+          ],
+        ),
+        borderRadius: BorderRadius.circular(20.r),
+        border: Border.all(
+          color: AppColors.accent.withOpacity(0.15),
+          width: 1.5,
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            _getGreeting(),
+            style: TextStyle(
+              fontSize: 24.sp,
+              fontWeight: FontWeight.bold,
+              color: AppColors.primaryText,
+            ),
           ),
-        );
-      },
+        ],
+      ),
     );
   }
 
@@ -252,6 +216,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }) {
     return Container(
       padding: EdgeInsets.all(16.w),
+      height: 120.h,
       decoration: BoxDecoration(
         color: AppColors.surface,
         borderRadius: BorderRadius.circular(16.r),
@@ -302,6 +267,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return Container(
       width: double.infinity,
+      constraints: BoxConstraints(minHeight: 120.h),
       padding: EdgeInsets.all(16.w),
       decoration: BoxDecoration(
         color: AppColors.surface,
@@ -395,9 +361,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _buildRecentServicesSection() {
     return BlocBuilder<VehicleCubit, VehicleState>(
       builder: (context, state) {
-        if (state is VehicleLoaded &&
-            state.serviceRecords != null &&
-            state.serviceRecords!.isNotEmpty) {
+        if (state is VehicleLoaded) {
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -414,44 +378,128 @@ class _HomeScreenState extends State<HomeScreen> {
                         color: AppColors.primaryText,
                       ),
                     ),
-                    TextButton(
-                      onPressed: () {
-                        context.push(AppRoutes.analytics);
-                      },
-                      child: Text(
-                        'View All',
-                        style: TextStyle(
-                          fontSize: 14.sp,
-                          color: AppColors.accent,
+                    if (state.serviceRecords != null &&
+                        state.serviceRecords!.isNotEmpty)
+                      TextButton(
+                        onPressed: () {
+                          context.push(AppRoutes.analytics);
+                        },
+                        child: Text(
+                          'View All',
+                          style: TextStyle(
+                            fontSize: 14.sp,
+                            color: AppColors.accent,
+                          ),
                         ),
                       ),
-                    ),
                   ],
                 ),
               ),
               SizedBox(height: 12.h),
-              SizedBox(
-                height: 140.h,
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  padding: EdgeInsets.symmetric(horizontal: 20.w),
-                  itemCount: state.serviceRecords!.length,
-                  itemBuilder: (context, index) {
-                    final service = state.serviceRecords![index];
-                    final vehicle = _getVehicleById(
-                      state.vehicles,
-                      service.vehicleId,
-                    );
-                    return _buildRecentServiceCard(service, vehicle);
-                  },
-                ),
-              ),
+              if (state.serviceRecords != null &&
+                  state.serviceRecords!.isNotEmpty)
+                SizedBox(
+                  height: 140.h,
+                  child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    padding: EdgeInsets.symmetric(horizontal: 20.w),
+                    itemCount: state.serviceRecords!.length,
+                    itemBuilder: (context, index) {
+                      final service = state.serviceRecords![index];
+                      final vehicle = _getVehicleById(
+                        state.vehicles,
+                        service.vehicleId,
+                      );
+                      return _buildRecentServiceCard(service, vehicle);
+                    },
+                  ),
+                )
+              else
+                _buildEmptyServicesState(state),
               SizedBox(height: 24.h),
             ],
           );
         }
         return const SizedBox.shrink();
       },
+    );
+  }
+
+  Widget _buildEmptyServicesState(VehicleLoaded state) {
+    return Container(
+      margin: EdgeInsets.symmetric(horizontal: 20.w),
+      padding: EdgeInsets.symmetric(vertical: 40.h),
+      decoration: BoxDecoration(
+        color: AppColors.surface,
+        borderRadius: BorderRadius.circular(16.r),
+        border: Border.all(color: AppColors.border),
+      ),
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              width: 64.w,
+              height: 64.h,
+              decoration: BoxDecoration(
+                color: AppColors.accent.withOpacity(0.1),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                Icons.history_outlined,
+                size: 32.sp,
+                color: AppColors.accent,
+              ),
+            ),
+            SizedBox(height: 16.h),
+            Text(
+              'No Service Records',
+              style: TextStyle(
+                fontSize: 18.sp,
+                fontWeight: FontWeight.w600,
+                color: AppColors.primaryText,
+              ),
+            ),
+            SizedBox(height: 8.h),
+            Text(
+              'Start tracking your vehicle maintenance',
+              style: TextStyle(fontSize: 14.sp, color: AppColors.secondaryText),
+            ),
+            SizedBox(height: 16.h),
+            if (state.vehicles.isNotEmpty)
+              ElevatedButton.icon(
+                onPressed: () {
+                  context.push(
+                    AppRoutes.vehicleDetail.replaceAll(
+                      ':vehicleId',
+                      state.vehicles.first.id.toString(),
+                    ),
+                  );
+                },
+                icon: Icon(Icons.add, size: 18.sp),
+                label: Text(
+                  'Add Service',
+                  style: TextStyle(
+                    fontSize: 14.sp,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.accent,
+                  foregroundColor: AppColors.background,
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 20.w,
+                    vertical: 12.h,
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12.r),
+                  ),
+                  elevation: 0,
+                ),
+              ),
+          ],
+        ),
+      ),
     );
   }
 

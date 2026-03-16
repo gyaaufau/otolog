@@ -373,15 +373,34 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
           BlocBuilder<VehicleCubit, VehicleState>(
             builder: (context, state) {
               if (state is VehicleLoaded && state.vehicles.isNotEmpty) {
-                return IconButton(
-                  icon: const Icon(
-                    Icons.delete_outline,
-                    color: AppColors.error,
-                  ),
-                  onPressed: () {
-                    _showDeleteDialog(context, state.vehicles.first);
-                  },
-                  tooltip: 'Delete vehicle',
+                return Row(
+                  children: [
+                    IconButton(
+                      icon: const Icon(
+                        Icons.edit_outlined,
+                        color: AppColors.accent,
+                      ),
+                      onPressed: () {
+                        context.push(
+                          AppRoutes.editVehicle.replaceAll(
+                            ':vehicleId',
+                            widget.vehicleId.toString(),
+                          ),
+                        );
+                      },
+                      tooltip: 'Edit vehicle',
+                    ),
+                    IconButton(
+                      icon: const Icon(
+                        Icons.delete_outline,
+                        color: AppColors.error,
+                      ),
+                      onPressed: () {
+                        _showDeleteDialog(context, state.vehicles.first);
+                      },
+                      tooltip: 'Delete vehicle',
+                    ),
+                  ],
                 );
               }
               return const SizedBox.shrink();
@@ -404,141 +423,7 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
               child: Column(
                 children: [
                   // Vehicle Info Card
-                  Container(
-                    margin: EdgeInsets.symmetric(
-                      horizontal: 16.w,
-                      vertical: 8.h,
-                    ),
-                    padding: EdgeInsets.all(20.w),
-                    decoration: BoxDecoration(
-                      color: AppColors.surface,
-                      borderRadius: BorderRadius.circular(16.r),
-                      border: Border.all(color: AppColors.border, width: 0.5),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        // Header with icon and name
-                        Row(
-                          children: [
-                            Container(
-                              width: 52.w,
-                              height: 52.h,
-                              decoration: BoxDecoration(
-                                color: AppColors.accent.withOpacity(0.12),
-                                borderRadius: BorderRadius.circular(14.r),
-                              ),
-                              child: Icon(
-                                _getVehicleTypeIcon(vehicle.type),
-                                color: AppColors.accent,
-                                size: 26.sp,
-                              ),
-                            ),
-                            SizedBox(width: 16.w),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    vehicle.name,
-                                    style: TextStyle(
-                                      fontSize: 20.sp,
-                                      fontWeight: FontWeight.w700,
-                                      color: AppColors.primaryText,
-                                    ),
-                                  ),
-                                  SizedBox(height: 4.h),
-                                  Text(
-                                    vehicle.plateNumber,
-                                    style: TextStyle(
-                                      fontSize: 14.sp,
-                                      color: AppColors.secondaryText,
-                                      letterSpacing: 0.5,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                        // Vehicle details
-                        Padding(
-                          padding: EdgeInsets.only(top: 24.h),
-                          child: Column(
-                            children: [
-                              _buildDetailRow(
-                                icon: Icons.category_outlined,
-                                label: 'Type',
-                                value: vehicle.type ?? 'Not set',
-                              ),
-                              _buildDetailRow(
-                                icon: Icons.business,
-                                label: 'Brand',
-                                value: vehicle.brand ?? 'Not set',
-                              ),
-                              _buildDetailRow(
-                                icon: Icons.model_training,
-                                label: 'Model',
-                                value: vehicle.model ?? 'Not set',
-                              ),
-                              _buildDetailRow(
-                                icon: Icons.calendar_today,
-                                label: 'Year',
-                                value: vehicle.year ?? 'Not set',
-                              ),
-                              _buildDetailRow(
-                                icon: Icons.palette,
-                                label: 'Color',
-                                value: vehicle.color ?? 'Not set',
-                              ),
-                              _buildDetailRow(
-                                icon: Icons.vpn_key,
-                                label: 'VIN',
-                                value: vehicle.vin ?? 'Not set',
-                              ),
-                              _buildDetailRow(
-                                icon: Icons.local_gas_station,
-                                label: 'Fuel Type',
-                                value: vehicle.fuelType ?? 'Not set',
-                              ),
-                              _buildDetailRow(
-                                icon: Icons.settings_input_component,
-                                label: 'Transmission',
-                                value: vehicle.transmissionType ?? 'Not set',
-                              ),
-                              _buildDetailRow(
-                                icon: Icons.speed,
-                                label: 'Odometer',
-                                value:
-                                    vehicle.odometer != null
-                                        ? '${vehicle.odometer} km'
-                                        : 'Not set',
-                              ),
-                              _buildDetailRow(
-                                icon: Icons.event,
-                                label: 'Purchase Date',
-                                value:
-                                    vehicle.purchaseDate != null
-                                        ? _formatDate(vehicle.purchaseDate!)
-                                        : 'Not set',
-                              ),
-                              _buildDetailRow(
-                                icon: Icons.add_circle_outline,
-                                label: 'Created',
-                                value: _formatDate(vehicle.createdAt),
-                              ),
-                              _buildDetailRow(
-                                icon: Icons.update,
-                                label: 'Last Updated',
-                                value: _formatDate(vehicle.updatedAt),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+                  _buildVehicleInfoData(context, vehicle),
                   // Vehicle Picture Section
                   if (vehicle.imagePath != null)
                     Container(
@@ -957,6 +842,147 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
             fontWeight: FontWeight.w600,
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildVehicleInfoData(BuildContext context, Vehicle vehicle) {
+    return Container(
+      margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+      padding: EdgeInsets.all(20.w),
+      decoration: BoxDecoration(
+        color: AppColors.surface,
+        borderRadius: BorderRadius.circular(16.r),
+        border: Border.all(color: AppColors.border, width: 0.5),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Header with icon and name
+          Row(
+            children: [
+              Container(
+                width: 52.w,
+                height: 52.h,
+                decoration: BoxDecoration(
+                  color: AppColors.accent.withOpacity(0.12),
+                  borderRadius: BorderRadius.circular(14.r),
+                ),
+                child: Icon(
+                  _getVehicleTypeIcon(vehicle.type),
+                  color: AppColors.accent,
+                  size: 26.sp,
+                ),
+              ),
+              SizedBox(width: 16.w),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      vehicle.name,
+                      style: TextStyle(
+                        fontSize: 20.sp,
+                        fontWeight: FontWeight.w700,
+                        color: AppColors.primaryText,
+                      ),
+                    ),
+                    SizedBox(height: 4.h),
+                    Text(
+                      vehicle.plateNumber,
+                      style: TextStyle(
+                        fontSize: 14.sp,
+                        color: AppColors.secondaryText,
+                        letterSpacing: 0.5,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          // Vehicle details
+          Padding(
+            padding: EdgeInsets.only(top: 24.h),
+            child: GridView.count(
+              crossAxisCount: 2,
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              mainAxisSpacing: 0,
+              crossAxisSpacing: 0,
+              childAspectRatio: 2.5,
+              children: [
+                _buildDetailRow(
+                  icon: Icons.category_outlined,
+                  label: 'Type',
+                  value: vehicle.type ?? 'Not set',
+                ),
+                _buildDetailRow(
+                  icon: Icons.business,
+                  label: 'Brand',
+                  value: vehicle.brand ?? 'Not set',
+                ),
+                _buildDetailRow(
+                  icon: Icons.model_training,
+                  label: 'Model',
+                  value: vehicle.model ?? 'Not set',
+                ),
+                _buildDetailRow(
+                  icon: Icons.calendar_today,
+                  label: 'Year',
+                  value: vehicle.year ?? 'Not set',
+                ),
+                _buildDetailRow(
+                  icon: Icons.palette,
+                  label: 'Color',
+                  value: vehicle.color ?? 'Not set',
+                ),
+                _buildDetailRow(
+                  icon: Icons.vpn_key,
+                  label: 'VIN',
+                  value: vehicle.vin ?? 'Not set',
+                ),
+                _buildDetailRow(
+                  icon: Icons.local_gas_station,
+                  label: 'Fuel Type',
+                  value: vehicle.fuelType ?? 'Not set',
+                ),
+                _buildDetailRow(
+                  icon: Icons.settings_input_component,
+                  label: 'Transmission',
+                  value: vehicle.transmissionType ?? 'Not set',
+                ),
+                _buildDetailRow(
+                  icon: Icons.speed,
+                  label: 'Odometer',
+                  value:
+                      vehicle.odometer != null
+                          ? '${vehicle.odometer} km'
+                          : 'Not set',
+                ),
+                _buildDetailRow(
+                  icon: Icons.event,
+                  label: 'Purchase Date',
+                  value:
+                      vehicle.purchaseDate != null
+                          ? _formatDate(vehicle.purchaseDate!)
+                          : 'Not set',
+                ),
+                _buildDetailRow(
+                  icon: Icons.add_circle_outline,
+                  label: 'Created',
+                  value: _formatDate(vehicle.createdAt),
+                ),
+                _buildDetailRow(
+                  icon: Icons.update,
+                  label: 'Last Updated',
+                  value: _formatDate(vehicle.updatedAt),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }

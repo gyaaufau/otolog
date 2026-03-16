@@ -462,6 +462,10 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
     dynamic mostExpensiveService,
     String? mostCommonServiceType,
   ) {
+    if (mostExpensiveService == null && mostCommonServiceType == null) {
+      return _buildEmptyState('No insights available yet');
+    }
+
     return Container(
       padding: EdgeInsets.all(16.w),
       decoration: BoxDecoration(
