@@ -3,9 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:drift/drift.dart' as drift;
 import '../cubit/vehicle_cubit.dart';
 import '../cubit/vehicle_state.dart';
-import '../models/vehicle.dart';
+import '../database/database.dart';
 import '../resources/theme.dart';
 import '../shared/commons/utils/image_picker_helper.dart';
 
@@ -379,47 +380,49 @@ class _AddVehicleScreenState extends State<AddVehicleScreen> {
 
   void _submitForm() {
     if (_formKey.currentState!.validate()) {
-      final vehicle = Vehicle(
+      final companion = VehiclesCompanion.insert(
         name: _nameController.text.trim(),
         plateNumber: _plateNumberController.text.trim(),
         brand:
             _brandController.text.trim().isEmpty
-                ? null
-                : _brandController.text.trim(),
+                ? const drift.Value(null)
+                : drift.Value(_brandController.text.trim()),
         model:
             _modelController.text.trim().isEmpty
-                ? null
-                : _modelController.text.trim(),
+                ? const drift.Value(null)
+                : drift.Value(_modelController.text.trim()),
         year:
             _yearController.text.trim().isEmpty
-                ? null
-                : _yearController.text.trim(),
-        color: _selectedColor?.isEmpty ?? true ? null : _selectedColor,
+                ? const drift.Value(null)
+                : drift.Value(_yearController.text.trim()),
+        color: drift.Value(
+          _selectedColor?.isEmpty ?? true ? null : _selectedColor,
+        ),
         type:
             _selectedType?.trim().isEmpty ?? true
-                ? null
-                : _selectedType?.trim(),
+                ? const drift.Value(null)
+                : drift.Value(_selectedType?.trim()),
         vin:
             _vinController.text.trim().isEmpty
-                ? null
-                : _vinController.text.trim(),
-        purchaseDate: _purchaseDate,
+                ? const drift.Value(null)
+                : drift.Value(_vinController.text.trim()),
+        purchaseDate: drift.Value(_purchaseDate),
         odometer:
             _odometerController.text.trim().isEmpty
-                ? null
-                : int.tryParse(_odometerController.text.trim()),
+                ? const drift.Value(null)
+                : drift.Value(int.tryParse(_odometerController.text.trim())),
         fuelType:
             _selectedFuelType?.trim().isEmpty ?? true
-                ? null
-                : _selectedFuelType?.trim(),
+                ? const drift.Value(null)
+                : drift.Value(_selectedFuelType?.trim()),
         transmissionType:
             _selectedTransmissionType?.trim().isEmpty ?? true
-                ? null
-                : _selectedTransmissionType?.trim(),
-        imagePath: _imageFile?.path,
+                ? const drift.Value(null)
+                : drift.Value(_selectedTransmissionType?.trim()),
+        imagePath: drift.Value(_imageFile?.path),
       );
 
-      context.read<VehicleCubit>().addVehicle(vehicle);
+      context.read<VehicleCubit>().addVehicle(companion);
     }
   }
 

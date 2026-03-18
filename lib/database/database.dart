@@ -1,0 +1,190 @@
+import 'dart:io';
+import 'package:drift/drift.dart';
+import 'package:drift/native.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:path/path.dart' as p;
+import 'package:sqlite3_flutter_libs/sqlite3_flutter_libs.dart';
+
+part 'database.g.dart';
+
+// Vehicles table
+@DataClassName('Vehicle')
+class Vehicles extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  TextColumn get name => text()();
+  TextColumn get plateNumber => text()();
+  TextColumn get brand => text().nullable()();
+  TextColumn get model => text().nullable()();
+  TextColumn get year => text().nullable()();
+  TextColumn get color => text().nullable()();
+  TextColumn get type => text().nullable()();
+  TextColumn get vin => text().nullable()();
+  DateTimeColumn get purchaseDate => dateTime().nullable()();
+  IntColumn get odometer => integer().nullable()();
+  TextColumn get fuelType => text().nullable()();
+  TextColumn get transmissionType => text().nullable()();
+  TextColumn get imagePath => text().nullable()();
+  DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
+  DateTimeColumn get updatedAt => dateTime().withDefault(currentDateAndTime)();
+}
+
+// Service records table
+@DataClassName('ServiceRecord')
+class ServiceRecords extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  IntColumn get vehicleId =>
+      integer().references(Vehicles, #id, onDelete: KeyAction.cascade)();
+  TextColumn get serviceType => text()();
+  DateTimeColumn get serviceDate => dateTime()();
+  TextColumn get description => text().nullable()();
+  RealColumn get cost => real().nullable()();
+  TextColumn get mechanic => text().nullable()();
+  TextColumn get notes => text().nullable()();
+  DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
+  DateTimeColumn get updatedAt => dateTime().withDefault(currentDateAndTime)();
+}
+
+// Database class
+@DriftDatabase(tables: [Vehicles, ServiceRecords])
+class AppDatabase extends _$AppDatabase {
+  AppDatabase(QueryExecutor e) : super(e);
+
+  @override
+  int get schemaVersion => 1;
+
+  @override
+  MigrationStrategy get migration {
+    return MigrationStrategy(
+      onCreate: (Migrator m) async {
+        await m.createAll();
+      },
+      onUpgrade: (Migrator m, int from, int to) async {
+        // Handle future migrations here
+      },
+    );
+  }
+
+  // Vehicle operations
+  Future<int> addVehicle(VehiclesCompanion vehicle) {
+    return into(vehicles).insert(vehicle);
+  }
+
+  Future<bool> updateVehicle(Vehicle vehicle) {
+    return update(
+      vehicles,
+    ).replace(vehicle.copyWith(updatedAt: DateTime.now()));
+  }
+
+  Future<int> deleteVehicle(int id) {
+    return (delete(vehicles)..where((tbl) => tbl.id.equals(id))).go();
+  }
+
+  Future<Vehicle?> getVehicle(int id) {
+    return (select(vehicles)
+      ..where((tbl) => tbl.id.equals(id))).getSingleOrNull();
+  }
+
+  Future<List<Vehicle>> getAllVehicles() {
+    return (select(vehicles)
+      ..orderBy([(tbl) => OrderingTerm.desc(tbl.createdAt)])).get();
+  }
+
+  Future<List<Vehicle>> searchVehicles(String query) {
+    final lowerQuery = query.toLowerCase();
+    return (select(vehicles)..where(
+      (tbl) =>
+          tbl.name.lower().contains(lowerQuery) |
+          tbl.plateNumber.lower().contains(lowerQuery),
+    )).get();
+  }
+
+  // Service record operations
+  Future<int> addServiceRecord(ServiceRecordsCompanion record) {
+    return into(serviceRecords).insert(record);
+  }
+
+  Future<bool> updateServiceRecord(ServiceRecord record) {
+    return update(
+      serviceRecords,
+    ).replace(record.copyWith(updatedAt: DateTime.now()));
+  }
+
+  Future<int> deleteServiceRecord(int id) {
+    return (delete(serviceRecords)..where((tbl) => tbl.id.equals(id))).go();
+  }
+
+  Future<ServiceRecord?> getServiceRecord(int id) {
+    return (select(serviceRecords)
+      ..where((tbl) => tbl.id.equals(id))).getSingleOrNull();
+  }
+
+  Future<List<ServiceRecord>> getServiceRecordsByVehicle(int vehicleId) {
+    return (select(serviceRecords)
+          ..where((tbl) => tbl.vehicleId.equals(vehicleId))
+          ..orderBy([(tbl) => OrderingTerm.desc(tbl.serviceDate)]))
+        .get();
+  }
+
+  Future<List<ServiceRecord>> getAllServiceRecords() {
+    return (select(serviceRecords)
+      ..orderBy([(tbl) => OrderingTerm.desc(tbl.serviceDate)])).get();
+  }
+
+  // Statistics
+  Future<double> getTotalCostByVehicle(int vehicleId) async {
+    final query = select(serviceRecords)
+      ..where((tbl) => tbl.vehicleId.equals(vehicleId));
+
+    final results = await query.get();
+    double total = 0.0;
+    for (final row in results) {
+      total += row.cost ?? 0.0;
+    }
+    return total;
+  }
+
+  Future<double> getTotalCostAllVehicles() async {
+    final query = select(serviceRecords);
+
+    final results = await query.get();
+    double total = 0.0;
+    for (final row in results) {
+      total += row.cost ?? 0.0;
+    }
+    return total;
+  }
+
+  Future<int> getServiceCountByVehicle(int vehicleId) async {
+    final result =
+        await (selectOnly(serviceRecords)
+              ..addColumns([serviceRecords.id.count()])
+              ..where(serviceRecords.vehicleId.equals(vehicleId)))
+            .getSingle();
+    return result.read(serviceRecords.id.count()) ?? 0;
+  }
+
+  // Clear all data (for testing)
+  Future<void> clearAll() async {
+    await delete(serviceRecords).go();
+    await delete(vehicles).go();
+  }
+}
+
+// Database connection
+LazyDatabase _openConnection() {
+  return LazyDatabase(() async {
+    final dbFolder = await getApplicationDocumentsDirectory();
+    final file = File(p.join(dbFolder.path, 'otolog.db'));
+
+    return NativeDatabase.createInBackground(
+      file,
+      setup: (database) {
+        // Enable foreign keys
+        database.execute('PRAGMA foreign_keys = ON');
+      },
+    );
+  });
+}
+
+// Singleton database instance
+final AppDatabase database = AppDatabase(_openConnection());

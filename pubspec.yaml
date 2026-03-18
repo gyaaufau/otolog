@@ -43,9 +43,10 @@ dependencies:
   get_it: ^7.6.4
   
   # Database
-  isar_plus: ^1.2.0
-  isar_plus_flutter_libs: ^1.2.0
+  drift: ^2.20.0
+  sqlite3_flutter_libs: ^0.5.20
   path_provider: ^2.1.5
+  path: ^1.9.0
   
   # UI
   intl: ^0.18.1
@@ -67,6 +68,7 @@ dev_dependencies:
   
   # Code Generation
   build_runner: ^2.10.4
+  drift_dev: ^2.20.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

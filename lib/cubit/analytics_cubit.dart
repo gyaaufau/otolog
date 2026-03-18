@@ -1,27 +1,27 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-import '../models/vehicle.dart';
-import '../models/service_record.dart';
-import '../repositories/isar_service.dart';
+import '../database/database.dart';
+import '../repositories/drift_service.dart';
 import 'analytics_state.dart';
 
 class AnalyticsCubit extends Cubit<AnalyticsState> {
-  final IsarService _isarService;
+  final DriftService _driftService;
 
-  AnalyticsCubit(this._isarService) : super(const AnalyticsInitial());
+  AnalyticsCubit(this._driftService) : super(const AnalyticsInitial());
 
   // Load analytics data
   Future<void> loadAnalytics() async {
     emit(const AnalyticsLoading());
     try {
-      final vehicles = await _isarService.getAllVehicles();
-      final allServiceRecords = await _isarService.getAllServiceRecords();
-      final totalCostAllVehicles = await _isarService.getTotalCostAllVehicles();
+      final vehicles = await _driftService.getAllVehicles();
+      final allServiceRecords = await _driftService.getAllServiceRecords();
+      final totalCostAllVehicles =
+          await _driftService.getTotalCostAllVehicles();
 
       // Calculate total service count
       int totalServiceCount = 0;
       for (var vehicle in vehicles) {
-        totalServiceCount += await _isarService.getServiceCountByVehicle(
+        totalServiceCount += await _driftService.getServiceCountByVehicle(
           vehicle.id,
         );
       }
@@ -105,7 +105,7 @@ class AnalyticsCubit extends Cubit<AnalyticsState> {
     final Map<int, double> costPerVehicle = {};
 
     for (var vehicle in vehicles) {
-      final cost = await _isarService.getTotalCostByVehicle(vehicle.id);
+      final cost = await _driftService.getTotalCostByVehicle(vehicle.id);
       costPerVehicle[vehicle.id] = cost;
     }
 
