@@ -471,6 +471,45 @@ class _VehiclesScreenState extends State<VehiclesScreen> {
     );
   }
 
+  Color _getColorFromName(String? colorName) {
+    if (colorName == null || colorName.isEmpty) return Colors.grey;
+
+    switch (colorName.toLowerCase()) {
+      case 'white':
+        return Colors.white;
+      case 'black':
+        return Colors.black;
+      case 'silver':
+        return Colors.grey;
+      case 'gray':
+        return const Color(0xFF808080);
+      case 'red':
+        return Colors.red;
+      case 'blue':
+        return Colors.blue;
+      case 'green':
+        return Colors.green;
+      case 'yellow':
+        return Colors.yellow;
+      case 'orange':
+        return Colors.orange;
+      case 'brown':
+        return Colors.brown;
+      case 'beige':
+        return const Color(0xFFF5F5DC);
+      case 'gold':
+        return const Color(0xFFFFD700);
+      case 'purple':
+        return Colors.purple;
+      case 'pink':
+        return Colors.pink;
+      case 'cyan':
+        return Colors.cyan;
+      default:
+        return Colors.grey;
+    }
+  }
+
   Widget _buildVehicleCard(
     Vehicle vehicle,
     List<ServiceRecord>? serviceRecords,
@@ -533,14 +572,38 @@ class _VehiclesScreenState extends State<VehiclesScreen> {
                     ),
                   ),
                   SizedBox(height: 6.h),
-                  Text(
-                    vehicle.plateNumber,
-                    style: TextStyle(
-                      color: AppColors.secondaryText,
-                      fontSize: 13.sp,
-                      letterSpacing: 0.5,
-                      fontWeight: FontWeight.w500,
-                    ),
+                  Row(
+                    children: [
+                      Text(
+                        vehicle.plateNumber,
+                        style: TextStyle(
+                          color: AppColors.secondaryText,
+                          fontSize: 13.sp,
+                          letterSpacing: 0.5,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      if (vehicle.color != null &&
+                          vehicle.color!.isNotEmpty) ...[
+                        SizedBox(width: 8.w),
+                        Container(
+                          width: 8.w,
+                          height: 8.h,
+                          decoration: BoxDecoration(
+                            color: _getColorFromName(vehicle.color),
+                            shape: BoxShape.circle,
+                          ),
+                        ),
+                        SizedBox(width: 4.w),
+                        Text(
+                          vehicle.color!,
+                          style: TextStyle(
+                            color: AppColors.secondaryText.withOpacity(0.8),
+                            fontSize: 12.sp,
+                          ),
+                        ),
+                      ],
+                    ],
                   ),
                   if (vehicle.brand != null ||
                       vehicle.model != null ||
