@@ -23,6 +23,8 @@ class VehicleDetailScreen extends StatefulWidget {
 }
 
 class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
+  bool _isVehicleInfoExpanded = true;
+
   IconData _getVehicleTypeIcon(String? type) {
     if (type == null) return Icons.directions_car;
 
@@ -874,84 +876,138 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
               ),
             ],
           ),
-          // Vehicle details
-          Padding(
-            padding: EdgeInsets.only(top: 24.h),
-            child: GridView.count(
-              crossAxisCount: 2,
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              mainAxisSpacing: 0,
-              crossAxisSpacing: 0,
-              childAspectRatio: 2.5,
-              children: [
-                _buildDetailRow(
-                  icon: Icons.category_outlined,
-                  label: 'Type',
-                  value: vehicle.type ?? 'Not set',
+          SizedBox(height: 16.h),
+          // Vehicle details with both height and fade animations
+          AnimatedSize(
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.easeInOut,
+            child: AnimatedOpacity(
+              opacity: _isVehicleInfoExpanded ? 1.0 : 0.0,
+              duration: const Duration(milliseconds: 300),
+              curve: Curves.easeInOut,
+              child:
+                  _isVehicleInfoExpanded
+                      ? GridView.count(
+                        crossAxisCount: 2,
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        mainAxisSpacing: 0,
+                        crossAxisSpacing: 0,
+                        childAspectRatio: 2.5,
+                        children: [
+                          _buildDetailRow(
+                            icon: Icons.category_outlined,
+                            label: 'Type',
+                            value: vehicle.type ?? 'Not set',
+                          ),
+                          _buildDetailRow(
+                            icon: Icons.business,
+                            label: 'Brand',
+                            value: vehicle.brand ?? 'Not set',
+                          ),
+                          _buildDetailRow(
+                            icon: Icons.model_training,
+                            label: 'Model',
+                            value: vehicle.model ?? 'Not set',
+                          ),
+                          _buildDetailRow(
+                            icon: Icons.calendar_today,
+                            label: 'Year',
+                            value: vehicle.year ?? 'Not set',
+                          ),
+                          _buildDetailRow(
+                            icon: Icons.palette,
+                            label: 'Color',
+                            value: vehicle.color ?? 'Not set',
+                          ),
+                          _buildDetailRow(
+                            icon: Icons.vpn_key,
+                            label: 'VIN',
+                            value: vehicle.vin ?? 'Not set',
+                          ),
+                          _buildDetailRow(
+                            icon: Icons.local_gas_station,
+                            label: 'Fuel Type',
+                            value: vehicle.fuelType ?? 'Not set',
+                          ),
+                          _buildDetailRow(
+                            icon: Icons.settings_input_component,
+                            label: 'Transmission',
+                            value: vehicle.transmissionType ?? 'Not set',
+                          ),
+                          _buildDetailRow(
+                            icon: Icons.speed,
+                            label: 'Odometer',
+                            value:
+                                vehicle.odometer != null
+                                    ? '${vehicle.odometer} km'
+                                    : 'Not set',
+                          ),
+                          _buildDetailRow(
+                            icon: Icons.event,
+                            label: 'Purchase Date',
+                            value:
+                                vehicle.purchaseDate != null
+                                    ? _formatDate(vehicle.purchaseDate!)
+                                    : 'Not set',
+                          ),
+                          _buildDetailRow(
+                            icon: Icons.add_circle_outline,
+                            label: 'Created',
+                            value: _formatDate(vehicle.createdAt),
+                          ),
+                          _buildDetailRow(
+                            icon: Icons.update,
+                            label: 'Last Updated',
+                            value: _formatDate(vehicle.updatedAt),
+                          ),
+                        ],
+                      )
+                      : const SizedBox.shrink(),
+            ),
+          ),
+          SizedBox(height: 16.h),
+          // Toggle button at the end
+          Center(
+            child: InkWell(
+              onTap: () {
+                setState(() {
+                  _isVehicleInfoExpanded = !_isVehicleInfoExpanded;
+                });
+              },
+              borderRadius: BorderRadius.circular(8.r),
+              child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
+                decoration: BoxDecoration(
+                  color: AppColors.background,
+                  borderRadius: BorderRadius.circular(8.r),
+                  border: Border.all(color: AppColors.border, width: 0.5),
                 ),
-                _buildDetailRow(
-                  icon: Icons.business,
-                  label: 'Brand',
-                  value: vehicle.brand ?? 'Not set',
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      _isVehicleInfoExpanded ? 'Show Less' : 'Show More',
+                      style: TextStyle(
+                        fontSize: 13.sp,
+                        color: AppColors.accent,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    SizedBox(width: 6.w),
+                    AnimatedRotation(
+                      turns: _isVehicleInfoExpanded ? 0.5 : 0,
+                      duration: const Duration(milliseconds: 300),
+                      curve: Curves.easeInOut,
+                      child: Icon(
+                        Icons.keyboard_arrow_down,
+                        size: 20.sp,
+                        color: AppColors.accent,
+                      ),
+                    ),
+                  ],
                 ),
-                _buildDetailRow(
-                  icon: Icons.model_training,
-                  label: 'Model',
-                  value: vehicle.model ?? 'Not set',
-                ),
-                _buildDetailRow(
-                  icon: Icons.calendar_today,
-                  label: 'Year',
-                  value: vehicle.year ?? 'Not set',
-                ),
-                _buildDetailRow(
-                  icon: Icons.palette,
-                  label: 'Color',
-                  value: vehicle.color ?? 'Not set',
-                ),
-                _buildDetailRow(
-                  icon: Icons.vpn_key,
-                  label: 'VIN',
-                  value: vehicle.vin ?? 'Not set',
-                ),
-                _buildDetailRow(
-                  icon: Icons.local_gas_station,
-                  label: 'Fuel Type',
-                  value: vehicle.fuelType ?? 'Not set',
-                ),
-                _buildDetailRow(
-                  icon: Icons.settings_input_component,
-                  label: 'Transmission',
-                  value: vehicle.transmissionType ?? 'Not set',
-                ),
-                _buildDetailRow(
-                  icon: Icons.speed,
-                  label: 'Odometer',
-                  value:
-                      vehicle.odometer != null
-                          ? '${vehicle.odometer} km'
-                          : 'Not set',
-                ),
-                _buildDetailRow(
-                  icon: Icons.event,
-                  label: 'Purchase Date',
-                  value:
-                      vehicle.purchaseDate != null
-                          ? _formatDate(vehicle.purchaseDate!)
-                          : 'Not set',
-                ),
-                _buildDetailRow(
-                  icon: Icons.add_circle_outline,
-                  label: 'Created',
-                  value: _formatDate(vehicle.createdAt),
-                ),
-                _buildDetailRow(
-                  icon: Icons.update,
-                  label: 'Last Updated',
-                  value: _formatDate(vehicle.updatedAt),
-                ),
-              ],
+              ),
             ),
           ),
         ],
