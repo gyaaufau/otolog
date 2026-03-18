@@ -20,7 +20,7 @@ class _HomeScreenState extends State<HomeScreen> {
   IconData _getVehicleTypeIcon(String? type) {
     if (type == null) return Icons.directions_car;
 
-    switch (type!.toLowerCase()) {
+    switch (type.toLowerCase()) {
       case 'car':
         return Icons.directions_car;
       case 'motorcycle':
@@ -56,12 +56,14 @@ class _HomeScreenState extends State<HomeScreen> {
 
   String _getGreeting() {
     final hour = DateTime.now().hour;
-    if (hour < 12) {
+    if (hour >= 5 && hour < 12) {
       return 'Good Morning';
-    } else if (hour < 17) {
+    } else if (hour >= 12 && hour < 17) {
       return 'Good Afternoon';
-    } else {
+    } else if (hour >= 17 && hour < 21) {
       return 'Good Evening';
+    } else {
+      return 'Good Night';
     }
   }
 
@@ -110,37 +112,15 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildHeader() {
-    return Container(
-      width: double.infinity,
-      margin: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
-      padding: EdgeInsets.all(20.w),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            AppColors.accent.withOpacity(0.08),
-            AppColors.accent.withOpacity(0.02),
-          ],
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
+      child: Text(
+        _getGreeting(),
+        style: TextStyle(
+          fontSize: 28.sp,
+          fontWeight: FontWeight.bold,
+          color: AppColors.primaryText,
         ),
-        borderRadius: BorderRadius.circular(20.r),
-        border: Border.all(
-          color: AppColors.accent.withOpacity(0.15),
-          width: 1.5,
-        ),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            _getGreeting(),
-            style: TextStyle(
-              fontSize: 24.sp,
-              fontWeight: FontWeight.bold,
-              color: AppColors.primaryText,
-            ),
-          ),
-        ],
       ),
     );
   }

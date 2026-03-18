@@ -62,6 +62,16 @@ class _VehiclesScreenState extends State<VehiclesScreen> {
     super.dispose();
   }
 
+  int _getServiceCountForVehicle(
+    int vehicleId,
+    List<ServiceRecord>? serviceRecords,
+  ) {
+    if (serviceRecords == null) return 0;
+    return serviceRecords
+        .where((service) => service.vehicleId == vehicleId)
+        .length;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -128,7 +138,7 @@ class _VehiclesScreenState extends State<VehiclesScreen> {
                       itemCount: state.vehicles.length,
                       itemBuilder: (context, index) {
                         final vehicle = state.vehicles[index];
-                        return _buildVehicleCard(vehicle);
+                        return _buildVehicleCard(vehicle, state.serviceRecords);
                       },
                     ),
                   );
@@ -151,7 +161,12 @@ class _VehiclesScreenState extends State<VehiclesScreen> {
     );
   }
 
-  Widget _buildVehicleCard(Vehicle vehicle) {
+  Widget _buildVehicleCard(
+    Vehicle vehicle,
+    List<ServiceRecord>? serviceRecords,
+  ) {
+    final serviceCount = _getServiceCountForVehicle(vehicle.id, serviceRecords);
+
     return GestureDetector(
       onTap: () {
         context.push(
@@ -179,8 +194,8 @@ class _VehiclesScreenState extends State<VehiclesScreen> {
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                   colors: [
-                    AppColors.accent.withOpacity(0.25),
-                    AppColors.accent.withOpacity(0.1),
+                    AppColors.accent.withOpacity(0.2),
+                    AppColors.accent.withOpacity(0.05),
                   ],
                 ),
                 borderRadius: BorderRadius.circular(12.r),
@@ -201,77 +216,71 @@ class _VehiclesScreenState extends State<VehiclesScreen> {
                   Text(
                     vehicle.name,
                     style: TextStyle(
-                      fontWeight: FontWeight.bold,
+                      fontWeight: FontWeight.w600,
                       fontSize: 16.sp,
                       color: AppColors.primaryText,
+                      letterSpacing: -0.3,
                     ),
                   ),
-                  SizedBox(height: 4.h),
-                  Row(
-                    children: [
-                      Icon(
-                        Icons.confirmation_number,
-                        size: 14.sp,
-                        color: AppColors.secondaryText,
-                      ),
-                      SizedBox(width: 4.w),
-                      Text(
-                        vehicle.plateNumber,
-                        style: TextStyle(
-                          color: AppColors.secondaryText,
-                          fontSize: 13.sp,
-                        ),
-                      ),
-                    ],
-                  ),
-                  if (vehicle.type != null) ...[
-                    SizedBox(height: 4.h),
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.category_outlined,
-                          size: 14.sp,
-                          color: AppColors.secondaryText,
-                        ),
-                        SizedBox(width: 4.w),
-                        Text(
-                          vehicle.type!,
-                          style: TextStyle(
-                            color: AppColors.secondaryText,
-                            fontSize: 12.sp,
-                          ),
-                        ),
-                      ],
+                  SizedBox(height: 6.h),
+                  Text(
+                    vehicle.plateNumber,
+                    style: TextStyle(
+                      color: AppColors.secondaryText,
+                      fontSize: 13.sp,
+                      letterSpacing: 0.5,
+                      fontWeight: FontWeight.w500,
                     ),
-                  ],
-                  if (vehicle.brand != null || vehicle.model != null) ...[
+                  ),
+                  if (vehicle.brand != null ||
+                      vehicle.model != null ||
+                      vehicle.year != null) ...[
                     SizedBox(height: 4.h),
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.info_outline,
-                          size: 14.sp,
-                          color: AppColors.secondaryText,
-                        ),
-                        SizedBox(width: 4.w),
-                        Text(
-                          '${vehicle.brand ?? ''} ${vehicle.model ?? ''} ${vehicle.year ?? ''}'
-                              .trim(),
-                          style: TextStyle(
-                            color: AppColors.secondaryText,
-                            fontSize: 12.sp,
-                          ),
-                        ),
-                      ],
+                    Text(
+                      '${vehicle.brand ?? ''} ${vehicle.model ?? ''} ${vehicle.year ?? ''}'
+                          .trim()
+                          .replaceAll(RegExp(r'\s+'), ' '),
+                      style: TextStyle(
+                        color: AppColors.secondaryText.withOpacity(0.7),
+                        fontSize: 12.sp,
+                        letterSpacing: 0.2,
+                      ),
                     ),
                   ],
                 ],
               ),
             ),
-            Icon(
-              Icons.chevron_right,
-              color: AppColors.secondaryText,
-              size: 20.sp,
+            SizedBox(width: 12.w),
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
+              decoration: BoxDecoration(
+                color: AppColors.warning.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(16.r),
+                border: Border.all(
+                  color: AppColors.warning.withOpacity(0.2),
+                  width: 1,
+                ),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    Icons.build_outlined,
+                    size: 13.sp,
+                    color: AppColors.warning,
+                  ),
+                  SizedBox(width: 5.w),
+                  Text(
+                    serviceCount.toString(),
+                    style: TextStyle(
+                      fontSize: 12.sp,
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.warning,
+                      letterSpacing: -0.2,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ],
         ),

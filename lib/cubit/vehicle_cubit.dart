@@ -13,7 +13,8 @@ class VehicleCubit extends Cubit<VehicleState> {
     emit(const VehicleLoading());
     try {
       final vehicles = await _driftService.getAllVehicles();
-      emit(VehicleLoaded(vehicles: vehicles));
+      final serviceRecords = await _driftService.getAllServiceRecords();
+      emit(VehicleLoaded(vehicles: vehicles, serviceRecords: serviceRecords));
     } catch (e) {
       emit(VehicleError('Failed to load vehicles: ${e.toString()}'));
     }
@@ -90,12 +91,13 @@ class VehicleCubit extends Cubit<VehicleState> {
   Future<void> searchVehicles(String query) async {
     emit(const VehicleLoading());
     try {
+      final serviceRecords = await _driftService.getAllServiceRecords();
       if (query.isEmpty) {
         final vehicles = await _driftService.getAllVehicles();
-        emit(VehicleLoaded(vehicles: vehicles));
+        emit(VehicleLoaded(vehicles: vehicles, serviceRecords: serviceRecords));
       } else {
         final vehicles = await _driftService.searchVehicles(query);
-        emit(VehicleLoaded(vehicles: vehicles));
+        emit(VehicleLoaded(vehicles: vehicles, serviceRecords: serviceRecords));
       }
     } catch (e) {
       emit(VehicleError('Failed to search vehicles: ${e.toString()}'));
