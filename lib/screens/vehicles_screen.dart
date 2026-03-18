@@ -17,6 +17,22 @@ class VehiclesScreen extends StatefulWidget {
 
 class _VehiclesScreenState extends State<VehiclesScreen> {
   final TextEditingController _searchController = TextEditingController();
+  String? _selectedFilterType;
+
+  // List of vehicle types for filter
+  final List<String> _vehicleTypes = [
+    'Car',
+    'Motorcycle',
+    'Truck',
+    'Van',
+    'Bus',
+    'SUV',
+    'Sedan',
+    'Hatchback',
+    'Coupe',
+    'Convertible',
+    'Wagon',
+  ];
 
   IconData _getVehicleTypeIcon(String? type) {
     if (type == null || type.trim().isEmpty) return Icons.directions_car;
@@ -57,9 +73,175 @@ class _VehiclesScreenState extends State<VehiclesScreen> {
   }
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final state = context.read<VehicleCubit>().state;
+    if (state is VehicleLoaded) {
+      _selectedFilterType = state.filterType;
+    }
+  }
+
+  @override
   void dispose() {
     _searchController.dispose();
     super.dispose();
+  }
+
+  void _showFilterBottomSheet(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+      builder:
+          (bottomSheetContext) => StatefulBuilder(
+            builder: (context, setModalState) {
+              return Container(
+                decoration: BoxDecoration(
+                  color: AppColors.surface,
+                  borderRadius: BorderRadius.vertical(
+                    top: Radius.circular(24.r),
+                  ),
+                ),
+                padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 24.h),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'Filter by Vehicle Type',
+                          style: TextStyle(
+                            fontSize: 18.sp,
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.primaryText,
+                          ),
+                        ),
+                        GestureDetector(
+                          onTap: () => Navigator.pop(context),
+                          child: Icon(
+                            Icons.close,
+                            color: AppColors.secondaryText,
+                            size: 24.sp,
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 20.h),
+                    Wrap(
+                      spacing: 10.w,
+                      runSpacing: 10.h,
+                      children:
+                          _vehicleTypes.map((type) {
+                            final isSelected = _selectedFilterType == type;
+                            return GestureDetector(
+                              onTap: () {
+                                setModalState(() {
+                                  _selectedFilterType =
+                                      isSelected ? null : type;
+                                });
+                                setState(() {
+                                  _selectedFilterType =
+                                      isSelected ? null : type;
+                                });
+                              },
+                              child: Container(
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: 16.w,
+                                  vertical: 10.h,
+                                ),
+                                decoration: BoxDecoration(
+                                  color:
+                                      isSelected
+                                          ? AppColors.accent
+                                          : AppColors.inputBackground,
+                                  borderRadius: BorderRadius.circular(20.r),
+                                  border: Border.all(
+                                    color:
+                                        isSelected
+                                            ? AppColors.accent
+                                            : AppColors.border,
+                                  ),
+                                ),
+                                child: Text(
+                                  type,
+                                  style: TextStyle(
+                                    fontSize: 14.sp,
+                                    fontWeight: FontWeight.w500,
+                                    color:
+                                        isSelected
+                                            ? AppColors.background
+                                            : AppColors.primaryText,
+                                  ),
+                                ),
+                              ),
+                            );
+                          }).toList(),
+                    ),
+                    SizedBox(height: 24.h),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: OutlinedButton(
+                            onPressed: () {
+                              setModalState(() {
+                                _selectedFilterType = null;
+                              });
+                              setState(() {
+                                _selectedFilterType = null;
+                              });
+                              context.read<VehicleCubit>().filterVehiclesByType(
+                                null,
+                              );
+                              Navigator.pop(context);
+                            },
+                            style: OutlinedButton.styleFrom(
+                              foregroundColor: AppColors.secondaryText,
+                              side: BorderSide(color: AppColors.border),
+                              padding: EdgeInsets.symmetric(vertical: 14.h),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12.r),
+                              ),
+                            ),
+                            child: Text(
+                              'Remove Filter',
+                              style: TextStyle(fontSize: 14.sp),
+                            ),
+                          ),
+                        ),
+                        SizedBox(width: 12.w),
+                        Expanded(
+                          child: ElevatedButton(
+                            onPressed: () {
+                              context.read<VehicleCubit>().filterVehiclesByType(
+                                _selectedFilterType,
+                              );
+                              Navigator.pop(context);
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: AppColors.accent,
+                              foregroundColor: AppColors.background,
+                              padding: EdgeInsets.symmetric(vertical: 14.h),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12.r),
+                              ),
+                            ),
+                            child: Text(
+                              'Apply Filter',
+                              style: TextStyle(fontSize: 14.sp),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: MediaQuery.of(context).viewInsets.bottom),
+                  ],
+                ),
+              );
+            },
+          ),
+    );
   }
 
   int _getServiceCountForVehicle(
@@ -86,35 +268,163 @@ class _VehiclesScreenState extends State<VehiclesScreen> {
         children: [
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 12.h),
-            child: TextField(
-              controller: _searchController,
-              decoration: InputDecoration(
-                hintText: 'Search vehicles...',
-                hintStyle: TextStyle(
-                  color: AppColors.secondaryText,
-                  fontSize: 14.sp,
+            child: Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    controller: _searchController,
+                    decoration: InputDecoration(
+                      hintText: 'Search vehicles...',
+                      hintStyle: TextStyle(
+                        color: AppColors.secondaryText,
+                        fontSize: 14.sp,
+                      ),
+                      prefixIcon: Icon(
+                        Icons.search,
+                        color: AppColors.secondaryText,
+                        size: 20.sp,
+                      ),
+                      filled: true,
+                      fillColor: AppColors.inputBackground,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12.r),
+                        borderSide: BorderSide.none,
+                      ),
+                      contentPadding: EdgeInsets.symmetric(
+                        horizontal: 16.w,
+                        vertical: 14.h,
+                      ),
+                    ),
+                    style: TextStyle(
+                      color: AppColors.primaryText,
+                      fontSize: 14.sp,
+                    ),
+                    onChanged: (value) {
+                      context.read<VehicleCubit>().searchVehicles(value);
+                    },
+                  ),
                 ),
-                prefixIcon: Icon(
-                  Icons.search,
-                  color: AppColors.secondaryText,
-                  size: 20.sp,
+                SizedBox(width: 12.w),
+                BlocBuilder<VehicleCubit, VehicleState>(
+                  builder: (context, state) {
+                    final hasActiveFilter =
+                        state is VehicleLoaded && state.filterType != null;
+                    return GestureDetector(
+                      onTap: () => _showFilterBottomSheet(context),
+                      child: Container(
+                        width: 48.w,
+                        height: 48.h,
+                        decoration: BoxDecoration(
+                          color:
+                              hasActiveFilter
+                                  ? AppColors.accent
+                                  : AppColors.inputBackground,
+                          borderRadius: BorderRadius.circular(12.r),
+                          border: Border.all(
+                            color:
+                                hasActiveFilter
+                                    ? AppColors.accent
+                                    : AppColors.border,
+                          ),
+                        ),
+                        child: Stack(
+                          children: [
+                            Center(
+                              child: Icon(
+                                Icons.filter_list,
+                                color:
+                                    hasActiveFilter
+                                        ? AppColors.background
+                                        : AppColors.secondaryText,
+                                size: 22.sp,
+                              ),
+                            ),
+                            if (hasActiveFilter)
+                              Positioned(
+                                top: 8.h,
+                                right: 8.w,
+                                child: Container(
+                                  width: 8.w,
+                                  height: 8.h,
+                                  decoration: BoxDecoration(
+                                    color: AppColors.background,
+                                    shape: BoxShape.circle,
+                                  ),
+                                ),
+                              ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
                 ),
-                filled: true,
-                fillColor: AppColors.inputBackground,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12.r),
-                  borderSide: BorderSide.none,
-                ),
-                contentPadding: EdgeInsets.symmetric(
-                  horizontal: 16.w,
-                  vertical: 14.h,
-                ),
-              ),
-              style: TextStyle(color: AppColors.primaryText, fontSize: 14.sp),
-              onChanged: (value) {
-                context.read<VehicleCubit>().searchVehicles(value);
-              },
+              ],
             ),
+          ),
+          BlocBuilder<VehicleCubit, VehicleState>(
+            builder: (context, state) {
+              if (state is VehicleLoaded && state.filterType != null) {
+                return Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 20.w,
+                    vertical: 8.h,
+                  ),
+                  child: Row(
+                    children: [
+                      Container(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 12.w,
+                          vertical: 6.h,
+                        ),
+                        decoration: BoxDecoration(
+                          color: AppColors.accent.withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(16.r),
+                          border: Border.all(
+                            color: AppColors.accent.withOpacity(0.3),
+                          ),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(
+                              Icons.filter_alt,
+                              size: 14.sp,
+                              color: AppColors.accent,
+                            ),
+                            SizedBox(width: 6.w),
+                            Text(
+                              '${state.filterType}',
+                              style: TextStyle(
+                                fontSize: 13.sp,
+                                fontWeight: FontWeight.w500,
+                                color: AppColors.accent,
+                              ),
+                            ),
+                            SizedBox(width: 6.w),
+                            GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  _selectedFilterType = null;
+                                });
+                                context
+                                    .read<VehicleCubit>()
+                                    .filterVehiclesByType(null);
+                              },
+                              child: Icon(
+                                Icons.close,
+                                size: 16.sp,
+                                color: AppColors.accent,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              }
+              return const SizedBox.shrink();
+            },
           ),
           Expanded(
             child: BlocBuilder<VehicleCubit, VehicleState>(

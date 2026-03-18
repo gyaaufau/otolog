@@ -21,12 +21,14 @@ class VehicleLoaded extends VehicleState {
   final List<ServiceRecord>? serviceRecords;
   final double? totalCost;
   final int? serviceCount;
+  final String? filterType;
 
   const VehicleLoaded({
     required this.vehicles,
     this.serviceRecords,
     this.totalCost,
     this.serviceCount,
+    this.filterType,
   });
 
   VehicleLoaded copyWith({
@@ -34,12 +36,14 @@ class VehicleLoaded extends VehicleState {
     List<ServiceRecord>? serviceRecords,
     double? totalCost,
     int? serviceCount,
+    String? filterType,
   }) {
     return VehicleLoaded(
       vehicles: vehicles ?? this.vehicles,
       serviceRecords: serviceRecords ?? this.serviceRecords,
       totalCost: totalCost ?? this.totalCost,
       serviceCount: serviceCount ?? this.serviceCount,
+      filterType: filterType ?? this.filterType,
     );
   }
 
@@ -49,6 +53,7 @@ class VehicleLoaded extends VehicleState {
     serviceRecords,
     totalCost,
     serviceCount,
+    filterType,
   ];
 }
 

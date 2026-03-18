@@ -98,6 +98,13 @@ class AppDatabase extends _$AppDatabase {
     )).get();
   }
 
+  Future<List<Vehicle>> filterVehiclesByType(String type) {
+    return (select(vehicles)
+          ..where((tbl) => tbl.type.equals(type))
+          ..orderBy([(tbl) => OrderingTerm.desc(tbl.createdAt)]))
+        .get();
+  }
+
   // Service record operations
   Future<int> addServiceRecord(ServiceRecordsCompanion record) {
     return into(serviceRecords).insert(record);

@@ -104,6 +104,35 @@ class VehicleCubit extends Cubit<VehicleState> {
     }
   }
 
+  // Filter vehicles by type
+  Future<void> filterVehiclesByType(String? type) async {
+    emit(const VehicleLoading());
+    try {
+      final serviceRecords = await _driftService.getAllServiceRecords();
+      if (type == null || type.isEmpty) {
+        final vehicles = await _driftService.getAllVehicles();
+        emit(
+          VehicleLoaded(
+            vehicles: vehicles,
+            serviceRecords: serviceRecords,
+            filterType: null,
+          ),
+        );
+      } else {
+        final vehicles = await _driftService.filterVehiclesByType(type);
+        emit(
+          VehicleLoaded(
+            vehicles: vehicles,
+            serviceRecords: serviceRecords,
+            filterType: type,
+          ),
+        );
+      }
+    } catch (e) {
+      emit(VehicleError('Failed to filter vehicles: ${e.toString()}'));
+    }
+  }
+
   // Add service record
   Future<void> addServiceRecord(ServiceRecordsCompanion record) async {
     emit(const VehicleLoading());

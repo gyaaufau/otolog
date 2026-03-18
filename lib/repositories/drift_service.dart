@@ -34,6 +34,10 @@ class DriftService {
     return await database.searchVehicles(query);
   }
 
+  Future<List<Vehicle>> filterVehiclesByType(String type) async {
+    return await database.filterVehiclesByType(type);
+  }
+
   // Service Record Operations
   Future<int> addServiceRecord(ServiceRecordsCompanion record) async {
     return await database.addServiceRecord(record);
