@@ -117,7 +117,7 @@ class _HomeScreenState extends State<HomeScreen> {
       child: Text(
         _getGreeting(),
         style: TextStyle(
-          fontSize: 28.sp,
+          fontSize: 22.sp,
           fontWeight: FontWeight.bold,
           color: AppColors.primaryText,
         ),
@@ -132,6 +132,11 @@ class _HomeScreenState extends State<HomeScreen> {
           final vehicleCount = state.vehicles.length;
           final serviceCount = state.serviceCount ?? 0;
           final totalCost = state.totalCost ?? 0;
+
+          // Show first-time CTA if no vehicles
+          if (vehicleCount == 0) {
+            return _buildFirstTimeCTA();
+          }
 
           return Padding(
             padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 20.h),
@@ -225,6 +230,80 @@ class _HomeScreenState extends State<HomeScreen> {
           Text(
             label,
             style: TextStyle(fontSize: 12.sp, color: AppColors.secondaryText),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildFirstTimeCTA() {
+    return Container(
+      margin: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
+      padding: EdgeInsets.all(16.w),
+      decoration: BoxDecoration(
+        color: AppColors.surface,
+        borderRadius: BorderRadius.circular(16.r),
+        border: Border.all(color: AppColors.accent.withOpacity(0.3), width: 1),
+      ),
+      child: Row(
+        children: [
+          // Compact Icon
+          Container(
+            width: 48.w,
+            height: 48.h,
+            decoration: BoxDecoration(
+              color: AppColors.accent.withOpacity(0.15),
+              borderRadius: BorderRadius.circular(12.r),
+            ),
+            child: Icon(
+              Icons.directions_car_rounded,
+              size: 24.sp,
+              color: AppColors.accent,
+            ),
+          ),
+          SizedBox(width: 12.w),
+          // Content
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Welcome to OtoLog!',
+                  style: TextStyle(
+                    fontSize: 14.sp,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.primaryText,
+                  ),
+                ),
+                SizedBox(height: 2.h),
+                Text(
+                  'Add your first vehicle to start tracking',
+                  style: TextStyle(
+                    fontSize: 12.sp,
+                    color: AppColors.secondaryText,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          // CTA Button
+          ElevatedButton(
+            onPressed: () {
+              context.push(AppRoutes.addVehicle);
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.accent,
+              foregroundColor: AppColors.background,
+              padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 8.h),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8.r),
+              ),
+              elevation: 0,
+            ),
+            child: Text(
+              'Add',
+              style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w600),
+            ),
           ),
         ],
       ),
@@ -407,7 +486,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _buildEmptyServicesState(VehicleLoaded state) {
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 20.w),
-      padding: EdgeInsets.symmetric(vertical: 40.h),
+      padding: EdgeInsets.symmetric(vertical: 32.h, horizontal: 20.w),
       decoration: BoxDecoration(
         color: AppColors.surface,
         borderRadius: BorderRadius.circular(16.r),
@@ -418,31 +497,31 @@ class _HomeScreenState extends State<HomeScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Container(
-              width: 64.w,
-              height: 64.h,
+              width: 56.w,
+              height: 56.h,
               decoration: BoxDecoration(
-                color: AppColors.accent.withOpacity(0.1),
+                color: AppColors.accent.withOpacity(0.15),
                 shape: BoxShape.circle,
               ),
               child: Icon(
-                Icons.history_outlined,
-                size: 32.sp,
+                Icons.build_circle_outlined,
+                size: 28.sp,
                 color: AppColors.accent,
               ),
             ),
-            SizedBox(height: 16.h),
+            SizedBox(height: 12.h),
             Text(
-              'No Service Records',
+              'Ready to Track?',
               style: TextStyle(
-                fontSize: 18.sp,
-                fontWeight: FontWeight.w600,
+                fontSize: 16.sp,
+                fontWeight: FontWeight.bold,
                 color: AppColors.primaryText,
               ),
             ),
-            SizedBox(height: 8.h),
+            SizedBox(height: 6.h),
             Text(
-              'Start tracking your vehicle maintenance',
-              style: TextStyle(fontSize: 14.sp, color: AppColors.secondaryText),
+              'Add your first service record',
+              style: TextStyle(fontSize: 13.sp, color: AppColors.secondaryText),
             ),
             SizedBox(height: 16.h),
             if (state.vehicles.isNotEmpty)
@@ -455,11 +534,11 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   );
                 },
-                icon: Icon(Icons.add, size: 18.sp),
+                icon: Icon(Icons.add, size: 16.sp),
                 label: Text(
                   'Add Service',
                   style: TextStyle(
-                    fontSize: 14.sp,
+                    fontSize: 13.sp,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
@@ -467,11 +546,11 @@ class _HomeScreenState extends State<HomeScreen> {
                   backgroundColor: AppColors.accent,
                   foregroundColor: AppColors.background,
                   padding: EdgeInsets.symmetric(
-                    horizontal: 20.w,
-                    vertical: 12.h,
+                    horizontal: 16.w,
+                    vertical: 10.h,
                   ),
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12.r),
+                    borderRadius: BorderRadius.circular(10.r),
                   ),
                   elevation: 0,
                 ),

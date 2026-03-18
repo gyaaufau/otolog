@@ -120,12 +120,16 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
             ),
           ),
           SizedBox(height: 2.h),
-          Text(
-            value,
-            style: TextStyle(
-              fontSize: 14.sp,
-              color: AppColors.primaryText,
-              fontWeight: FontWeight.w600,
+          Flexible(
+            child: Text(
+              value,
+              style: TextStyle(
+                fontSize: 14.sp,
+                color: AppColors.primaryText,
+                fontWeight: FontWeight.w600,
+              ),
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
             ),
           ),
         ],
