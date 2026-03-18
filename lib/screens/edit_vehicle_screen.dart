@@ -5,7 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import '../cubit/vehicle_cubit.dart';
 import '../cubit/vehicle_state.dart';
-import '../models/vehicle.dart';
+import '../database/database.dart';
 import '../resources/theme.dart';
 import '../shared/commons/utils/image_picker_helper.dart';
 
@@ -38,6 +38,7 @@ class _EditVehicleScreenState extends State<EditVehicleScreen> {
   File? _imageFile;
   String? _existingImagePath;
   bool _isSubmitting = false;
+  Vehicle? _originalVehicle;
 
   static const List<String> _vehicleTypes = [
     'Car',
@@ -107,6 +108,7 @@ class _EditVehicleScreenState extends State<EditVehicleScreen> {
     if (state is VehicleLoaded && state.vehicles.isNotEmpty) {
       final vehicle = state.vehicles.first;
       setState(() {
+        _originalVehicle = vehicle;
         _nameController.text = vehicle.name;
         _plateNumberController.text = vehicle.plateNumber;
         _brandController.text = vehicle.brand ?? '';
@@ -414,10 +416,21 @@ class _EditVehicleScreenState extends State<EditVehicleScreen> {
 
   void _submitForm() {
     if (_formKey.currentState!.validate()) {
+      if (_originalVehicle == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Vehicle data not loaded. Please try again.'),
+            backgroundColor: AppColors.error,
+          ),
+        );
+        return;
+      }
+
       setState(() {
         _isSubmitting = true;
       });
       final vehicle = Vehicle(
+        id: _originalVehicle!.id,
         name: _nameController.text.trim(),
         plateNumber: _plateNumberController.text.trim(),
         brand:
@@ -455,7 +468,9 @@ class _EditVehicleScreenState extends State<EditVehicleScreen> {
                 ? null
                 : _selectedTransmissionType?.trim(),
         imagePath: _imageFile?.path ?? _existingImagePath,
-      )..id = widget.vehicleId;
+        createdAt: _originalVehicle!.createdAt,
+        updatedAt: DateTime.now(),
+      );
 
       context.read<VehicleCubit>().updateVehicle(vehicle);
     }

@@ -3,9 +3,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import 'package:go_router/go_router.dart';
+import 'package:drift/drift.dart' as drift;
 import '../cubit/vehicle_cubit.dart';
 import '../cubit/vehicle_state.dart';
-import '../models/service_record.dart';
+import '../database/database.dart';
 import '../resources/theme.dart';
 
 class AddServiceScreen extends StatefulWidget {
@@ -65,29 +66,29 @@ class _AddServiceScreenState extends State<AddServiceScreen> {
 
   void _submitForm() {
     if (_formKey.currentState!.validate()) {
-      final record = ServiceRecord(
+      final companion = ServiceRecordsCompanion.insert(
         vehicleId: widget.vehicleId,
         serviceType: _serviceTypeController.text.trim(),
         serviceDate: _selectedDate,
         description:
             _descriptionController.text.trim().isEmpty
-                ? null
-                : _descriptionController.text.trim(),
+                ? const drift.Value(null)
+                : drift.Value(_descriptionController.text.trim()),
         cost:
             _costController.text.trim().isEmpty
-                ? null
-                : double.tryParse(_costController.text.trim()),
+                ? const drift.Value(null)
+                : drift.Value(double.tryParse(_costController.text.trim())),
         mechanic:
             _mechanicController.text.trim().isEmpty
-                ? null
-                : _mechanicController.text.trim(),
+                ? const drift.Value(null)
+                : drift.Value(_mechanicController.text.trim()),
         notes:
             _notesController.text.trim().isEmpty
-                ? null
-                : _notesController.text.trim(),
+                ? const drift.Value(null)
+                : drift.Value(_notesController.text.trim()),
       );
 
-      context.read<VehicleCubit>().addServiceRecord(record);
+      context.read<VehicleCubit>().addServiceRecord(companion);
     }
   }
 
@@ -131,10 +132,6 @@ class _AddServiceScreenState extends State<AddServiceScreen> {
                   children: [
                     // Service Type Dropdown
                     DropdownButtonFormField<String>(
-                      initialValue:
-                          _serviceTypeController.text.isEmpty
-                              ? null
-                              : _serviceTypeController.text,
                       decoration: InputDecoration(
                         labelText: 'Service Type *',
                         filled: true,

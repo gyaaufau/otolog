@@ -5,8 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:go_router/go_router.dart';
 import '../cubit/vehicle_cubit.dart';
 import '../cubit/vehicle_state.dart';
-import '../models/service_record.dart';
-import '../models/vehicle.dart';
+import '../database/database.dart';
 import '../resources/theme.dart';
 import '../router.dart';
 

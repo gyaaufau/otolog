@@ -6,7 +6,7 @@ import '../cubit/vehicle_cubit.dart';
 import '../cubit/vehicle_state.dart';
 import '../resources/theme.dart';
 import '../router.dart';
-import '../models/vehicle.dart';
+import '../database/database.dart';
 
 class VehiclesScreen extends StatefulWidget {
   const VehiclesScreen({super.key});

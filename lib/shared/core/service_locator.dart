@@ -1,5 +1,6 @@
 import 'package:get_it/get_it.dart';
-import '../../repositories/isar_service.dart';
+import '../../repositories/drift_service.dart';
+import '../../database/database.dart';
 import '../../cubit/vehicle_cubit.dart';
 import '../../cubit/analytics_cubit.dart';
 
@@ -7,15 +8,15 @@ final sl = GetIt.instance;
 
 /// Initialize the service locator with all dependencies
 Future<void> initServiceLocator() async {
-  // Initialize and register IsarService as a singleton
-  // We initialize it synchronously to ensure it's ready before use
-  final isarService = IsarService();
-  await isarService.db; // Ensure database is initialized
-  sl.registerSingleton<IsarService>(isarService);
+  // Register database as a singleton
+  sl.registerSingleton<AppDatabase>(database);
+
+  // Register DriftService as a singleton
+  sl.registerSingleton<DriftService>(DriftService(database));
 
   // Register cubits
-  sl.registerFactory<VehicleCubit>(() => VehicleCubit(sl<IsarService>()));
-  sl.registerFactory<AnalyticsCubit>(() => AnalyticsCubit(sl<IsarService>()));
+  sl.registerFactory<VehicleCubit>(() => VehicleCubit(sl<DriftService>()));
+  sl.registerFactory<AnalyticsCubit>(() => AnalyticsCubit(sl<DriftService>()));
 }
 
 /// Reset the service locator (useful for testing)

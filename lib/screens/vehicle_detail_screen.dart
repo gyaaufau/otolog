@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:drift/drift.dart' as drift;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -6,8 +7,7 @@ import 'package:intl/intl.dart';
 import 'package:go_router/go_router.dart';
 import '../cubit/vehicle_cubit.dart';
 import '../cubit/vehicle_state.dart';
-import '../models/vehicle.dart';
-import '../models/service_record.dart';
+import '../database/database.dart';
 import '../resources/theme.dart';
 import '../router.dart';
 import '../shared/commons/utils/image_picker_helper.dart';
@@ -318,41 +318,13 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
   }
 
   void _updateVehicleImage(Vehicle vehicle, String imagePath) {
-    final updatedVehicle = Vehicle(
-      name: vehicle.name,
-      plateNumber: vehicle.plateNumber,
-      brand: vehicle.brand,
-      model: vehicle.model,
-      year: vehicle.year,
-      color: vehicle.color,
-      type: vehicle.type,
-      vin: vehicle.vin,
-      purchaseDate: vehicle.purchaseDate,
-      odometer: vehicle.odometer,
-      fuelType: vehicle.fuelType,
-      transmissionType: vehicle.transmissionType,
-      imagePath: imagePath,
-    )..id = vehicle.id;
+    final updatedVehicle = vehicle.copyWith(imagePath: drift.Value(imagePath));
 
     context.read<VehicleCubit>().updateVehicle(updatedVehicle);
   }
 
   void _removeVehicleImage(Vehicle vehicle) {
-    final updatedVehicle = Vehicle(
-      name: vehicle.name,
-      plateNumber: vehicle.plateNumber,
-      brand: vehicle.brand,
-      model: vehicle.model,
-      year: vehicle.year,
-      color: vehicle.color,
-      type: vehicle.type,
-      vin: vehicle.vin,
-      purchaseDate: vehicle.purchaseDate,
-      odometer: vehicle.odometer,
-      fuelType: vehicle.fuelType,
-      transmissionType: vehicle.transmissionType,
-      imagePath: null,
-    )..id = vehicle.id;
+    final updatedVehicle = vehicle.copyWith(imagePath: drift.Value(null));
 
     context.read<VehicleCubit>().updateVehicle(updatedVehicle);
   }
