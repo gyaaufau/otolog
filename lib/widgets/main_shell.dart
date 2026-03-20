@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
-import '../resources/colors.dart';
+import '../resources/theme.dart';
 
 class MainShell extends StatelessWidget {
   final StatefulNavigationShell navigationShell;
@@ -23,7 +23,7 @@ class MainShell extends StatelessWidget {
       body: navigationShell,
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
-          color: AppColors.surface,
+          color: Theme.of(context).colorScheme.surface,
           boxShadow: [
             BoxShadow(
               color: Colors.black.withOpacity(0.1),
@@ -86,14 +86,22 @@ class MainShell extends StatelessWidget {
         children: [
           Icon(
             isActive ? activeIcon : icon,
-            color: isActive ? AppColors.accent : AppColors.secondaryText,
+            color:
+                isActive
+                    ? Theme.of(context).colorScheme.primary
+                    : Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
             size: 24.sp,
           ),
           SizedBox(height: 4.h),
           Text(
             label,
             style: TextStyle(
-              color: isActive ? AppColors.accent : AppColors.secondaryText,
+              color:
+                  isActive
+                      ? Theme.of(context).colorScheme.primary
+                      : Theme.of(
+                        context,
+                      ).colorScheme.onSurface.withOpacity(0.6),
               fontSize: 12.sp,
               fontWeight: isActive ? FontWeight.w600 : FontWeight.normal,
             ),
