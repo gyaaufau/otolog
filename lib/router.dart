@@ -74,38 +74,22 @@ final goRouter = GoRouter(
     GoRoute(
       path: AppRoutes.vehicleDetail,
       name: 'vehicleDetail',
-      builder: (context, state) {
-        final vehicleId = int.parse(state.pathParameters['vehicleId']!);
-        return VehicleDetailScreen(vehicleId: vehicleId);
-      },
+      builder: (context, state) => const VehicleDetailScreen(),
       routes: [
         GoRoute(
           path: 'edit',
           name: 'editVehicle',
-          builder: (context, state) {
-            final vehicleId = int.parse(state.pathParameters['vehicleId']!);
-            return EditVehicleScreen(vehicleId: vehicleId);
-          },
+          builder: (context, state) => const EditVehicleScreen(),
         ),
         GoRoute(
           path: 'add-service',
           name: 'addService',
-          builder: (context, state) {
-            final vehicleId = int.parse(state.pathParameters['vehicleId']!);
-            return AddServiceScreen(vehicleId: vehicleId);
-          },
+          builder: (context, state) => const AddServiceScreen(),
         ),
         GoRoute(
           path: 'service/:serviceId',
           name: 'serviceDetail',
-          builder: (context, state) {
-            final vehicleId = int.parse(state.pathParameters['vehicleId']!);
-            final serviceId = int.parse(state.pathParameters['serviceId']!);
-            return ServiceDetailScreen(
-              serviceId: serviceId,
-              vehicleId: vehicleId,
-            );
-          },
+          builder: (context, state) => const ServiceDetailScreen(),
         ),
       ],
     ),

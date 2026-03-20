@@ -4,8 +4,11 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'shared/core/service_locator.dart';
 import 'cubit/vehicle_cubit.dart';
 import 'cubit/analytics_cubit.dart';
+import 'cubit/theme_cubit.dart';
+import 'cubit/theme_state.dart';
 import 'router.dart';
 import 'resources/theme.dart';
+import 'resources/colors.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -30,112 +33,19 @@ class MyApp extends StatelessWidget {
           providers: [
             BlocProvider(create: (context) => sl<VehicleCubit>()),
             BlocProvider(create: (context) => sl<AnalyticsCubit>()),
+            BlocProvider(create: (context) => ThemeCubit()),
           ],
-          child: MaterialApp.router(
-            title: 'OtoLog',
-            debugShowCheckedModeBanner: false,
-            theme: ThemeData(
-              brightness: Brightness.dark,
-              scaffoldBackgroundColor: AppColors.background,
-              colorScheme: ColorScheme.dark(
-                primary: AppColors.accent,
-                secondary: AppColors.accent,
-                surface: AppColors.surface,
-                onPrimary: AppColors.primaryText,
-                onSecondary: AppColors.primaryText,
-                onSurface: AppColors.primaryText,
-                error: AppColors.error,
-              ),
-              useMaterial3: true,
-              appBarTheme: AppBarTheme(
-                backgroundColor: AppColors.background,
-                foregroundColor: AppColors.primaryText,
-                elevation: 0,
-                centerTitle: true,
-              ),
-              cardTheme: CardThemeData(
-                color: AppColors.surface,
-                elevation: 0,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-              ),
-              inputDecorationTheme: InputDecorationTheme(
-                filled: true,
-                fillColor: AppColors.inputBackground,
-                hintStyle: TextStyle(color: AppColors.secondaryText),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8),
-                  borderSide: BorderSide.none,
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8),
-                  borderSide: BorderSide.none,
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8),
-                  borderSide: BorderSide(color: AppColors.accent),
-                ),
-                errorBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8),
-                  borderSide: BorderSide(color: AppColors.error),
-                ),
-              ),
-              elevatedButtonTheme: ElevatedButtonThemeData(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.accent,
-                  foregroundColor: AppColors.background,
-                  elevation: 0,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                ),
-              ),
-              textButtonTheme: TextButtonThemeData(
-                style: TextButton.styleFrom(foregroundColor: AppColors.accent),
-              ),
-              iconTheme: IconThemeData(color: AppColors.primaryText),
-              textTheme: TextTheme(
-                displayLarge: TextStyle(
-                  color: AppColors.primaryText,
-                  fontSize: 32.sp,
-                  fontWeight: FontWeight.bold,
-                ),
-                displayMedium: TextStyle(
-                  color: AppColors.primaryText,
-                  fontSize: 28.sp,
-                  fontWeight: FontWeight.bold,
-                ),
-                displaySmall: TextStyle(
-                  color: AppColors.primaryText,
-                  fontSize: 24.sp,
-                  fontWeight: FontWeight.bold,
-                ),
-                headlineMedium: TextStyle(
-                  color: AppColors.primaryText,
-                  fontSize: 20.sp,
-                  fontWeight: FontWeight.w600,
-                ),
-                titleLarge: TextStyle(
-                  color: AppColors.primaryText,
-                  fontSize: 18.sp,
-                  fontWeight: FontWeight.w600,
-                ),
-                bodyLarge: TextStyle(
-                  color: AppColors.primaryText,
-                  fontSize: 16.sp,
-                ),
-                bodyMedium: TextStyle(
-                  color: AppColors.primaryText,
-                  fontSize: 14.sp,
-                ),
-                bodySmall: TextStyle(
-                  color: AppColors.secondaryText,
-                  fontSize: 12.sp,
-                ),
-              ),
-            ),
-            routerConfig: goRouter,
+          child: BlocBuilder<ThemeCubit, ThemeState>(
+            builder: (context, themeState) {
+              return MaterialApp.router(
+                title: 'OtoLog',
+                debugShowCheckedModeBanner: false,
+                theme: AppTheme.lightTheme,
+                darkTheme: AppTheme.darkTheme,
+                themeMode: themeState.themeMode,
+                routerConfig: goRouter,
+              );
+            },
           ),
         );
       },
