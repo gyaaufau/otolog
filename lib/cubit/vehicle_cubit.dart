@@ -14,8 +14,35 @@ class VehicleCubit extends Cubit<VehicleState> {
     try {
       final vehicles = await _driftService.getAllVehicles();
       final serviceRecords = await _driftService.getAllServiceRecords();
-      emit(VehicleLoaded(vehicles: vehicles, serviceRecords: serviceRecords));
+
+      print('DEBUG: Loaded ${vehicles.length} vehicles');
+      for (var v in vehicles) {
+        print('DEBUG: Vehicle ${v.name} has isPrimary: ${v.isPrimary}');
+      }
+
+      // If there are vehicles but none is marked as primary, mark the first one as primary
+      if (vehicles.isNotEmpty && !vehicles.any((v) => v.isPrimary == true)) {
+        print(
+          'DEBUG: No primary vehicle found, marking first vehicle as primary',
+        );
+        await _driftService.markAsPrimary(vehicles.first.id);
+        // Reload vehicles to get updated isPrimary values
+        final updatedVehicles = await _driftService.getAllVehicles();
+        print(
+          'DEBUG: After marking primary, first vehicle isPrimary: ${updatedVehicles.first.isPrimary}',
+        );
+        emit(
+          VehicleLoaded(
+            vehicles: updatedVehicles,
+            serviceRecords: serviceRecords,
+          ),
+        );
+      } else {
+        print('DEBUG: Primary vehicle already exists or no vehicles');
+        emit(VehicleLoaded(vehicles: vehicles, serviceRecords: serviceRecords));
+      }
     } catch (e) {
+      print('DEBUG: Error loading vehicles: $e');
       emit(VehicleError('Failed to load vehicles: ${e.toString()}'));
     }
   }
@@ -84,6 +111,18 @@ class VehicleCubit extends Cubit<VehicleState> {
       emit(VehicleLoaded(vehicles: vehicles));
     } catch (e) {
       emit(VehicleError('Failed to delete vehicle: ${e.toString()}'));
+    }
+  }
+
+  // Mark vehicle as primary
+  Future<void> markAsPrimary(int vehicleId) async {
+    emit(const VehicleLoading());
+    try {
+      await _driftService.markAsPrimary(vehicleId);
+      final vehicles = await _driftService.getAllVehicles();
+      emit(VehicleLoaded(vehicles: vehicles));
+    } catch (e) {
+      emit(VehicleError('Failed to mark vehicle as primary: ${e.toString()}'));
     }
   }
 

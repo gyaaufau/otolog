@@ -3,15 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:drift/drift.dart' as drift;
-import '../cubit/vehicle_cubit.dart';
-import '../cubit/vehicle_state.dart';
-import '../database/database.dart';
-import '../resources/colors.dart';
-import '../router.dart';
-import '../widgets/form_input_field.dart';
-import '../widgets/modal_dropdown_field.dart';
-import '../widgets/form_date_field.dart';
-import '../shared/commons/utils/image_picker_helper.dart';
+import '../../cubit/vehicle_cubit.dart';
+import '../../cubit/vehicle_state.dart';
+import '../../database/database.dart';
+import '../../resources/colors.dart';
+import '../../router.dart';
+import '../../widgets/modal_dropdown_field.dart';
+import '../../shared/commons/utils/image_picker_helper.dart';
 
 class AddVehicleScreen extends StatefulWidget {
   const AddVehicleScreen({super.key});
@@ -623,86 +621,335 @@ class _AddVehicleScreenState extends State<AddVehicleScreen> {
   }
 
   Widget _buildNameField() {
-    return FormInputField(
-      controller: _nameController,
-      label: 'Vehicle Name',
-      hint: 'e.g., My Toyota Camry',
-      icon: Icons.drive_eta_rounded,
-      showLabel: true,
-      validator: (value) {
-        if (value == null || value.trim().isEmpty) {
-          return 'Vehicle name is required';
-        }
-        return null;
-      },
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Vehicle Name',
+          style: TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.w600,
+            color: AppColors.neutral[700],
+            letterSpacing: 0.15,
+          ),
+        ),
+        const SizedBox(height: 8),
+        TextFormField(
+          controller: _nameController,
+          validator: (value) {
+            if (value == null || value.trim().isEmpty) {
+              return 'Vehicle name is required';
+            }
+            return null;
+          },
+          decoration: InputDecoration(
+            hintText: 'e.g., My Toyota Camry',
+            hintStyle: TextStyle(color: AppColors.neutral[400], fontSize: 15),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(color: AppColors.neutral[200]!),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(color: AppColors.neutral[200]!),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(
+                color: AppColors.primary[500]!,
+                width: 1.5,
+              ),
+            ),
+            errorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(
+                color: AppColors.tertiary[500]!,
+                width: 1.5,
+              ),
+            ),
+            focusedErrorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(
+                color: AppColors.tertiary[500]!,
+                width: 1.5,
+              ),
+            ),
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 16,
+              vertical: 16,
+            ),
+          ),
+        ),
+      ],
     );
   }
 
   Widget _buildPlateNumberField() {
-    return FormInputField(
-      controller: _plateNumberController,
-      label: 'Plate Number',
-      hint: 'e.g., B 1234 ABC',
-      icon: Icons.confirmation_number_rounded,
-      textCapitalization: TextCapitalization.characters,
-      showLabel: true,
-      validator: (value) {
-        if (value == null || value.trim().isEmpty) {
-          return 'Plate number is required';
-        }
-        return null;
-      },
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Plate Number',
+          style: TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.w600,
+            color: AppColors.neutral[700],
+            letterSpacing: 0.15,
+          ),
+        ),
+        const SizedBox(height: 8),
+        TextFormField(
+          controller: _plateNumberController,
+          textCapitalization: TextCapitalization.characters,
+          validator: (value) {
+            if (value == null || value.trim().isEmpty) {
+              return 'Plate number is required';
+            }
+            return null;
+          },
+          decoration: InputDecoration(
+            hintText: 'e.g., B 1234 ABC',
+            hintStyle: TextStyle(color: AppColors.neutral[400], fontSize: 15),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(color: AppColors.neutral[200]!),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(color: AppColors.neutral[200]!),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(
+                color: AppColors.primary[500]!,
+                width: 1.5,
+              ),
+            ),
+            errorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(
+                color: AppColors.tertiary[500]!,
+                width: 1.5,
+              ),
+            ),
+            focusedErrorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(
+                color: AppColors.tertiary[500]!,
+                width: 1.5,
+              ),
+            ),
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 16,
+              vertical: 16,
+            ),
+          ),
+        ),
+      ],
     );
   }
 
   Widget _buildBrandField() {
-    return FormInputField(
-      controller: _brandController,
-      label: 'Brand',
-      hint: 'e.g., Toyota',
-      icon: Icons.business_rounded,
-      showLabel: true,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Brand',
+          style: TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.w600,
+            color: AppColors.neutral[700],
+            letterSpacing: 0.15,
+          ),
+        ),
+        const SizedBox(height: 8),
+        TextFormField(
+          controller: _brandController,
+          decoration: InputDecoration(
+            hintText: 'e.g., Toyota',
+            hintStyle: TextStyle(color: AppColors.neutral[400], fontSize: 15),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(color: AppColors.neutral[200]!),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(color: AppColors.neutral[200]!),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(
+                color: AppColors.primary[500]!,
+                width: 1.5,
+              ),
+            ),
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 16,
+              vertical: 16,
+            ),
+          ),
+        ),
+      ],
     );
   }
 
   Widget _buildModelField() {
-    return FormInputField(
-      controller: _modelController,
-      label: 'Model',
-      hint: 'e.g., Camry',
-      icon: Icons.directions_car_rounded,
-      showLabel: true,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Model',
+          style: TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.w600,
+            color: AppColors.neutral[700],
+            letterSpacing: 0.15,
+          ),
+        ),
+        const SizedBox(height: 8),
+        TextFormField(
+          controller: _modelController,
+          decoration: InputDecoration(
+            hintText: 'e.g., Camry',
+            hintStyle: TextStyle(color: AppColors.neutral[400], fontSize: 15),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(color: AppColors.neutral[200]!),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(color: AppColors.neutral[200]!),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(
+                color: AppColors.primary[500]!,
+                width: 1.5,
+              ),
+            ),
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 16,
+              vertical: 16,
+            ),
+          ),
+        ),
+      ],
     );
   }
 
   Widget _buildYearField() {
-    return FormInputField(
-      controller: _yearController,
-      label: 'Year',
-      hint: 'e.g., 2020',
-      icon: Icons.calendar_today_rounded,
-      keyboardType: TextInputType.number,
-      maxLength: 4,
-      showLabel: true,
-      validator: (value) {
-        if (value != null && value.isNotEmpty) {
-          final year = int.tryParse(value);
-          if (year == null || year < 1900 || year > DateTime.now().year + 1) {
-            return 'Please enter a valid year';
-          }
-        }
-        return null;
-      },
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Year',
+          style: TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.w600,
+            color: AppColors.neutral[700],
+            letterSpacing: 0.15,
+          ),
+        ),
+        const SizedBox(height: 8),
+        TextFormField(
+          controller: _yearController,
+          keyboardType: TextInputType.number,
+          maxLength: 4,
+          validator: (value) {
+            if (value != null && value.isNotEmpty) {
+              final year = int.tryParse(value);
+              if (year == null ||
+                  year < 1900 ||
+                  year > DateTime.now().year + 1) {
+                return 'Please enter a valid year';
+              }
+            }
+            return null;
+          },
+          decoration: InputDecoration(
+            hintText: 'e.g., 2020',
+            hintStyle: TextStyle(color: AppColors.neutral[400], fontSize: 15),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(color: AppColors.neutral[200]!),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(color: AppColors.neutral[200]!),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(
+                color: AppColors.primary[500]!,
+                width: 1.5,
+              ),
+            ),
+            errorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(
+                color: AppColors.tertiary[500]!,
+                width: 1.5,
+              ),
+            ),
+            focusedErrorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(
+                color: AppColors.tertiary[500]!,
+                width: 1.5,
+              ),
+            ),
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 16,
+              vertical: 16,
+            ),
+            counterText: '',
+          ),
+        ),
+      ],
     );
   }
 
   Widget _buildColorField() {
-    return FormInputField(
-      controller: _colorController,
-      label: 'Color',
-      hint: 'e.g., Black',
-      icon: Icons.palette_rounded,
-      showLabel: true,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Color',
+          style: TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.w600,
+            color: AppColors.neutral[700],
+            letterSpacing: 0.15,
+          ),
+        ),
+        const SizedBox(height: 8),
+        TextFormField(
+          controller: _colorController,
+          decoration: InputDecoration(
+            hintText: 'e.g., Black',
+            hintStyle: TextStyle(color: AppColors.neutral[400], fontSize: 15),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(color: AppColors.neutral[200]!),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(color: AppColors.neutral[200]!),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(
+                color: AppColors.primary[500]!,
+                width: 1.5,
+              ),
+            ),
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 16,
+              vertical: 16,
+            ),
+          ),
+        ),
+      ],
     );
   }
 
@@ -752,51 +999,209 @@ class _AddVehicleScreenState extends State<AddVehicleScreen> {
   }
 
   Widget _buildVINField() {
-    return FormInputField(
-      controller: _vinController,
-      label: 'VIN (Vehicle Identification Number)',
-      hint: 'e.g., 1HGCM82633A123456',
-      icon: Icons.qr_code_2_rounded,
-      textCapitalization: TextCapitalization.characters,
-      maxLength: 17,
-      showLabel: true,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'VIN (Vehicle Identification Number)',
+          style: TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.w600,
+            color: AppColors.neutral[700],
+            letterSpacing: 0.15,
+          ),
+        ),
+        const SizedBox(height: 8),
+        TextFormField(
+          controller: _vinController,
+          textCapitalization: TextCapitalization.characters,
+          maxLength: 17,
+          decoration: InputDecoration(
+            hintText: 'e.g., 1HGCM82633A123456',
+            hintStyle: TextStyle(color: AppColors.neutral[400], fontSize: 15),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(color: AppColors.neutral[200]!),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(color: AppColors.neutral[200]!),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(
+                color: AppColors.primary[500]!,
+                width: 1.5,
+              ),
+            ),
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 16,
+              vertical: 16,
+            ),
+            counterText: '',
+          ),
+        ),
+      ],
     );
   }
 
   Widget _buildOdometerField() {
-    return FormInputField(
-      controller: _odometerController,
-      label: 'Current Odometer (km)',
-      hint: 'e.g., 50000',
-      icon: Icons.speed_rounded,
-      keyboardType: TextInputType.number,
-      showLabel: true,
-      validator: (value) {
-        if (value != null && value.isNotEmpty) {
-          final odometer = int.tryParse(value);
-          if (odometer == null || odometer < 0) {
-            return 'Please enter a valid odometer reading';
-          }
-        }
-        return null;
-      },
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Current Odometer (km)',
+          style: TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.w600,
+            color: AppColors.neutral[700],
+            letterSpacing: 0.15,
+          ),
+        ),
+        const SizedBox(height: 8),
+        TextFormField(
+          controller: _odometerController,
+          keyboardType: TextInputType.number,
+          validator: (value) {
+            if (value != null && value.isNotEmpty) {
+              final odometer = int.tryParse(value);
+              if (odometer == null || odometer < 0) {
+                return 'Please enter a valid odometer reading';
+              }
+            }
+            return null;
+          },
+          decoration: InputDecoration(
+            hintText: 'e.g., 50000',
+            hintStyle: TextStyle(color: AppColors.neutral[400], fontSize: 15),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(color: AppColors.neutral[200]!),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(color: AppColors.neutral[200]!),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(
+                color: AppColors.primary[500]!,
+                width: 1.5,
+              ),
+            ),
+            errorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(
+                color: AppColors.tertiary[500]!,
+                width: 1.5,
+              ),
+            ),
+            focusedErrorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(
+                color: AppColors.tertiary[500]!,
+                width: 1.5,
+              ),
+            ),
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 16,
+              vertical: 16,
+            ),
+          ),
+        ),
+      ],
     );
   }
 
   Widget _buildPurchaseDatePicker() {
-    return FormDateField(
-      label: 'Purchase Date',
-      hint: 'Select purchase date',
-      icon: Icons.event_rounded,
-      value: _purchaseDate,
-      showLabel: false,
-      onChanged: (date) {
-        setState(() {
-          _purchaseDate = date;
-        });
-      },
-      firstDate: DateTime(1900),
-      lastDate: DateTime.now(),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Purchase Date',
+          style: TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.w600,
+            color:
+                _purchaseDate != null
+                    ? AppColors.primary[500]
+                    : AppColors.neutral[700],
+            letterSpacing: 0.15,
+          ),
+        ),
+        const SizedBox(height: 8),
+        InkWell(
+          onTap: () async {
+            final DateTime? picked = await showDatePicker(
+              context: context,
+              initialDate: _purchaseDate ?? DateTime.now(),
+              firstDate: DateTime(1900),
+              lastDate: DateTime.now(),
+              builder: (context, child) {
+                return Theme(
+                  data: Theme.of(context).copyWith(
+                    colorScheme: ColorScheme.light(
+                      primary: AppColors.primary[500]!,
+                      onPrimary: Colors.white,
+                      surface: Colors.white,
+                      onSurface: AppColors.neutral[900]!,
+                    ),
+                  ),
+                  child: child!,
+                );
+              },
+            );
+            if (picked != null && mounted) {
+              setState(() {
+                _purchaseDate = picked;
+              });
+            }
+          },
+          borderRadius: BorderRadius.circular(12),
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(
+                color:
+                    _purchaseDate != null
+                        ? AppColors.primary[500]!
+                        : AppColors.neutral[200]!,
+                width: _purchaseDate != null ? 1.5 : 1.0,
+              ),
+            ),
+            child: Row(
+              children: [
+                Icon(
+                  Icons.calendar_today_rounded,
+                  color:
+                      _purchaseDate != null
+                          ? AppColors.primary[500]
+                          : AppColors.neutral[500],
+                  size: 20,
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Text(
+                    _purchaseDate != null
+                        ? '${_purchaseDate!.day}/${_purchaseDate!.month}/${_purchaseDate!.year}'
+                        : 'Select purchase date',
+                    style: TextStyle(
+                      color:
+                          _purchaseDate != null
+                              ? AppColors.neutral[900]
+                              : AppColors.neutral[400],
+                      fontSize: 15,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
     );
   }
 

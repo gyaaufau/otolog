@@ -1,11 +1,12 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import '../cubit/vehicle_cubit.dart';
-import '../cubit/vehicle_state.dart';
-import '../resources/colors.dart';
-import '../router.dart';
-import '../widgets/search_bar_widget.dart';
+import '../../cubit/vehicle_cubit.dart';
+import '../../cubit/vehicle_state.dart';
+import '../../resources/colors.dart';
+import '../../router.dart';
+import '../../widgets/search_bar_widget.dart';
 
 class VehiclesScreen extends StatefulWidget {
   const VehiclesScreen({super.key});
@@ -16,7 +17,6 @@ class VehiclesScreen extends StatefulWidget {
 
 class _VehiclesScreenState extends State<VehiclesScreen> {
   final TextEditingController _searchController = TextEditingController();
-  String? _selectedFilter;
 
   @override
   void initState() {
@@ -144,41 +144,46 @@ class _VehiclesScreenState extends State<VehiclesScreen> {
   }
 
   Widget _buildFilterChip(String label, String? value) {
-    final isSelected = _selectedFilter == value;
-    return GestureDetector(
-      onTap: () {
-        setState(() {
-          _selectedFilter = isSelected ? null : value;
-          context.read<VehicleCubit>().filterVehiclesByType(_selectedFilter);
-        });
+    return BlocBuilder<VehicleCubit, VehicleState>(
+      builder: (context, state) {
+        final isSelected = state is VehicleLoaded && state.filterType == value;
+        return GestureDetector(
+          onTap: () {
+            final currentFilter =
+                state is VehicleLoaded ? state.filterType : null;
+            final newFilter = isSelected ? null : value;
+            if (currentFilter != newFilter) {
+              context.read<VehicleCubit>().filterVehiclesByType(newFilter);
+            }
+          },
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+            decoration: BoxDecoration(
+              color:
+                  isSelected
+                      ? AppColors.primary.withOpacity(0.12)
+                      : AppColors.neutral[100],
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(
+                color:
+                    isSelected
+                        ? AppColors.primary.withOpacity(0.3)
+                        : Colors.transparent,
+                width: 1,
+              ),
+            ),
+            child: Text(
+              label,
+              style: TextStyle(
+                color: isSelected ? AppColors.primary : AppColors.neutral[700],
+                fontSize: 14,
+                fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
+                letterSpacing: 0.2,
+              ),
+            ),
+          ),
+        );
       },
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-        decoration: BoxDecoration(
-          color:
-              isSelected
-                  ? AppColors.primary.withOpacity(0.12)
-                  : AppColors.neutral[100],
-          borderRadius: BorderRadius.circular(8),
-          border: Border.all(
-            color:
-                isSelected
-                    ? AppColors.primary.withOpacity(0.3)
-                    : Colors.transparent,
-            width: 1,
-          ),
-        ),
-        child: Text(
-          label,
-          style: TextStyle(
-            color: isSelected ? AppColors.primary : AppColors.neutral[700],
-            fontSize: 14,
-            fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
-            letterSpacing: 0.2,
-          ),
-        ),
-      ),
     );
   }
 
@@ -214,7 +219,7 @@ class _VehiclesScreenState extends State<VehiclesScreen> {
               ),
               const SizedBox(height: 10),
               Text(
-                _searchController.text.isNotEmpty || _selectedFilter != null
+                _searchController.text.isNotEmpty
                     ? 'Try adjusting your search or filters'
                     : 'Add your first vehicle to get started',
                 textAlign: TextAlign.center,
@@ -248,6 +253,9 @@ class _VehiclesScreenState extends State<VehiclesScreen> {
   }
 
   Widget _buildVehicleCard(dynamic vehicle) {
+    // Debug log for isPrimary value
+    print('Vehicle: ${vehicle.name}, isPrimary: ${vehicle.isPrimary}');
+
     return GestureDetector(
       onTap:
           () => context.push(
@@ -289,11 +297,21 @@ class _VehiclesScreenState extends State<VehiclesScreen> {
                     ),
                     borderRadius: BorderRadius.circular(12),
                   ),
-                  child: Icon(
-                    Icons.directions_car,
-                    size: 36,
-                    color: AppColors.primary,
-                  ),
+                  child:
+                      vehicle.imagePath != null && vehicle.imagePath!.isNotEmpty
+                          ? ClipRRect(
+                            borderRadius: BorderRadius.circular(12),
+                            child: Image.file(
+                              File(vehicle.imagePath!),
+                              width: 72,
+                              height: 72,
+                              fit: BoxFit.cover,
+                              errorBuilder: (context, error, stackTrace) {
+                                return _getVehicleTypeIcon(vehicle.type);
+                              },
+                            ),
+                          )
+                          : _getVehicleTypeIcon(vehicle.type),
                 ),
                 const SizedBox(width: 16),
                 Expanded(
@@ -319,9 +337,43 @@ class _VehiclesScreenState extends State<VehiclesScreen> {
                           letterSpacing: 0.1,
                         ),
                       ),
+                      if (vehicle.year != null) ...[
+                        const SizedBox(height: 2),
+                        Text(
+                          vehicle.year!,
+                          style: TextStyle(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w500,
+                            color: AppColors.neutral[500],
+                            letterSpacing: 0.1,
+                          ),
+                        ),
+                      ],
                     ],
                   ),
                 ),
+                if (vehicle.isPrimary ?? false) ...[
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 3,
+                    ),
+                    decoration: BoxDecoration(
+                      color: AppColors.tertiary[50],
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                    child: Text(
+                      'Primary',
+                      style: TextStyle(
+                        fontSize: 11,
+                        fontWeight: FontWeight.w600,
+                        color: AppColors.tertiary,
+                        letterSpacing: 0.3,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                ],
                 GestureDetector(
                   onTap: () => _showVehicleOptionsSheet(vehicle),
                   child: Container(
@@ -349,12 +401,6 @@ class _VehiclesScreenState extends State<VehiclesScreen> {
                   vehicle.plateNumber,
                   'Plate',
                 ),
-                const SizedBox(width: 28),
-                _buildInfoItem(
-                  Icons.calendar_today_outlined,
-                  vehicle.year ?? 'N/A',
-                  'Year',
-                ),
                 if (vehicle.type != null) ...[
                   const SizedBox(width: 28),
                   _buildInfoItem(
@@ -363,6 +409,14 @@ class _VehiclesScreenState extends State<VehiclesScreen> {
                     'Type',
                   ),
                 ],
+                const SizedBox(width: 28),
+                _buildInfoItem(
+                  Icons.speed_outlined,
+                  vehicle.odometer != null
+                      ? '${vehicle.odometer!.toString()} km'
+                      : '0 km',
+                  'Odometer',
+                ),
               ],
             ),
           ],
@@ -376,20 +430,14 @@ class _VehiclesScreenState extends State<VehiclesScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            children: [
-              Icon(icon, size: 14, color: AppColors.neutral[400]),
-              const SizedBox(width: 6),
-              Text(
-                label.toUpperCase(),
-                style: TextStyle(
-                  fontSize: 11,
-                  fontWeight: FontWeight.w600,
-                  color: AppColors.neutral[400],
-                  letterSpacing: 0.5,
-                ),
-              ),
-            ],
+          Text(
+            label.toUpperCase(),
+            style: TextStyle(
+              fontSize: 11,
+              fontWeight: FontWeight.w600,
+              color: AppColors.neutral[400],
+              letterSpacing: 0.5,
+            ),
           ),
           const SizedBox(height: 4),
           Text(
@@ -405,6 +453,31 @@ class _VehiclesScreenState extends State<VehiclesScreen> {
         ],
       ),
     );
+  }
+
+  Widget _getVehicleTypeIcon(String? type) {
+    IconData iconData;
+    switch (type?.toLowerCase()) {
+      case 'sedan':
+        iconData = Icons.directions_car;
+        break;
+      case 'suv':
+        iconData = Icons.directions_car;
+        break;
+      case 'truck':
+        iconData = Icons.local_shipping;
+        break;
+      case 'motorcycle':
+        iconData = Icons.two_wheeler;
+        break;
+      case 'van':
+        iconData = Icons.airport_shuttle;
+        break;
+      default:
+        iconData = Icons.directions_car;
+    }
+
+    return Icon(iconData, size: 36, color: AppColors.primary);
   }
 
   Widget _buildAddVehicleButton() {
@@ -551,6 +624,20 @@ class _VehiclesScreenState extends State<VehiclesScreen> {
                     ),
                   ),
                   const SizedBox(height: 24),
+                  _buildOptionButton(
+                    icon: Icons.star_outline,
+                    label:
+                        (vehicle.isPrimary ?? false) == true
+                            ? 'Primary Vehicle'
+                            : 'Mark as Primary',
+                    onTap: () {
+                      Navigator.pop(context);
+                      if ((vehicle.isPrimary ?? false) != true) {
+                        context.read<VehicleCubit>().markAsPrimary(vehicle.id);
+                      }
+                    },
+                  ),
+                  const SizedBox(height: 12),
                   _buildOptionButton(
                     icon: Icons.edit_outlined,
                     label: 'Edit Vehicle',

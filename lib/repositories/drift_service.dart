@@ -38,6 +38,10 @@ class DriftService {
     return await database.filterVehiclesByType(type);
   }
 
+  Future<void> markAsPrimary(int vehicleId) async {
+    await database.markAsPrimary(vehicleId);
+  }
+
   // Service Record Operations
   Future<int> addServiceRecord(ServiceRecordsCompanion record) async {
     return await database.addServiceRecord(record);

@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:drift/drift.dart' as drift;
-import '../cubit/vehicle_cubit.dart';
-import '../cubit/vehicle_state.dart';
-import '../database/database.dart';
-import '../resources/colors.dart';
-import '../router.dart';
+import '../../cubit/vehicle_cubit.dart';
+import '../../cubit/vehicle_state.dart';
+import '../../database/database.dart';
+import '../../resources/colors.dart';
+import '../../router.dart';
 
 class EditVehicleScreen extends StatefulWidget {
   const EditVehicleScreen({super.key});
@@ -669,6 +669,7 @@ class _EditVehicleScreenState extends State<EditVehicleScreen> {
       transmissionType: _selectedTransmissionType,
       purchaseDate: _purchaseDate,
       imagePath: _vehicle!.imagePath,
+      isPrimary: _vehicle!.isPrimary,
       createdAt: _vehicle!.createdAt,
       updatedAt: DateTime.now(),
     );

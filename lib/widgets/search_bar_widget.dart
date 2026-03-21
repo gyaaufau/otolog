@@ -23,49 +23,27 @@ class SearchBarWidget extends StatefulWidget {
   State<SearchBarWidget> createState() => _SearchBarWidgetState();
 }
 
-class _SearchBarWidgetState extends State<SearchBarWidget>
-    with SingleTickerProviderStateMixin {
+class _SearchBarWidgetState extends State<SearchBarWidget> {
   late FocusNode _focusNode;
   bool _isFocused = false;
-  late AnimationController _animationController;
-  late Animation<double> _fadeAnimation;
-  late Animation<double> _scaleAnimation;
+  bool _hasText = false;
 
   @override
   void initState() {
     super.initState();
     _focusNode = widget.focusNode ?? FocusNode();
     _focusNode.addListener(_onFocusChange);
-
-    _animationController = AnimationController(
-      duration: const Duration(milliseconds: 200),
-      vsync: this,
-    );
-
-    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),
-    );
-
-    _scaleAnimation = Tween<double>(begin: 0.8, end: 1.0).animate(
-      CurvedAnimation(parent: _animationController, curve: Curves.easeOutBack),
-    );
-
-    // Show clear button if text is not empty
-    if (widget.controller.text.isNotEmpty) {
-      _animationController.forward();
-    }
-
+    _hasText = widget.controller.text.isNotEmpty;
     widget.controller.addListener(_onTextChanged);
   }
 
   @override
   void dispose() {
     _focusNode.removeListener(_onFocusChange);
+    widget.controller.removeListener(_onTextChanged);
     if (widget.focusNode == null) {
       _focusNode.dispose();
     }
-    widget.controller.removeListener(_onTextChanged);
-    _animationController.dispose();
     super.dispose();
   }
 
@@ -76,10 +54,11 @@ class _SearchBarWidgetState extends State<SearchBarWidget>
   }
 
   void _onTextChanged() {
-    if (widget.controller.text.isNotEmpty) {
-      _animationController.forward();
-    } else {
-      _animationController.reverse();
+    final hasText = widget.controller.text.isNotEmpty;
+    if (hasText != _hasText) {
+      setState(() {
+        _hasText = hasText;
+      });
     }
   }
 
@@ -92,104 +71,61 @@ class _SearchBarWidgetState extends State<SearchBarWidget>
 
   @override
   Widget build(BuildContext context) {
-    return AnimatedContainer(
-      duration: const Duration(milliseconds: 200),
-      curve: Curves.easeInOut,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color:
-              _isFocused
-                  ? AppColors.primary.withOpacity(0.5)
-                  : AppColors.neutral[200]!,
-          width: _isFocused ? 2 : 1,
-        ),
-        boxShadow:
-            _isFocused
-                ? [
-                  BoxShadow(
-                    color: AppColors.primary.withOpacity(0.15),
-                    blurRadius: 20,
-                    offset: const Offset(0, 4),
-                  ),
-                ]
-                : [
-                  BoxShadow(
-                    color: AppColors.neutral[900]!.withOpacity(0.04),
-                    blurRadius: 8,
-                    offset: const Offset(0, 2),
-                  ),
-                ],
+    return TextField(
+      controller: widget.controller,
+      focusNode: _focusNode,
+      autofocus: widget.autofocus,
+      onChanged: widget.onChanged,
+      style: TextStyle(
+        color: AppColors.neutral[900],
+        fontSize: 15,
+        fontWeight: FontWeight.w500,
+        letterSpacing: 0.2,
       ),
-      child: TextField(
-        controller: widget.controller,
-        focusNode: _focusNode,
-        autofocus: widget.autofocus,
-        onChanged: widget.onChanged,
-        style: TextStyle(
-          color: AppColors.neutral[900],
+      decoration: InputDecoration(
+        hintText: widget.hintText,
+        hintStyle: TextStyle(
+          color: AppColors.neutral[400],
           fontSize: 15,
-          fontWeight: FontWeight.w500,
+          fontWeight: FontWeight.w400,
           letterSpacing: 0.2,
         ),
-        decoration: InputDecoration(
-          hintText: widget.hintText,
-          hintStyle: TextStyle(
-            color: AppColors.neutral[400],
-            fontSize: 15,
-            fontWeight: FontWeight.w400,
-            letterSpacing: 0.2,
-          ),
-          prefixIcon: Container(
-            margin: const EdgeInsets.all(12),
-            padding: const EdgeInsets.all(6),
-            decoration: BoxDecoration(
-              color:
-                  _isFocused
-                      ? AppColors.primary.withOpacity(0.1)
-                      : AppColors.neutral[100],
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Icon(
-              Icons.search_outlined,
-              color: _isFocused ? AppColors.primary : AppColors.neutral[500],
-              size: 18,
-            ),
-          ),
-          suffixIcon: AnimatedBuilder(
-            animation: _animationController,
-            builder: (context, child) {
-              return FadeTransition(
-                opacity: _fadeAnimation,
-                child: ScaleTransition(
-                  scale: _scaleAnimation,
-                  child: GestureDetector(
-                    onTap: _handleClear,
-                    child: Container(
-                      margin: const EdgeInsets.all(10),
-                      padding: const EdgeInsets.all(6),
-                      decoration: BoxDecoration(
-                        color: AppColors.neutral[100],
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: Icon(
-                        Icons.close_rounded,
-                        color: AppColors.neutral[600],
-                        size: 16,
-                      ),
-                    ),
+        prefixIcon: Icon(
+          Icons.search_outlined,
+          color: _isFocused ? AppColors.primary[500] : AppColors.neutral[400],
+          size: 20,
+        ),
+        suffixIcon:
+            _hasText
+                ? IconButton(
+                  icon: Icon(
+                    Icons.close_rounded,
+                    color: AppColors.neutral[400],
+                    size: 18,
                   ),
-                ),
-              );
-            },
-          ),
-          border: InputBorder.none,
-          contentPadding: const EdgeInsets.symmetric(
-            horizontal: 8,
-            vertical: 14,
-          ),
-          isDense: true,
+                  onPressed: _handleClear,
+                  padding: EdgeInsets.zero,
+                  constraints: const BoxConstraints(
+                    minWidth: 40,
+                    minHeight: 40,
+                  ),
+                )
+                : null,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: AppColors.neutral[200]!),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: AppColors.neutral[200]!),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: AppColors.primary[500]!, width: 1.5),
+        ),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 16,
+          vertical: 16,
         ),
       ),
     );

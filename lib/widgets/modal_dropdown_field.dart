@@ -23,21 +23,24 @@ class ModalDropdownField extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
       children: [
-        if (showLabel && label != null) ...[
+        if (showLabel && label != null)
           Padding(
             padding: const EdgeInsets.only(left: 4, bottom: 8),
             child: Text(
               label!,
               style: TextStyle(
-                fontSize: 13,
-                fontWeight: FontWeight.w500,
-                color: AppColors.neutral[600],
-                letterSpacing: 0.2,
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
+                color:
+                    value != null
+                        ? AppColors.primary[500]
+                        : AppColors.neutral[700],
+                letterSpacing: 0.15,
               ),
             ),
           ),
-        ],
         InkWell(
           onTap: () {
             showModalBottomSheet(
@@ -52,12 +55,19 @@ class ModalDropdownField extends StatelessWidget {
                   ),
             );
           },
+          borderRadius: BorderRadius.circular(12),
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: AppColors.neutral[200]!, width: 1),
+              border: Border.all(
+                color:
+                    value != null
+                        ? AppColors.primary[500]!
+                        : AppColors.neutral[200]!,
+                width: value != null ? 1.5 : 1.0,
+              ),
             ),
             child: Row(
               children: [
@@ -72,18 +82,23 @@ class ModalDropdownField extends StatelessWidget {
                               ? AppColors.neutral[900]
                               : AppColors.neutral[400],
                       letterSpacing: 0.2,
+                      height: 1.4,
                     ),
                   ),
                 ),
                 Icon(
                   Icons.keyboard_arrow_down_rounded,
-                  color: AppColors.neutral[500],
+                  color:
+                      value != null
+                          ? AppColors.primary[500]
+                          : AppColors.neutral[500],
                   size: 20,
                 ),
               ],
             ),
           ),
         ),
+        const SizedBox(height: 4),
       ],
     );
   }
@@ -131,13 +146,10 @@ class _ModalBottomSheet extends StatelessWidget {
                   ),
                   GestureDetector(
                     onTap: () => Navigator.pop(context),
-                    child: Container(
-                      padding: const EdgeInsets.all(8),
-                      child: Icon(
-                        Icons.close_rounded,
-                        color: AppColors.neutral[500],
-                        size: 20,
-                      ),
+                    child: Icon(
+                      Icons.close_rounded,
+                      color: AppColors.neutral[500],
+                      size: 20,
                     ),
                   ),
                 ],
@@ -168,17 +180,6 @@ class _ModalBottomSheet extends StatelessWidget {
                       ),
                       child: Row(
                         children: [
-                          Container(
-                            width: 4,
-                            height: 4,
-                            decoration: BoxDecoration(
-                              color:
-                                  isSelected
-                                      ? AppColors.primary
-                                      : Colors.transparent,
-                              borderRadius: BorderRadius.circular(2),
-                            ),
-                          ),
                           Expanded(
                             child: Text(
                               item,

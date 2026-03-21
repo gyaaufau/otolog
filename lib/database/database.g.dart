@@ -150,6 +150,21 @@ class $VehiclesTable extends Vehicles with TableInfo<$VehiclesTable, Vehicle> {
     type: DriftSqlType.string,
     requiredDuringInsert: false,
   );
+  static const VerificationMeta _isPrimaryMeta = const VerificationMeta(
+    'isPrimary',
+  );
+  @override
+  late final GeneratedColumn<bool> isPrimary = GeneratedColumn<bool>(
+    'is_primary',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("is_primary" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
   static const VerificationMeta _createdAtMeta = const VerificationMeta(
     'createdAt',
   );
@@ -190,6 +205,7 @@ class $VehiclesTable extends Vehicles with TableInfo<$VehiclesTable, Vehicle> {
     fuelType,
     transmissionType,
     imagePath,
+    isPrimary,
     createdAt,
     updatedAt,
   ];
@@ -299,6 +315,12 @@ class $VehiclesTable extends Vehicles with TableInfo<$VehiclesTable, Vehicle> {
         imagePath.isAcceptableOrUnknown(data['image_path']!, _imagePathMeta),
       );
     }
+    if (data.containsKey('is_primary')) {
+      context.handle(
+        _isPrimaryMeta,
+        isPrimary.isAcceptableOrUnknown(data['is_primary']!, _isPrimaryMeta),
+      );
+    }
     if (data.containsKey('created_at')) {
       context.handle(
         _createdAtMeta,
@@ -379,6 +401,11 @@ class $VehiclesTable extends Vehicles with TableInfo<$VehiclesTable, Vehicle> {
         DriftSqlType.string,
         data['${effectivePrefix}image_path'],
       ),
+      isPrimary:
+          attachedDatabase.typeMapping.read(
+            DriftSqlType.bool,
+            data['${effectivePrefix}is_primary'],
+          )!,
       createdAt:
           attachedDatabase.typeMapping.read(
             DriftSqlType.dateTime,
@@ -413,6 +440,7 @@ class Vehicle extends DataClass implements Insertable<Vehicle> {
   final String? fuelType;
   final String? transmissionType;
   final String? imagePath;
+  final bool isPrimary;
   final DateTime createdAt;
   final DateTime updatedAt;
   const Vehicle({
@@ -430,6 +458,7 @@ class Vehicle extends DataClass implements Insertable<Vehicle> {
     this.fuelType,
     this.transmissionType,
     this.imagePath,
+    required this.isPrimary,
     required this.createdAt,
     required this.updatedAt,
   });
@@ -472,6 +501,7 @@ class Vehicle extends DataClass implements Insertable<Vehicle> {
     if (!nullToAbsent || imagePath != null) {
       map['image_path'] = Variable<String>(imagePath);
     }
+    map['is_primary'] = Variable<bool>(isPrimary);
     map['created_at'] = Variable<DateTime>(createdAt);
     map['updated_at'] = Variable<DateTime>(updatedAt);
     return map;
@@ -511,6 +541,7 @@ class Vehicle extends DataClass implements Insertable<Vehicle> {
           imagePath == null && nullToAbsent
               ? const Value.absent()
               : Value(imagePath),
+      isPrimary: Value(isPrimary),
       createdAt: Value(createdAt),
       updatedAt: Value(updatedAt),
     );
@@ -536,6 +567,7 @@ class Vehicle extends DataClass implements Insertable<Vehicle> {
       fuelType: serializer.fromJson<String?>(json['fuelType']),
       transmissionType: serializer.fromJson<String?>(json['transmissionType']),
       imagePath: serializer.fromJson<String?>(json['imagePath']),
+      isPrimary: serializer.fromJson<bool>(json['isPrimary']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
       updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
     );
@@ -558,6 +590,7 @@ class Vehicle extends DataClass implements Insertable<Vehicle> {
       'fuelType': serializer.toJson<String?>(fuelType),
       'transmissionType': serializer.toJson<String?>(transmissionType),
       'imagePath': serializer.toJson<String?>(imagePath),
+      'isPrimary': serializer.toJson<bool>(isPrimary),
       'createdAt': serializer.toJson<DateTime>(createdAt),
       'updatedAt': serializer.toJson<DateTime>(updatedAt),
     };
@@ -578,6 +611,7 @@ class Vehicle extends DataClass implements Insertable<Vehicle> {
     Value<String?> fuelType = const Value.absent(),
     Value<String?> transmissionType = const Value.absent(),
     Value<String?> imagePath = const Value.absent(),
+    bool? isPrimary,
     DateTime? createdAt,
     DateTime? updatedAt,
   }) => Vehicle(
@@ -598,6 +632,7 @@ class Vehicle extends DataClass implements Insertable<Vehicle> {
             ? transmissionType.value
             : this.transmissionType,
     imagePath: imagePath.present ? imagePath.value : this.imagePath,
+    isPrimary: isPrimary ?? this.isPrimary,
     createdAt: createdAt ?? this.createdAt,
     updatedAt: updatedAt ?? this.updatedAt,
   );
@@ -624,6 +659,7 @@ class Vehicle extends DataClass implements Insertable<Vehicle> {
               ? data.transmissionType.value
               : this.transmissionType,
       imagePath: data.imagePath.present ? data.imagePath.value : this.imagePath,
+      isPrimary: data.isPrimary.present ? data.isPrimary.value : this.isPrimary,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
       updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
     );
@@ -646,6 +682,7 @@ class Vehicle extends DataClass implements Insertable<Vehicle> {
           ..write('fuelType: $fuelType, ')
           ..write('transmissionType: $transmissionType, ')
           ..write('imagePath: $imagePath, ')
+          ..write('isPrimary: $isPrimary, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt')
           ..write(')'))
@@ -668,6 +705,7 @@ class Vehicle extends DataClass implements Insertable<Vehicle> {
     fuelType,
     transmissionType,
     imagePath,
+    isPrimary,
     createdAt,
     updatedAt,
   );
@@ -689,6 +727,7 @@ class Vehicle extends DataClass implements Insertable<Vehicle> {
           other.fuelType == this.fuelType &&
           other.transmissionType == this.transmissionType &&
           other.imagePath == this.imagePath &&
+          other.isPrimary == this.isPrimary &&
           other.createdAt == this.createdAt &&
           other.updatedAt == this.updatedAt);
 }
@@ -708,6 +747,7 @@ class VehiclesCompanion extends UpdateCompanion<Vehicle> {
   final Value<String?> fuelType;
   final Value<String?> transmissionType;
   final Value<String?> imagePath;
+  final Value<bool> isPrimary;
   final Value<DateTime> createdAt;
   final Value<DateTime> updatedAt;
   const VehiclesCompanion({
@@ -725,6 +765,7 @@ class VehiclesCompanion extends UpdateCompanion<Vehicle> {
     this.fuelType = const Value.absent(),
     this.transmissionType = const Value.absent(),
     this.imagePath = const Value.absent(),
+    this.isPrimary = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
   });
@@ -743,6 +784,7 @@ class VehiclesCompanion extends UpdateCompanion<Vehicle> {
     this.fuelType = const Value.absent(),
     this.transmissionType = const Value.absent(),
     this.imagePath = const Value.absent(),
+    this.isPrimary = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
   }) : name = Value(name),
@@ -762,6 +804,7 @@ class VehiclesCompanion extends UpdateCompanion<Vehicle> {
     Expression<String>? fuelType,
     Expression<String>? transmissionType,
     Expression<String>? imagePath,
+    Expression<bool>? isPrimary,
     Expression<DateTime>? createdAt,
     Expression<DateTime>? updatedAt,
   }) {
@@ -780,6 +823,7 @@ class VehiclesCompanion extends UpdateCompanion<Vehicle> {
       if (fuelType != null) 'fuel_type': fuelType,
       if (transmissionType != null) 'transmission_type': transmissionType,
       if (imagePath != null) 'image_path': imagePath,
+      if (isPrimary != null) 'is_primary': isPrimary,
       if (createdAt != null) 'created_at': createdAt,
       if (updatedAt != null) 'updated_at': updatedAt,
     });
@@ -800,6 +844,7 @@ class VehiclesCompanion extends UpdateCompanion<Vehicle> {
     Value<String?>? fuelType,
     Value<String?>? transmissionType,
     Value<String?>? imagePath,
+    Value<bool>? isPrimary,
     Value<DateTime>? createdAt,
     Value<DateTime>? updatedAt,
   }) {
@@ -818,6 +863,7 @@ class VehiclesCompanion extends UpdateCompanion<Vehicle> {
       fuelType: fuelType ?? this.fuelType,
       transmissionType: transmissionType ?? this.transmissionType,
       imagePath: imagePath ?? this.imagePath,
+      isPrimary: isPrimary ?? this.isPrimary,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
     );
@@ -868,6 +914,9 @@ class VehiclesCompanion extends UpdateCompanion<Vehicle> {
     if (imagePath.present) {
       map['image_path'] = Variable<String>(imagePath.value);
     }
+    if (isPrimary.present) {
+      map['is_primary'] = Variable<bool>(isPrimary.value);
+    }
     if (createdAt.present) {
       map['created_at'] = Variable<DateTime>(createdAt.value);
     }
@@ -894,6 +943,7 @@ class VehiclesCompanion extends UpdateCompanion<Vehicle> {
           ..write('fuelType: $fuelType, ')
           ..write('transmissionType: $transmissionType, ')
           ..write('imagePath: $imagePath, ')
+          ..write('isPrimary: $isPrimary, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt')
           ..write(')'))
@@ -1556,6 +1606,7 @@ typedef $$VehiclesTableCreateCompanionBuilder =
       Value<String?> fuelType,
       Value<String?> transmissionType,
       Value<String?> imagePath,
+      Value<bool> isPrimary,
       Value<DateTime> createdAt,
       Value<DateTime> updatedAt,
     });
@@ -1575,6 +1626,7 @@ typedef $$VehiclesTableUpdateCompanionBuilder =
       Value<String?> fuelType,
       Value<String?> transmissionType,
       Value<String?> imagePath,
+      Value<bool> isPrimary,
       Value<DateTime> createdAt,
       Value<DateTime> updatedAt,
     });
@@ -1681,6 +1733,11 @@ class $$VehiclesTableFilterComposer
 
   ColumnFilters<String> get imagePath => $composableBuilder(
     column: $table.imagePath,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get isPrimary => $composableBuilder(
+    column: $table.isPrimary,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -1799,6 +1856,11 @@ class $$VehiclesTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<bool> get isPrimary => $composableBuilder(
+    column: $table.isPrimary,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<DateTime> get createdAt => $composableBuilder(
     column: $table.createdAt,
     builder: (column) => ColumnOrderings(column),
@@ -1866,6 +1928,9 @@ class $$VehiclesTableAnnotationComposer
 
   GeneratedColumn<String> get imagePath =>
       $composableBuilder(column: $table.imagePath, builder: (column) => column);
+
+  GeneratedColumn<bool> get isPrimary =>
+      $composableBuilder(column: $table.isPrimary, builder: (column) => column);
 
   GeneratedColumn<DateTime> get createdAt =>
       $composableBuilder(column: $table.createdAt, builder: (column) => column);
@@ -1941,6 +2006,7 @@ class $$VehiclesTableTableManager
                 Value<String?> fuelType = const Value.absent(),
                 Value<String?> transmissionType = const Value.absent(),
                 Value<String?> imagePath = const Value.absent(),
+                Value<bool> isPrimary = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<DateTime> updatedAt = const Value.absent(),
               }) => VehiclesCompanion(
@@ -1958,6 +2024,7 @@ class $$VehiclesTableTableManager
                 fuelType: fuelType,
                 transmissionType: transmissionType,
                 imagePath: imagePath,
+                isPrimary: isPrimary,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
               ),
@@ -1977,6 +2044,7 @@ class $$VehiclesTableTableManager
                 Value<String?> fuelType = const Value.absent(),
                 Value<String?> transmissionType = const Value.absent(),
                 Value<String?> imagePath = const Value.absent(),
+                Value<bool> isPrimary = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<DateTime> updatedAt = const Value.absent(),
               }) => VehiclesCompanion.insert(
@@ -1994,6 +2062,7 @@ class $$VehiclesTableTableManager
                 fuelType: fuelType,
                 transmissionType: transmissionType,
                 imagePath: imagePath,
+                isPrimary: isPrimary,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
               ),

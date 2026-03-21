@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../screens/home_screen.dart';
-import '../screens/vehicle_detail_screen.dart';
-import '../screens/service_detail_screen.dart';
-import '../screens/add_vehicle_screen.dart';
-import '../screens/edit_vehicle_screen.dart';
-import '../screens/add_service_screen.dart';
+import 'screens/garage/vehicle_detail_screen.dart';
+import 'screens/logs/service_detail_screen.dart';
+import 'screens/garage/add_vehicle_screen.dart';
+import 'screens/garage/edit_vehicle_screen.dart';
+import 'screens/logs/add_service_screen.dart';
 import '../screens/analytics_screen.dart';
-import '../screens/vehicles_screen.dart';
+import 'screens/garage/vehicles_screen.dart';
+import 'screens/settings/settings_screen.dart';
 import '../widgets/main_shell.dart';
 
 /// Route names for type-safe navigation
@@ -20,6 +21,7 @@ class AppRoutes {
   static const String editVehicle = '/vehicle/:vehicleId/edit';
   static const String addService = '/vehicle/:vehicleId/add-service';
   static const String analytics = '/analytics';
+  static const String settings = '/settings';
 }
 
 /// GoRouter configuration for the app
@@ -65,6 +67,18 @@ final goRouter = GoRouter(
               pageBuilder:
                   (context, state) =>
                       const NoTransitionPage(child: AnalyticsScreen()),
+            ),
+          ],
+        ),
+        // Settings branch
+        StatefulShellBranch(
+          routes: [
+            GoRoute(
+              path: AppRoutes.settings,
+              name: 'settings',
+              pageBuilder:
+                  (context, state) =>
+                      const NoTransitionPage(child: SettingsScreen()),
             ),
           ],
         ),
