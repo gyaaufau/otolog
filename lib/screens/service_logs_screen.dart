@@ -126,7 +126,47 @@ class _ServiceLogsScreenState extends State<ServiceLogsScreen> {
           padding: const EdgeInsets.fromLTRB(24, 8, 24, 20),
           child: Column(
             children: [
-              // Vehicle Switcher and Total Cost
+              // Total Cost
+              if (vehicles.isNotEmpty) ...[
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 12,
+                  ),
+                  decoration: BoxDecoration(
+                    color: AppColors.primary,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        'Total Cost',
+                        style: TextStyle(
+                          fontSize: 11,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.white.withOpacity(0.8),
+                          letterSpacing: 0.5,
+                        ),
+                      ),
+                      const SizedBox(height: 2),
+                      Text(
+                        _formatCurrency(totalCost),
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w700,
+                          color: Colors.white,
+                          letterSpacing: 0.2,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 16),
+              ],
+              // Vehicle Dropdown and Search
               if (vehicles.isNotEmpty) ...[
                 Row(
                   children: [
@@ -135,7 +175,7 @@ class _ServiceLogsScreenState extends State<ServiceLogsScreen> {
                       child: Container(
                         padding: const EdgeInsets.symmetric(
                           horizontal: 16,
-                          vertical: 12,
+                          vertical: 16,
                         ),
                         decoration: BoxDecoration(
                           color: Colors.white,
@@ -197,56 +237,31 @@ class _ServiceLogsScreenState extends State<ServiceLogsScreen> {
                     const SizedBox(width: 12),
                     Expanded(
                       flex: 1,
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 16,
-                          vertical: 12,
-                        ),
-                        decoration: BoxDecoration(
-                          color: AppColors.primary,
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text(
-                              'Total Cost',
-                              style: TextStyle(
-                                fontSize: 11,
-                                fontWeight: FontWeight.w600,
-                                color: Colors.white.withOpacity(0.8),
-                                letterSpacing: 0.5,
-                              ),
-                            ),
-                            const SizedBox(height: 2),
-                            Text(
-                              _formatCurrency(totalCost),
-                              style: const TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w700,
-                                color: Colors.white,
-                                letterSpacing: 0.2,
-                              ),
-                            ),
-                          ],
-                        ),
+                      child: SearchBarWidget(
+                        controller: _searchController,
+                        hintText: 'Search services...',
+                        onChanged: (value) {
+                          // Filter services based on search
+                        },
+                        onClear: () {
+                          _searchController.clear();
+                        },
                       ),
                     ),
                   ],
                 ),
-                const SizedBox(height: 16),
+              ] else ...[
+                SearchBarWidget(
+                  controller: _searchController,
+                  hintText: 'Search services...',
+                  onChanged: (value) {
+                    // Filter services based on search
+                  },
+                  onClear: () {
+                    _searchController.clear();
+                  },
+                ),
               ],
-              SearchBarWidget(
-                controller: _searchController,
-                hintText: 'Search services...',
-                onChanged: (value) {
-                  // Filter services based on search
-                },
-                onClear: () {
-                  _searchController.clear();
-                },
-              ),
             ],
           ),
         );
