@@ -2,7 +2,6 @@ import 'package:get_it/get_it.dart';
 import '../../repositories/drift_service.dart';
 import '../../database/database.dart';
 import '../../cubit/vehicle_cubit.dart';
-import '../../cubit/analytics_cubit.dart';
 
 final sl = GetIt.instance;
 
@@ -16,7 +15,6 @@ Future<void> initServiceLocator() async {
 
   // Register cubits
   sl.registerFactory<VehicleCubit>(() => VehicleCubit(sl<DriftService>()));
-  sl.registerFactory<AnalyticsCubit>(() => AnalyticsCubit(sl<DriftService>()));
 }
 
 /// Reset the service locator (useful for testing)

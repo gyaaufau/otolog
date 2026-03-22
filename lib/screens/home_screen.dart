@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -111,7 +112,9 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _buildContent(VehicleLoaded state) {
     return RefreshIndicator(
       onRefresh: () async {
-        await context.read<VehicleCubit>().loadHomeData();
+        await context.read<VehicleCubit>().loadHomeData(
+          selectedVehicleId: state.selectedVehicleId,
+        );
       },
       color: AppColors.primary,
       child: CustomScrollView(
@@ -119,14 +122,14 @@ class _HomeScreenState extends State<HomeScreen> {
           // Header Section
           SliverToBoxAdapter(child: _buildHeader(state)),
 
+          // Vehicle Switcher Section
+          SliverToBoxAdapter(child: _buildVehicleSwitcher(state)),
+
           // Statistics Section
           SliverToBoxAdapter(child: _buildStatistics(state)),
 
           // Quick Actions
           SliverToBoxAdapter(child: _buildQuickActions(state)),
-
-          // Vehicles Section
-          SliverToBoxAdapter(child: _buildVehiclesSection(state)),
 
           // Recent Services Section
           SliverToBoxAdapter(child: _buildRecentServices(state)),
@@ -225,7 +228,293 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  Widget _buildVehicleSwitcher(VehicleLoaded state) {
+    if (state.vehicles.isEmpty) {
+      return const SizedBox.shrink();
+    }
+
+    final selectedVehicle =
+        state.selectedVehicleId != null
+            ? state.vehicles.firstWhere(
+              (v) => v.id == state.selectedVehicleId,
+              orElse: () => state.vehicles.first,
+            )
+            : state.vehicles.first;
+
+    return Container(
+      margin: const EdgeInsets.fromLTRB(24, 16, 24, 0),
+      child: InkWell(
+        onTap: () {
+          if (state.vehicles.length > 1) {
+            _showVehicleSelector(state);
+          }
+        },
+        borderRadius: BorderRadius.circular(12),
+        child: Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(12),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.03),
+                blurRadius: 10,
+                offset: const Offset(0, 2),
+              ),
+            ],
+          ),
+          child: Row(
+            children: [
+              Container(
+                width: 48,
+                height: 48,
+                decoration: BoxDecoration(
+                  color: AppColors.primary.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child:
+                    selectedVehicle.imagePath != null &&
+                            selectedVehicle.imagePath!.isNotEmpty
+                        ? ClipRRect(
+                          borderRadius: BorderRadius.circular(10),
+                          child: Image.file(
+                            File(selectedVehicle.imagePath!),
+                            width: 48,
+                            height: 48,
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) {
+                              return _getVehicleTypeIcon(selectedVehicle.type);
+                            },
+                          ),
+                        )
+                        : _getVehicleTypeIcon(selectedVehicle.type),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      selectedVehicle.name,
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        color: AppColors.neutral[900],
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      '${selectedVehicle.brand ?? ''} ${selectedVehicle.model ?? ''}'
+                          .trim(),
+                      style: TextStyle(
+                        fontSize: 13,
+                        color: AppColors.neutral[600],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              if (state.vehicles.length > 1)
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 6,
+                  ),
+                  decoration: BoxDecoration(
+                    color: AppColors.primary.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(6),
+                    border: Border.all(
+                      color: AppColors.primary.withOpacity(0.3),
+                      width: 1,
+                    ),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        Icons.swap_horiz_rounded,
+                        size: 14,
+                        color: AppColors.primary,
+                      ),
+                      const SizedBox(width: 4),
+                      Text(
+                        'Switch',
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w600,
+                          color: AppColors.primary,
+                          letterSpacing: 0.3,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _showVehicleSelector(VehicleLoaded state) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+      builder:
+          (context) => Container(
+            decoration: const BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+            ),
+            child: SafeArea(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      border: Border(
+                        bottom: BorderSide(
+                          color: AppColors.neutral[200]!,
+                          width: 1,
+                        ),
+                      ),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'Select Vehicle',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                            color: AppColors.neutral[900],
+                          ),
+                        ),
+                        GestureDetector(
+                          onTap: () => Navigator.pop(context),
+                          child: Icon(
+                            Icons.close_rounded,
+                            color: AppColors.neutral[500],
+                            size: 20,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Flexible(
+                    child: ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: state.vehicles.length,
+                      itemBuilder: (context, index) {
+                        final vehicle = state.vehicles[index];
+                        final isSelected =
+                            vehicle.id == state.selectedVehicleId;
+                        return InkWell(
+                          onTap: () {
+                            context.read<VehicleCubit>().selectVehicle(
+                              vehicle.id,
+                            );
+                            Navigator.pop(context);
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 16,
+                              vertical: 16,
+                            ),
+                            decoration: BoxDecoration(
+                              color:
+                                  isSelected
+                                      ? AppColors.primary.withOpacity(0.1)
+                                      : Colors.transparent,
+                            ),
+                            child: Row(
+                              children: [
+                                Container(
+                                  width: 40,
+                                  height: 40,
+                                  decoration: BoxDecoration(
+                                    color: AppColors.primary.withOpacity(0.1),
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  child:
+                                      vehicle.imagePath != null &&
+                                              vehicle.imagePath!.isNotEmpty
+                                          ? ClipRRect(
+                                            borderRadius: BorderRadius.circular(
+                                              8,
+                                            ),
+                                            child: Image.file(
+                                              File(vehicle.imagePath!),
+                                              width: 40,
+                                              height: 40,
+                                              fit: BoxFit.cover,
+                                              errorBuilder: (
+                                                context,
+                                                error,
+                                                stackTrace,
+                                              ) {
+                                                return _getVehicleTypeIcon(
+                                                  vehicle.type,
+                                                );
+                                              },
+                                            ),
+                                          )
+                                          : _getVehicleTypeIcon(vehicle.type),
+                                ),
+                                const SizedBox(width: 12),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        vehicle.name,
+                                        style: TextStyle(
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.w600,
+                                          color:
+                                              isSelected
+                                                  ? AppColors.primary
+                                                  : AppColors.neutral[900],
+                                        ),
+                                      ),
+                                      const SizedBox(height: 2),
+                                      Text(
+                                        '${vehicle.brand ?? ''} ${vehicle.model ?? ''}'
+                                            .trim(),
+                                        style: TextStyle(
+                                          fontSize: 13,
+                                          color: AppColors.neutral[600],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                if (isSelected)
+                                  Icon(
+                                    Icons.check_rounded,
+                                    color: AppColors.primary,
+                                    size: 18,
+                                  ),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+    );
+  }
+
   Widget _buildStatistics(VehicleLoaded state) {
+    final odometerValue = state.odometer ?? 0;
+    final formattedOdometer = _formatOdometer(odometerValue);
     return Container(
       margin: const EdgeInsets.fromLTRB(24, 16, 24, 0),
       padding: const EdgeInsets.all(20),
@@ -244,9 +533,9 @@ class _HomeScreenState extends State<HomeScreen> {
         children: [
           Expanded(
             child: _buildStatItem(
-              'Total Vehicles',
-              '${state.vehicles.length}',
-              Icons.directions_car_outlined,
+              'Last Odometer',
+              formattedOdometer,
+              Icons.speed_outlined,
             ),
           ),
           Container(width: 1, height: 40, color: Colors.white.withOpacity(0.2)),
@@ -255,14 +544,6 @@ class _HomeScreenState extends State<HomeScreen> {
               'Services',
               '${state.serviceCount ?? 0}',
               Icons.build_outlined,
-            ),
-          ),
-          Container(width: 1, height: 40, color: Colors.white.withOpacity(0.2)),
-          Expanded(
-            child: _buildStatItem(
-              'Total Cost',
-              '\$${(state.totalCost ?? 0).toStringAsFixed(0)}',
-              Icons.payments_outlined,
             ),
           ),
         ],
@@ -375,183 +656,6 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildVehiclesSection(VehicleLoaded state) {
-    if (state.vehicles.isEmpty) {
-      return Container(
-        margin: const EdgeInsets.fromLTRB(24, 24, 24, 0),
-        padding: const EdgeInsets.all(24),
-        decoration: BoxDecoration(
-          color: AppColors.neutral[100],
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: Column(
-          children: [
-            Container(
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: AppColors.secondary[500]!.withOpacity(0.1),
-                shape: BoxShape.circle,
-              ),
-              child: Icon(
-                Icons.directions_car_outlined,
-                size: 32,
-                color: AppColors.secondary[500],
-              ),
-            ),
-            const SizedBox(height: 12),
-            Text(
-              'No Vehicles Yet',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-                color: AppColors.neutral[700],
-              ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              'Add your first vehicle to start tracking maintenance',
-              textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 14, color: AppColors.neutral[500]),
-            ),
-            const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: () => context.push(AppRoutes.addVehicle),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.primary,
-                foregroundColor: Colors.white,
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 24,
-                  vertical: 12,
-                ),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(6),
-                ),
-              ),
-              child: const Text('Add Vehicle'),
-            ),
-          ],
-        ),
-      );
-    }
-
-    return Container(
-      margin: const EdgeInsets.fromLTRB(24, 24, 24, 0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'Your Vehicles',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w600,
-                  color: AppColors.neutral[900],
-                  letterSpacing: -0.3,
-                ),
-              ),
-              TextButton(
-                onPressed: () => context.go(AppRoutes.vehicles),
-                style: TextButton.styleFrom(
-                  foregroundColor: AppColors.primary,
-                  padding: EdgeInsets.zero,
-                ),
-                child: const Text('View All'),
-              ),
-            ],
-          ),
-          const SizedBox(height: 16),
-          ...state.vehicles
-              .take(3)
-              .map((vehicle) => _buildVehicleCard(vehicle)),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildVehicleCard(dynamic vehicle) {
-    return GestureDetector(
-      onTap:
-          () => context.push(
-            AppRoutes.vehicleDetail.replaceFirst(
-              ':vehicleId',
-              vehicle.id.toString(),
-            ),
-          ),
-      child: Container(
-        margin: const EdgeInsets.only(bottom: 12),
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: AppColors.neutral[50],
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: AppColors.neutral[200]!, width: 1),
-        ),
-        child: Row(
-          children: [
-            Container(
-              width: 56,
-              height: 56,
-              decoration: BoxDecoration(
-                color: AppColors.primary.withOpacity(0.1),
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Icon(
-                Icons.directions_car,
-                size: 28,
-                color: AppColors.primary,
-              ),
-            ),
-            const SizedBox(width: 16),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    vehicle.name,
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      color: AppColors.neutral[900],
-                    ),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    '${vehicle.brand ?? ''} ${vehicle.model ?? ''}'.trim(),
-                    style: TextStyle(
-                      fontSize: 13,
-                      color: AppColors.neutral[600],
-                    ),
-                  ),
-                  const SizedBox(height: 4),
-                  Row(
-                    children: [
-                      Icon(
-                        Icons.confirmation_number_outlined,
-                        size: 12,
-                        color: AppColors.neutral[400],
-                      ),
-                      const SizedBox(width: 4),
-                      Text(
-                        vehicle.plateNumber,
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: AppColors.neutral[500],
-                          letterSpacing: 0.5,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-            Icon(Icons.chevron_right, color: AppColors.neutral[400]),
-          ],
-        ),
-      ),
-    );
-  }
-
   Widget _buildRecentServices(VehicleLoaded state) {
     final recentServices = state.serviceRecords ?? [];
 
@@ -576,18 +680,13 @@ class _HomeScreenState extends State<HomeScreen> {
           const SizedBox(height: 16),
           ...recentServices
               .take(3)
-              .map((service) => _buildServiceCard(service, state.vehicles)),
+              .map((service) => _buildServiceCard(service)),
         ],
       ),
     );
   }
 
-  Widget _buildServiceCard(dynamic service, List<dynamic> vehicles) {
-    final vehicle = vehicles.firstWhere(
-      (v) => v.id == service.vehicleId,
-      orElse: () => null,
-    );
-
+  Widget _buildServiceCard(dynamic service) {
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(16),
@@ -624,23 +723,17 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
                 const SizedBox(height: 4),
-                Row(
-                  children: [
-                    Icon(
-                      Icons.directions_car_outlined,
-                      size: 11,
-                      color: AppColors.neutral[400],
+                if (service.description != null &&
+                    service.description!.isNotEmpty)
+                  Text(
+                    service.description!,
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: AppColors.neutral[600],
                     ),
-                    const SizedBox(width: 3),
-                    Text(
-                      vehicle?.name ?? 'Unknown Vehicle',
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: AppColors.neutral[600],
-                      ),
-                    ),
-                  ],
-                ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
               ],
             ),
           ),
@@ -684,5 +777,47 @@ class _HomeScreenState extends State<HomeScreen> {
     } else {
       return '${date.day}/${date.month}/${date.year}';
     }
+  }
+
+  String _formatOdometer(int odometer) {
+    if (odometer == 0) {
+      return '0 km';
+    }
+    // Format odometer value with comma separators (e.g., 50,000 km)
+    final valueStr = odometer.toString();
+    final buffer = StringBuffer();
+    for (int i = 0; i < valueStr.length; i++) {
+      final char = valueStr[valueStr.length - 1 - i];
+      buffer.write(char);
+      if ((i + 1) % 3 == 0 && i != valueStr.length - 1) {
+        buffer.write(',');
+      }
+    }
+    return '${buffer.toString().split('').reversed.join()} km';
+  }
+
+  Widget _getVehicleTypeIcon(String? type) {
+    IconData iconData;
+    switch (type?.toLowerCase()) {
+      case 'sedan':
+        iconData = Icons.directions_car;
+        break;
+      case 'suv':
+        iconData = Icons.directions_car;
+        break;
+      case 'truck':
+        iconData = Icons.local_shipping;
+        break;
+      case 'motorcycle':
+        iconData = Icons.two_wheeler;
+        break;
+      case 'van':
+        iconData = Icons.airport_shuttle;
+        break;
+      default:
+        iconData = Icons.directions_car;
+    }
+
+    return Icon(iconData, size: 24, color: AppColors.primary);
   }
 }

@@ -6,7 +6,8 @@ import 'screens/logs/service_detail_screen.dart';
 import 'screens/garage/add_vehicle_screen.dart';
 import 'screens/garage/edit_vehicle_screen.dart';
 import 'screens/logs/add_service_screen.dart';
-import '../screens/analytics_screen.dart';
+import 'screens/logs/edit_service_screen.dart';
+import '../screens/service_logs_screen.dart';
 import 'screens/garage/vehicles_screen.dart';
 import 'screens/settings/settings_screen.dart';
 import '../widgets/main_shell.dart';
@@ -20,7 +21,9 @@ class AppRoutes {
   static const String addVehicle = '/add-vehicle';
   static const String editVehicle = '/vehicle/:vehicleId/edit';
   static const String addService = '/vehicle/:vehicleId/add-service';
-  static const String analytics = '/analytics';
+  static const String editService =
+      '/vehicle/:vehicleId/service/:serviceId/edit';
+  static const String serviceLogs = '/service-logs';
   static const String settings = '/settings';
 }
 
@@ -58,15 +61,15 @@ final goRouter = GoRouter(
             ),
           ],
         ),
-        // Analytics branch
+        // Service Logs branch
         StatefulShellBranch(
           routes: [
             GoRoute(
-              path: AppRoutes.analytics,
-              name: 'analytics',
+              path: AppRoutes.serviceLogs,
+              name: 'serviceLogs',
               pageBuilder:
                   (context, state) =>
-                      const NoTransitionPage(child: AnalyticsScreen()),
+                      const NoTransitionPage(child: ServiceLogsScreen()),
             ),
           ],
         ),
@@ -104,6 +107,13 @@ final goRouter = GoRouter(
           path: 'service/:serviceId',
           name: 'serviceDetail',
           builder: (context, state) => const ServiceDetailScreen(),
+          routes: [
+            GoRoute(
+              path: 'edit',
+              name: 'editService',
+              builder: (context, state) => const EditServiceScreen(),
+            ),
+          ],
         ),
       ],
     ),

@@ -9,14 +9,14 @@ import '../../resources/colors.dart';
 import '../../widgets/modal_dropdown_field.dart';
 import '../../router.dart';
 
-class AddServiceScreen extends StatefulWidget {
-  const AddServiceScreen({super.key});
+class EditServiceScreen extends StatefulWidget {
+  const EditServiceScreen({super.key});
 
   @override
-  State<AddServiceScreen> createState() => _AddServiceScreenState();
+  State<EditServiceScreen> createState() => _EditServiceScreenState();
 }
 
-class _AddServiceScreenState extends State<AddServiceScreen> {
+class _EditServiceScreenState extends State<EditServiceScreen> {
   final _formKey = GlobalKey<FormState>();
   final _serviceTypeController = TextEditingController();
   final _descriptionController = TextEditingController();
@@ -26,7 +26,10 @@ class _AddServiceScreenState extends State<AddServiceScreen> {
 
   DateTime? _serviceDate;
   String? _selectedServiceType;
+  Vehicle? _selectedVehicle;
+  ServiceRecord? _existingService;
   int? _vehicleId;
+  int? _serviceId;
 
   final List<String> _serviceTypes = [
     'Oil Change',
@@ -49,13 +52,18 @@ class _AddServiceScreenState extends State<AddServiceScreen> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    if (_vehicleId == null) {
+    if (_vehicleId == null || _serviceId == null) {
       final vehicleId = int.tryParse(
         GoRouterState.of(context).pathParameters['vehicleId'] ?? '',
       );
-      if (vehicleId != null) {
+      final serviceId = int.tryParse(
+        GoRouterState.of(context).pathParameters['serviceId'] ?? '',
+      );
+
+      if (vehicleId != null && serviceId != null) {
         setState(() {
           _vehicleId = vehicleId;
+          _serviceId = serviceId;
         });
         context.read<VehicleCubit>().loadVehicleWithServices(vehicleId);
       }
@@ -70,6 +78,22 @@ class _AddServiceScreenState extends State<AddServiceScreen> {
     _mechanicController.dispose();
     _notesController.dispose();
     super.dispose();
+  }
+
+  void _initializeForm(ServiceRecord service, Vehicle vehicle) {
+    if (_existingService == null) {
+      setState(() {
+        _existingService = service;
+        _selectedVehicle = vehicle;
+        _selectedServiceType = service.serviceType;
+        _serviceDate = service.serviceDate;
+        _serviceTypeController.text = service.serviceType;
+        _descriptionController.text = service.description ?? '';
+        _costController.text = service.cost?.toString() ?? '';
+        _mechanicController.text = service.mechanic ?? '';
+        _notesController.text = service.notes ?? '';
+      });
+    }
   }
 
   @override
@@ -87,7 +111,7 @@ class _AddServiceScreenState extends State<AddServiceScreen> {
           onPressed: () => context.pop(),
         ),
         title: Text(
-          'Add Service Record',
+          'Edit Service Record',
           style: TextStyle(
             color: AppColors.neutral[900],
             fontSize: 20,
@@ -117,119 +141,155 @@ class _AddServiceScreenState extends State<AddServiceScreen> {
             );
           }
 
-          final selectedVehicle =
-              state is VehicleLoaded && _vehicleId != null
-                  ? state.vehicles.firstWhere(
-                    (v) => v.id == _vehicleId,
-                    orElse: () => state.vehicles.first,
-                  )
-                  : null;
+          if (state is VehicleLoaded && state.serviceRecords != null) {
+            final service = state.serviceRecords!.firstWhere(
+              (s) => s.id == _serviceId,
+              orElse: () => state.serviceRecords!.first,
+            );
+            final vehicle = state.vehicles.firstWhere(
+              (v) => v.id == service.vehicleId,
+              orElse: () => state.vehicles.first,
+            );
 
-          return SingleChildScrollView(
-            padding: const EdgeInsets.fromLTRB(24, 24, 24, 100),
-            child: Form(
-              key: _formKey,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  if (selectedVehicle != null) ...[
-                    _buildVehicleInfo(selectedVehicle!),
+            _initializeForm(service, vehicle);
+
+            return SingleChildScrollView(
+              padding: const EdgeInsets.fromLTRB(24, 24, 24, 100),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _buildVehicleSelector(state.vehicles),
                     const SizedBox(height: 24),
+                    _buildServiceTypeField(),
+                    const SizedBox(height: 20),
+                    _buildServiceDatePicker(),
+                    const SizedBox(height: 20),
+                    _buildDescriptionField(),
+                    const SizedBox(height: 20),
+                    _buildCostField(),
+                    const SizedBox(height: 20),
+                    _buildMechanicField(),
+                    const SizedBox(height: 20),
+                    _buildNotesField(),
+                    const SizedBox(height: 32),
+                    _buildSaveButton(),
                   ],
-                  _buildServiceTypeField(),
-                  const SizedBox(height: 20),
-                  _buildServiceDatePicker(),
-                  const SizedBox(height: 20),
-                  _buildDescriptionField(),
-                  const SizedBox(height: 20),
-                  _buildCostField(),
-                  const SizedBox(height: 20),
-                  _buildMechanicField(),
-                  const SizedBox(height: 20),
-                  _buildNotesField(),
-                  const SizedBox(height: 32),
-                  _buildSaveButton(),
-                ],
+                ),
               ),
-            ),
-          );
+            );
+          }
+
+          return const SizedBox.shrink();
         },
       ),
     );
   }
 
-  Widget _buildVehicleInfo(Vehicle vehicle) {
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.neutral[200]!, width: 1),
-      ),
-      child: Row(
-        children: [
-          Container(
-            width: 56,
-            height: 56,
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [
-                  AppColors.primary.withOpacity(0.15),
-                  AppColors.primary.withOpacity(0.05),
-                ],
+  Widget _buildVehicleSelector(List<Vehicle> vehicles) {
+    if (vehicles.isEmpty) {
+      return const SizedBox.shrink();
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Vehicle',
+          style: TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.w600,
+            color: AppColors.neutral[700],
+            letterSpacing: 0.15,
+          ),
+        ),
+        const SizedBox(height: 8),
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: AppColors.neutral[200]!, width: 1),
+          ),
+          child: DropdownButtonHideUnderline(
+            child: DropdownButton<Vehicle>(
+              value: _selectedVehicle,
+              isExpanded: true,
+              icon: Icon(
+                Icons.keyboard_arrow_down_rounded,
+                color: AppColors.neutral[600],
               ),
+              style: TextStyle(
+                color: AppColors.neutral[900],
+                fontSize: 15,
+                fontWeight: FontWeight.w500,
+              ),
+              dropdownColor: Colors.white,
               borderRadius: BorderRadius.circular(12),
-            ),
-            child: Icon(
-              Icons.directions_car,
-              size: 28,
-              color: AppColors.primary,
+              items:
+                  vehicles.map((vehicle) {
+                    return DropdownMenuItem<Vehicle>(
+                      value: vehicle,
+                      child: Row(
+                        children: [
+                          Container(
+                            width: 40,
+                            height: 40,
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
+                                colors: [
+                                  AppColors.primary.withOpacity(0.15),
+                                  AppColors.primary.withOpacity(0.05),
+                                ],
+                              ),
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: Icon(
+                              Icons.directions_car,
+                              size: 20,
+                              color: AppColors.primary,
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  vehicle.name,
+                                  style: TextStyle(
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w600,
+                                    color: AppColors.neutral[900],
+                                  ),
+                                ),
+                                Text(
+                                  '${vehicle.brand ?? ''} ${vehicle.model ?? ''}'
+                                      .trim(),
+                                  style: TextStyle(
+                                    fontSize: 13,
+                                    color: AppColors.neutral[600],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  }).toList(),
+              onChanged: (value) {
+                setState(() {
+                  _selectedVehicle = value;
+                });
+              },
             ),
           ),
-          const SizedBox(width: 16),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  vehicle.name,
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w700,
-                    color: AppColors.neutral[900],
-                    letterSpacing: -0.3,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  '${vehicle.brand ?? ''} ${vehicle.model ?? ''}'.trim(),
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
-                    color: AppColors.neutral[600],
-                    letterSpacing: 0.1,
-                  ),
-                ),
-                if (vehicle.plateNumber != null &&
-                    vehicle.plateNumber!.isNotEmpty) ...[
-                  const SizedBox(height: 4),
-                  Text(
-                    vehicle.plateNumber!,
-                    style: TextStyle(
-                      fontSize: 13,
-                      fontWeight: FontWeight.w500,
-                      color: AppColors.neutral[500],
-                      letterSpacing: 0.1,
-                    ),
-                  ),
-                ],
-              ],
-            ),
-          ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
@@ -542,7 +602,7 @@ class _AddServiceScreenState extends State<AddServiceScreen> {
             ],
           ),
           child: ElevatedButton(
-            onPressed: isLoading ? null : _saveService,
+            onPressed: isLoading ? null : _updateService,
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.transparent,
               foregroundColor: Colors.white,
@@ -565,7 +625,7 @@ class _AddServiceScreenState extends State<AddServiceScreen> {
                       ),
                     )
                     : const Text(
-                      'Save Service Record',
+                      'Update Service Record',
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
@@ -578,13 +638,14 @@ class _AddServiceScreenState extends State<AddServiceScreen> {
     );
   }
 
-  void _saveService() {
+  void _updateService() {
     if (_formKey.currentState!.validate() &&
-        _vehicleId != null &&
+        _selectedVehicle != null &&
         _selectedServiceType != null &&
-        _serviceDate != null) {
-      final service = ServiceRecordsCompanion.insert(
-        vehicleId: _vehicleId!,
+        _serviceDate != null &&
+        _existingService != null) {
+      final updatedService = _existingService!.copyWith(
+        vehicleId: _selectedVehicle!.id,
         serviceType: _selectedServiceType!,
         serviceDate: _serviceDate!,
         description:
@@ -605,7 +666,7 @@ class _AddServiceScreenState extends State<AddServiceScreen> {
                 : drift.Value(_notesController.text.trim()),
       );
 
-      context.read<VehicleCubit>().addServiceRecord(service);
+      context.read<VehicleCubit>().updateServiceRecord(updatedService);
       context.pop();
     } else {
       ScaffoldMessenger.of(context).showSnackBar(

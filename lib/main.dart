@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'shared/core/service_locator.dart';
 import 'cubit/vehicle_cubit.dart';
-import 'cubit/analytics_cubit.dart';
 import 'cubit/theme_cubit.dart';
 import 'cubit/theme_state.dart';
 import 'router.dart';
@@ -32,7 +31,6 @@ class MyApp extends StatelessWidget {
         return MultiBlocProvider(
           providers: [
             BlocProvider(create: (context) => sl<VehicleCubit>()),
-            BlocProvider(create: (context) => sl<AnalyticsCubit>()),
             BlocProvider(create: (context) => ThemeCubit()),
           ],
           child: BlocBuilder<ThemeCubit, ThemeState>(

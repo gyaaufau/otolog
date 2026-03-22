@@ -56,9 +56,9 @@ class MainShell extends StatelessWidget {
                 ),
                 _buildNavItem(
                   context: context,
-                  icon: Icons.bar_chart_outlined,
-                  activeIcon: Icons.bar_chart,
-                  label: 'Analytics',
+                  icon: Icons.history_outlined,
+                  activeIcon: Icons.history,
+                  label: 'Logs',
                   index: 2,
                   isActive: navigationShell.currentIndex == 2,
                 ),

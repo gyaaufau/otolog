@@ -20,27 +20,8 @@ class VehicleCubit extends Cubit<VehicleState> {
         print('DEBUG: Vehicle ${v.name} has isPrimary: ${v.isPrimary}');
       }
 
-      // If there are vehicles but none is marked as primary, mark the first one as primary
-      if (vehicles.isNotEmpty && !vehicles.any((v) => v.isPrimary == true)) {
-        print(
-          'DEBUG: No primary vehicle found, marking first vehicle as primary',
-        );
-        await _driftService.markAsPrimary(vehicles.first.id);
-        // Reload vehicles to get updated isPrimary values
-        final updatedVehicles = await _driftService.getAllVehicles();
-        print(
-          'DEBUG: After marking primary, first vehicle isPrimary: ${updatedVehicles.first.isPrimary}',
-        );
-        emit(
-          VehicleLoaded(
-            vehicles: updatedVehicles,
-            serviceRecords: serviceRecords,
-          ),
-        );
-      } else {
-        print('DEBUG: Primary vehicle already exists or no vehicles');
-        emit(VehicleLoaded(vehicles: vehicles, serviceRecords: serviceRecords));
-      }
+      print('DEBUG: Primary vehicle already exists or no vehicles');
+      emit(VehicleLoaded(vehicles: vehicles, serviceRecords: serviceRecords));
     } catch (e) {
       print('DEBUG: Error loading vehicles: $e');
       emit(VehicleError('Failed to load vehicles: ${e.toString()}'));
@@ -84,7 +65,8 @@ class VehicleCubit extends Cubit<VehicleState> {
     try {
       await _driftService.addVehicle(vehicle);
       final vehicles = await _driftService.getAllVehicles();
-      emit(VehicleLoaded(vehicles: vehicles));
+      final serviceRecords = await _driftService.getAllServiceRecords();
+      emit(VehicleLoaded(vehicles: vehicles, serviceRecords: serviceRecords));
     } catch (e) {
       emit(VehicleError('Failed to add vehicle: ${e.toString()}'));
     }
@@ -96,7 +78,8 @@ class VehicleCubit extends Cubit<VehicleState> {
     try {
       await _driftService.updateVehicle(vehicle);
       final vehicles = await _driftService.getAllVehicles();
-      emit(VehicleLoaded(vehicles: vehicles));
+      final serviceRecords = await _driftService.getAllServiceRecords();
+      emit(VehicleLoaded(vehicles: vehicles, serviceRecords: serviceRecords));
     } catch (e) {
       emit(VehicleError('Failed to update vehicle: ${e.toString()}'));
     }
@@ -108,7 +91,8 @@ class VehicleCubit extends Cubit<VehicleState> {
     try {
       await _driftService.deleteVehicle(vehicleId);
       final vehicles = await _driftService.getAllVehicles();
-      emit(VehicleLoaded(vehicles: vehicles));
+      final serviceRecords = await _driftService.getAllServiceRecords();
+      emit(VehicleLoaded(vehicles: vehicles, serviceRecords: serviceRecords));
     } catch (e) {
       emit(VehicleError('Failed to delete vehicle: ${e.toString()}'));
     }
@@ -120,7 +104,8 @@ class VehicleCubit extends Cubit<VehicleState> {
     try {
       await _driftService.markAsPrimary(vehicleId);
       final vehicles = await _driftService.getAllVehicles();
-      emit(VehicleLoaded(vehicles: vehicles));
+      final serviceRecords = await _driftService.getAllServiceRecords();
+      emit(VehicleLoaded(vehicles: vehicles, serviceRecords: serviceRecords));
     } catch (e) {
       emit(VehicleError('Failed to mark vehicle as primary: ${e.toString()}'));
     }
@@ -232,17 +217,40 @@ class VehicleCubit extends Cubit<VehicleState> {
   }
 
   // Load home screen data
-  Future<void> loadHomeData() async {
+  Future<void> loadHomeData({int? selectedVehicleId}) async {
     emit(const VehicleLoading());
     try {
       final vehicles = await _driftService.getAllVehicles();
-      final recentServices = await _driftService.getAllServiceRecords();
-      final totalCost = await _driftService.getTotalCostAllVehicles();
 
+      // If no selectedVehicleId is provided, use the primary vehicle or first vehicle
+      int? targetVehicleId = selectedVehicleId;
+      int? targetOdometer;
+      if (targetVehicleId == null && vehicles.isNotEmpty) {
+        final primaryVehicle = vehicles.firstWhere(
+          (v) => v.isPrimary == true,
+          orElse: () => vehicles.first,
+        );
+        targetVehicleId = primaryVehicle.id;
+        targetOdometer = primaryVehicle.odometer;
+      } else if (targetVehicleId != null) {
+        final targetVehicle = vehicles.firstWhere(
+          (v) => v.id == targetVehicleId,
+          orElse: () => vehicles.first,
+        );
+        targetOdometer = targetVehicle.odometer;
+      }
+
+      List<ServiceRecord> recentServices = [];
+      double totalCost = 0;
       int totalServices = 0;
-      for (var vehicle in vehicles) {
-        totalServices += await _driftService.getServiceCountByVehicle(
-          vehicle.id,
+
+      if (targetVehicleId != null) {
+        recentServices = await _driftService.getServiceRecordsByVehicle(
+          targetVehicleId,
+        );
+        totalCost = await _driftService.getTotalCostByVehicle(targetVehicleId);
+        totalServices = await _driftService.getServiceCountByVehicle(
+          targetVehicleId,
         );
       }
 
@@ -255,10 +263,50 @@ class VehicleCubit extends Cubit<VehicleState> {
           serviceRecords: limitedRecentServices,
           totalCost: totalCost,
           serviceCount: totalServices,
+          selectedVehicleId: targetVehicleId,
+          odometer: targetOdometer,
         ),
       );
     } catch (e) {
       emit(VehicleError('Failed to load home data: ${e.toString()}'));
+    }
+  }
+
+  // Select vehicle for home screen
+  Future<void> selectVehicle(int vehicleId) async {
+    final currentState = state;
+    if (currentState is! VehicleLoaded) {
+      return;
+    }
+
+    try {
+      final vehicles = currentState.vehicles;
+      final selectedVehicle = vehicles.firstWhere(
+        (v) => v.id == vehicleId,
+        orElse: () => vehicles.first,
+      );
+      final recentServices = await _driftService.getServiceRecordsByVehicle(
+        vehicleId,
+      );
+      final totalCost = await _driftService.getTotalCostByVehicle(vehicleId);
+      final totalServices = await _driftService.getServiceCountByVehicle(
+        vehicleId,
+      );
+
+      // Get only last 5 recent services
+      final limitedRecentServices = recentServices.take(5).toList();
+
+      emit(
+        currentState.copyWith(
+          serviceRecords: limitedRecentServices,
+          totalCost: totalCost,
+          serviceCount: totalServices,
+          selectedVehicleId: vehicleId,
+          odometer: selectedVehicle.odometer,
+        ),
+      );
+    } catch (e) {
+      emit(VehicleError('Failed to select vehicle: ${e.toString()}'));
     }
   }
 }

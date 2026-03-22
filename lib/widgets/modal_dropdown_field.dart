@@ -117,7 +117,10 @@ class _ModalBottomSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenHeight = MediaQuery.of(context).size.height;
+
     return Container(
+      constraints: BoxConstraints(maxHeight: screenHeight * 0.5),
       decoration: const BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
@@ -156,55 +159,69 @@ class _ModalBottomSheet extends StatelessWidget {
               ),
             ),
             Flexible(
-              child: ListView.builder(
-                shrinkWrap: true,
-                itemCount: items.length,
-                itemBuilder: (context, index) {
-                  final item = items[index];
-                  final isSelected = item == selectedValue;
-                  return InkWell(
-                    onTap: () {
-                      onSelected(item);
-                      Navigator.pop(context);
-                    },
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 16,
-                      ),
-                      decoration: BoxDecoration(
-                        color:
-                            isSelected
-                                ? AppColors.primary.withOpacity(0.1)
-                                : Colors.transparent,
-                      ),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: Text(
-                              item,
-                              style: TextStyle(
-                                fontSize: 15,
-                                fontWeight: FontWeight.w500,
-                                color:
-                                    isSelected
-                                        ? AppColors.primary
-                                        : AppColors.neutral[900],
-                                letterSpacing: 0.2,
-                              ),
+              child: Column(
+                children: [
+                  Expanded(
+                    child: ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: items.length,
+                      itemBuilder: (context, index) {
+                        final item = items[index];
+                        final isSelected = item == selectedValue;
+                        return InkWell(
+                          onTap: () {
+                            onSelected(item);
+                            Navigator.pop(context);
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 16,
+                              vertical: 16,
+                            ),
+                            decoration: BoxDecoration(
+                              color:
+                                  isSelected
+                                      ? AppColors.primary.withOpacity(0.1)
+                                      : Colors.transparent,
+                            ),
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: Text(
+                                    item,
+                                    style: TextStyle(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.w500,
+                                      color:
+                                          isSelected
+                                              ? AppColors.primary
+                                              : AppColors.neutral[900],
+                                      letterSpacing: 0.2,
+                                    ),
+                                  ),
+                                ),
+                                if (isSelected)
+                                  Icon(
+                                    Icons.check_rounded,
+                                    color: AppColors.primary,
+                                    size: 18,
+                                  ),
+                              ],
                             ),
                           ),
-                          if (isSelected)
-                            Icon(
-                              Icons.check_rounded,
-                              color: AppColors.primary,
-                              size: 18,
-                            ),
-                        ],
-                      ),
+                        );
+                      },
                     ),
-                  );
-                },
+                  ),
+                  Container(
+                    padding: const EdgeInsets.symmetric(vertical: 12),
+                    child: Icon(
+                      Icons.keyboard_arrow_down_rounded,
+                      color: AppColors.neutral[400],
+                      size: 20,
+                    ),
+                  ),
+                ],
               ),
             ),
           ],
