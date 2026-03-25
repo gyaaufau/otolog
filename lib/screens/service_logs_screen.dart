@@ -331,6 +331,10 @@ class _ServiceLogsScreenState extends State<ServiceLogsScreen> {
       );
     }
 
+    // Group services by date
+    final groupedServices = _groupServicesByDate(filteredServices);
+    final dateGroups = groupedServices.entries.toList();
+
     return RefreshIndicator(
       onRefresh: () async {
         await context.read<VehicleCubit>().loadVehicles();
@@ -339,17 +343,140 @@ class _ServiceLogsScreenState extends State<ServiceLogsScreen> {
       backgroundColor: AppColors.neutral[50],
       child: ListView.builder(
         padding: const EdgeInsets.fromLTRB(24, 0, 24, 100),
-        itemCount: filteredServices.length,
+        itemCount: dateGroups.length,
         itemBuilder: (context, index) {
-          final service = filteredServices[index];
-          final vehicle = vehicles.firstWhere(
-            (v) => v.id == service.vehicleId,
-            orElse: () => vehicles.first,
-          );
-          return _buildServiceCard(service, vehicle);
+          final dateGroup = dateGroups[index];
+          return _buildDateGroup(dateGroup, vehicles);
         },
       ),
     );
+  }
+
+  Map<String, List<dynamic>> _groupServicesByDate(List<dynamic> services) {
+    final Map<String, List<dynamic>> grouped = {};
+
+    for (final service in services) {
+      final dateKey = _formatDateKey(service.serviceDate);
+      if (!grouped.containsKey(dateKey)) {
+        grouped[dateKey] = [];
+      }
+      grouped[dateKey]!.add(service);
+    }
+
+    // Sort dates in descending order (newest first)
+    final sortedKeys = grouped.keys.toList()..sort((a, b) => b.compareTo(a));
+
+    final Map<String, List<dynamic>> sortedGrouped = {};
+    for (final key in sortedKeys) {
+      sortedGrouped[key] = grouped[key]!;
+    }
+
+    return sortedGrouped;
+  }
+
+  String _formatDateKey(DateTime date) {
+    return '${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}';
+  }
+
+  Widget _buildDateGroup(
+    MapEntry<String, List<dynamic>> dateGroup,
+    List<dynamic> vehicles,
+  ) {
+    final date = DateTime.parse(dateGroup.key);
+    final services = dateGroup.value;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _buildDateHeader(date, services.length),
+        const SizedBox(height: 12),
+        ...services.map((service) {
+          dynamic? vehicle;
+          try {
+            vehicle = vehicles.firstWhere((v) => v.id == service.vehicleId);
+          } catch (e) {
+            if (vehicles.isNotEmpty) {
+              vehicle = vehicles.first;
+            }
+          }
+          if (vehicle == null) return const SizedBox.shrink();
+          return Padding(
+            padding: const EdgeInsets.only(bottom: 16),
+            child: _buildServiceCard(service, vehicle),
+          );
+        }),
+        const SizedBox(height: 8),
+      ],
+    );
+  }
+
+  Widget _buildDateHeader(DateTime date, int count) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 4, bottom: 8),
+      child: Row(
+        children: [
+          Text(
+            _formatDateHeader(date),
+            style: TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.w700,
+              color: AppColors.neutral[600],
+              letterSpacing: 0.3,
+            ),
+          ),
+          const SizedBox(width: 8),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+            decoration: BoxDecoration(
+              color: AppColors.primary.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Text(
+              '$count',
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w600,
+                color: AppColors.primary,
+                letterSpacing: 0.2,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  String _formatDateHeader(DateTime date) {
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    final yesterday = today.subtract(const Duration(days: 1));
+    final serviceDate = DateTime(date.year, date.month, date.day);
+
+    if (serviceDate == today) {
+      return 'Today';
+    } else if (serviceDate == yesterday) {
+      return 'Yesterday';
+    } else {
+      return '${date.day} ${_getMonthName(date.month)} ${date.year}';
+    }
+  }
+
+  String _getMonthName(int month) {
+    const months = [
+      'January',
+      'February',
+      'March',
+      'April',
+      'May',
+      'June',
+      'July',
+      'August',
+      'September',
+      'October',
+      'November',
+      'December',
+    ];
+    return months[month - 1];
   }
 
   Widget _buildServiceCard(dynamic service, dynamic vehicle) {
@@ -448,13 +575,7 @@ class _ServiceLogsScreenState extends State<ServiceLogsScreen> {
             const SizedBox(height: 18),
             Row(
               children: [
-                _buildInfoItem(
-                  Icons.calendar_today_outlined,
-                  _formatDate(service.serviceDate),
-                  'Date',
-                ),
                 if (service.cost != null) ...[
-                  const SizedBox(width: 28),
                   _buildInfoItem(
                     Icons.payments_outlined,
                     _formatCurrency(service.cost),
@@ -550,6 +671,7 @@ class _ServiceLogsScreenState extends State<ServiceLogsScreen> {
         return Container(
           margin: const EdgeInsets.only(bottom: 24, right: 24),
           child: FloatingActionButton.extended(
+            heroTag: 'add_service_fab',
             onPressed: () {
               if (_selectedVehicle != null) {
                 // Navigate directly to add service for selected vehicle

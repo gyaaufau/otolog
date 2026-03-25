@@ -484,6 +484,7 @@ class _VehiclesScreenState extends State<VehiclesScreen> {
     return Container(
       margin: const EdgeInsets.only(bottom: 24, right: 24),
       child: FloatingActionButton.extended(
+        heroTag: 'add_vehicle_fab',
         onPressed: () => context.push(AppRoutes.addVehicle),
         backgroundColor: AppColors.primary,
         foregroundColor: Colors.white,
