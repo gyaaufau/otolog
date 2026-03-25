@@ -168,87 +168,87 @@ class _ServiceLogsScreenState extends State<ServiceLogsScreen> {
               ],
               // Vehicle Dropdown and Search
               if (vehicles.isNotEmpty) ...[
-                Row(
-                  children: [
-                    Expanded(
-                      flex: 1,
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 16,
-                          vertical: 16,
+                IntrinsicHeight(
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Expanded(
+                        flex: 1,
+                        child: SearchBarWidget(
+                          controller: _searchController,
+                          hintText: 'Search services...',
+                          onChanged: (value) {
+                            // Filter services based on search
+                          },
+                          onClear: () {
+                            _searchController.clear();
+                          },
                         ),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(12),
-                          border: Border.all(color: AppColors.neutral[200]!),
-                        ),
-                        child: DropdownButtonHideUnderline(
-                          child: DropdownButton<dynamic>(
-                            value: _selectedVehicle,
-                            hint: Text(
-                              'All Vehicles',
-                              style: TextStyle(
-                                fontSize: 15,
-                                fontWeight: FontWeight.w500,
-                                color: AppColors.neutral[700],
-                              ),
-                            ),
-                            icon: Icon(
-                              Icons.keyboard_arrow_down,
-                              color: AppColors.neutral[500],
-                            ),
-                            isExpanded: true,
-                            items: [
-                              DropdownMenuItem<dynamic>(
-                                value: null,
-                                child: Text(
-                                  'All Vehicles',
-                                  style: TextStyle(
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.w500,
-                                    color: AppColors.neutral[700],
-                                  ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        flex: 1,
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(color: AppColors.neutral[200]!),
+                          ),
+                          child: DropdownButtonHideUnderline(
+                            child: DropdownButton<dynamic>(
+                              value: _selectedVehicle,
+                              hint: Text(
+                                'All Vehicles',
+                                style: TextStyle(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w500,
+                                  color: AppColors.neutral[700],
                                 ),
                               ),
-                              ...vehicles.map((vehicle) {
-                                return DropdownMenuItem<dynamic>(
-                                  value: vehicle,
+                              icon: Icon(
+                                Icons.keyboard_arrow_down,
+                                color: AppColors.neutral[500],
+                              ),
+                              isExpanded: true,
+                              items: [
+                                DropdownMenuItem<dynamic>(
+                                  value: null,
                                   child: Text(
-                                    vehicle.name,
+                                    'All Vehicles',
                                     style: TextStyle(
                                       fontSize: 15,
                                       fontWeight: FontWeight.w500,
-                                      color: AppColors.neutral[900],
+                                      color: AppColors.neutral[700],
                                     ),
-                                    overflow: TextOverflow.ellipsis,
                                   ),
-                                );
-                              }).toList(),
-                            ],
-                            onChanged: (value) {
-                              setState(() {
-                                _selectedVehicle = value;
-                              });
-                            },
+                                ),
+                                ...vehicles.map((vehicle) {
+                                  return DropdownMenuItem<dynamic>(
+                                    value: vehicle,
+                                    child: Text(
+                                      vehicle.name,
+                                      style: TextStyle(
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.w500,
+                                        color: AppColors.neutral[900],
+                                      ),
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  );
+                                }).toList(),
+                              ],
+                              onChanged: (value) {
+                                setState(() {
+                                  _selectedVehicle = value;
+                                });
+                              },
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      flex: 1,
-                      child: SearchBarWidget(
-                        controller: _searchController,
-                        hintText: 'Search services...',
-                        onChanged: (value) {
-                          // Filter services based on search
-                        },
-                        onClear: () {
-                          _searchController.clear();
-                        },
-                      ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ] else ...[
                 SearchBarWidget(
