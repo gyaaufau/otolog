@@ -673,18 +673,8 @@ class _ServiceLogsScreenState extends State<ServiceLogsScreen> {
           child: FloatingActionButton.extended(
             heroTag: 'add_service_fab',
             onPressed: () {
-              if (_selectedVehicle != null) {
-                // Navigate directly to add service for selected vehicle
-                context.push(
-                  AppRoutes.addService.replaceFirst(
-                    ':vehicleId',
-                    _selectedVehicle!.id.toString(),
-                  ),
-                );
-              } else {
-                // Show vehicle selection dialog
-                _showVehicleSelectionDialog(vehicles);
-              }
+              // Navigate directly to add service screen
+              context.push(AppRoutes.addServiceGeneral);
             },
             backgroundColor: AppColors.primary,
             foregroundColor: Colors.white,
@@ -704,99 +694,6 @@ class _ServiceLogsScreenState extends State<ServiceLogsScreen> {
           ),
         );
       },
-    );
-  }
-
-  void _showVehicleSelectionDialog(List<dynamic> vehicles) {
-    showDialog(
-      context: context,
-      builder:
-          (context) => AlertDialog(
-            backgroundColor: Colors.white,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(16),
-            ),
-            title: Text(
-              'Select Vehicle',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.w700,
-                color: AppColors.neutral[900],
-                letterSpacing: -0.3,
-              ),
-            ),
-            content: SizedBox(
-              width: double.maxFinite,
-              child: ListView.builder(
-                shrinkWrap: true,
-                itemCount: vehicles.length,
-                itemBuilder: (context, index) {
-                  final vehicle = vehicles[index];
-                  return ListTile(
-                    contentPadding: EdgeInsets.zero,
-                    onTap: () {
-                      Navigator.pop(context);
-                      context.push(
-                        AppRoutes.addService.replaceFirst(
-                          ':vehicleId',
-                          vehicle.id.toString(),
-                        ),
-                      );
-                    },
-                    leading: Container(
-                      width: 48,
-                      height: 48,
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                          colors: [
-                            AppColors.primary.withOpacity(0.15),
-                            AppColors.primary.withOpacity(0.05),
-                          ],
-                        ),
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: Icon(
-                        Icons.directions_car,
-                        size: 24,
-                        color: AppColors.primary,
-                      ),
-                    ),
-                    title: Text(
-                      vehicle.name,
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                        color: AppColors.neutral[900],
-                      ),
-                    ),
-                    subtitle: Text(
-                      '${vehicle.brand ?? ''} ${vehicle.model ?? ''}'.trim(),
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: AppColors.neutral[600],
-                      ),
-                    ),
-                  );
-                },
-              ),
-            ),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: Text(
-                  'Cancel',
-                  style: TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w600,
-                    color: AppColors.neutral[600],
-                    letterSpacing: 0.2,
-                  ),
-                ),
-              ),
-            ],
-          ),
     );
   }
 

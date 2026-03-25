@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:otolog/cubit/service_vehicle_selector_cubit.dart';
 import 'shared/core/service_locator.dart';
 import 'cubit/vehicle_cubit.dart';
 import 'cubit/theme_cubit.dart';
@@ -32,6 +33,9 @@ class MyApp extends StatelessWidget {
           providers: [
             BlocProvider(create: (context) => sl<VehicleCubit>()),
             BlocProvider(create: (context) => ThemeCubit()),
+            BlocProvider(
+              create: (context) => sl<ServiceVehicleSelectorCubit>(),
+            ),
           ],
           child: BlocBuilder<ThemeCubit, ThemeState>(
             builder: (context, themeState) {

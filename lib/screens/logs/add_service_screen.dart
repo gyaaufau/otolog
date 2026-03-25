@@ -4,6 +4,8 @@ import 'package:go_router/go_router.dart';
 import 'package:drift/drift.dart' as drift;
 import '../../cubit/vehicle_cubit.dart';
 import '../../cubit/vehicle_state.dart';
+import '../../cubit/service_vehicle_selector_cubit.dart';
+import '../../cubit/service_vehicle_selector_state.dart';
 import '../../database/database.dart';
 import '../../resources/colors.dart';
 import '../../widgets/modal_dropdown_field.dart';
@@ -49,17 +51,29 @@ class _AddServiceScreenState extends State<AddServiceScreen> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
+    print('📱 [AddServiceScreen] didChangeDependencies called');
+
     if (_vehicleId == null) {
       final vehicleId = int.tryParse(
         GoRouterState.of(context).pathParameters['vehicleId'] ?? '',
       );
+      print('📱 [AddServiceScreen] Vehicle ID from route: $vehicleId');
       if (vehicleId != null) {
         setState(() {
           _vehicleId = vehicleId;
         });
+        print('📱 [AddServiceScreen] Local _vehicleId set to: $_vehicleId');
         context.read<VehicleCubit>().loadVehicleWithServices(vehicleId);
       }
+    } else {
+      print('📱 [AddServiceScreen] Local _vehicleId already set: $_vehicleId');
     }
+
+    // Load all vehicles for vehicle selection
+    print(
+      '📱 [AddServiceScreen] Calling loadVehicles() on ServiceVehicleSelectorCubit',
+    );
+    context.read<ServiceVehicleSelectorCubit>().loadVehicles();
   }
 
   @override
@@ -106,130 +120,429 @@ class _AddServiceScreenState extends State<AddServiceScreen> {
           ),
         ),
       ),
-      body: BlocBuilder<VehicleCubit, VehicleState>(
-        builder: (context, state) {
-          if (state is VehicleLoading) {
-            return Center(
-              child: CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation(AppColors.primary),
-                strokeWidth: 2,
-              ),
-            );
-          }
+      body: Column(
+        children: [
+          BlocBuilder<ServiceVehicleSelectorCubit, ServiceVehicleSelectorState>(
+            builder: (context, vehicleSelectorState) {
+              print('📱 [AddServiceScreen] BlocBuilder rebuilt');
+              print(
+                '📱 [AddServiceScreen]   State type: ${vehicleSelectorState.runtimeType}',
+              );
 
-          final selectedVehicle =
-              state is VehicleLoaded && _vehicleId != null
-                  ? state.vehicles.firstWhere(
-                    (v) => v.id == _vehicleId,
-                    orElse: () => state.vehicles.first,
-                  )
-                  : null;
+              if (vehicleSelectorState is ServiceVehicleSelectorLoading) {
+                print('📱 [AddServiceScreen]   State is Loading');
+                return const Expanded(
+                  child: Center(
+                    child: CircularProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation(AppColors.primary),
+                      strokeWidth: 2,
+                    ),
+                  ),
+                );
+              }
 
-          return SingleChildScrollView(
-            padding: const EdgeInsets.fromLTRB(24, 24, 24, 100),
-            child: Form(
-              key: _formKey,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  if (selectedVehicle != null) ...[
-                    _buildVehicleInfo(selectedVehicle!),
-                    const SizedBox(height: 24),
-                  ],
-                  _buildServiceTypeField(),
-                  const SizedBox(height: 20),
-                  _buildServiceDatePicker(),
-                  const SizedBox(height: 20),
-                  _buildDescriptionField(),
-                  const SizedBox(height: 20),
-                  _buildCostField(),
-                  const SizedBox(height: 20),
-                  _buildMechanicField(),
-                  const SizedBox(height: 20),
-                  _buildNotesField(),
-                  const SizedBox(height: 32),
-                  _buildSaveButton(),
-                ],
-              ),
-            ),
-          );
-        },
+              if (vehicleSelectorState is ServiceVehicleSelectorError) {
+                print(
+                  '📱 [AddServiceScreen]   State is Error: ${vehicleSelectorState.message}',
+                );
+                return const Expanded(
+                  child: Center(child: Text('Failed to load vehicles')),
+                );
+              }
+
+              if (vehicleSelectorState is ServiceVehicleSelectorLoaded) {
+                print(
+                  '📱 [AddServiceScreen]   State is Loaded with ${vehicleSelectorState.vehicles.length} vehicles',
+                );
+                print(
+                  '📱 [AddServiceScreen]   selectedVehicleId in state: ${vehicleSelectorState.selectedVehicleId}',
+                );
+                print('📱 [AddServiceScreen]   local _vehicleId: $_vehicleId');
+
+                // Sync local _vehicleId with cubit state if they differ
+                if (vehicleSelectorState.selectedVehicleId != null &&
+                    vehicleSelectorState.selectedVehicleId != _vehicleId) {
+                  print(
+                    '📱 [AddServiceScreen]   ⚠️ Syncing local _vehicleId with cubit state',
+                  );
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    setState(() {
+                      _vehicleId = vehicleSelectorState.selectedVehicleId;
+                    });
+                    print(
+                      '📱 [AddServiceScreen]   Local _vehicleId synced to: $_vehicleId',
+                    );
+                  });
+                }
+              }
+
+              final vehicles =
+                  vehicleSelectorState is ServiceVehicleSelectorLoaded
+                      ? vehicleSelectorState.vehicles
+                      : <dynamic>[];
+
+              final selectedVehicleId =
+                  vehicleSelectorState is ServiceVehicleSelectorLoaded
+                      ? vehicleSelectorState.selectedVehicleId
+                      : null;
+
+              return Expanded(
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.fromLTRB(24, 24, 24, 100),
+                  child: Form(
+                    key: _formKey,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _buildVehicleSelector(vehicles, selectedVehicleId),
+                        const SizedBox(height: 24),
+                        _buildServiceTypeField(),
+                        const SizedBox(height: 20),
+                        _buildServiceDatePicker(),
+                        const SizedBox(height: 20),
+                        _buildDescriptionField(),
+                        const SizedBox(height: 20),
+                        _buildCostField(),
+                        const SizedBox(height: 20),
+                        _buildMechanicField(),
+                        const SizedBox(height: 20),
+                        _buildNotesField(),
+                        const SizedBox(height: 32),
+                        _buildSaveButton(),
+                      ],
+                    ),
+                  ),
+                ),
+              );
+            },
+          ),
+        ],
       ),
     );
   }
 
-  Widget _buildVehicleInfo(Vehicle vehicle) {
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.neutral[200]!, width: 1),
-      ),
-      child: Row(
-        children: [
-          Container(
-            width: 56,
-            height: 56,
+  Widget _buildVehicleSelector(List<dynamic> vehicles, int? selectedVehicleId) {
+    print('📱 [AddServiceScreen] _buildVehicleSelector called');
+    print('📱 [AddServiceScreen]   vehicles.length: ${vehicles.length}');
+    print(
+      '📱 [AddServiceScreen]   selectedVehicleId from cubit: $selectedVehicleId',
+    );
+    print('📱 [AddServiceScreen]   local _vehicleId: $_vehicleId');
+
+    dynamic selectedVehicle;
+    if (selectedVehicleId != null && vehicles.isNotEmpty) {
+      try {
+        selectedVehicle = vehicles.firstWhere((v) => v.id == selectedVehicleId);
+        print(
+          '📱 [AddServiceScreen]   Found selected vehicle: id=${selectedVehicle.id}, name="${selectedVehicle.name}"',
+        );
+      } catch (e) {
+        print(
+          '📱 [AddServiceScreen]   ⚠️ Vehicle with id=$selectedVehicleId not found, using first vehicle',
+        );
+        selectedVehicle = vehicles.first;
+      }
+    } else if (vehicles.isNotEmpty) {
+      print(
+        '📱 [AddServiceScreen]   No selectedVehicleId, using first vehicle',
+      );
+      selectedVehicle = vehicles.first;
+    } else {
+      print('📱 [AddServiceScreen]   No vehicles available');
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Select Vehicle',
+          style: TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.w600,
+            color:
+                _vehicleId != null
+                    ? AppColors.primary[500]
+                    : AppColors.neutral[700],
+            letterSpacing: 0.15,
+          ),
+        ),
+        const SizedBox(height: 8),
+        InkWell(
+          onTap:
+              vehicles.isEmpty
+                  ? null
+                  : () => _showVehicleSelectionModal(vehicles),
+          borderRadius: BorderRadius.circular(12),
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
             decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [
-                  AppColors.primary.withOpacity(0.15),
-                  AppColors.primary.withOpacity(0.05),
-                ],
-              ),
+              color: Colors.white,
               borderRadius: BorderRadius.circular(12),
+              border: Border.all(
+                color:
+                    _vehicleId != null
+                        ? AppColors.primary[500]!
+                        : AppColors.neutral[200]!,
+                width: _vehicleId != null ? 1.5 : 1.0,
+              ),
             ),
-            child: Icon(
-              Icons.directions_car,
-              size: 28,
-              color: AppColors.primary,
+            child: Row(
+              children: [
+                Icon(
+                  selectedVehicle != null
+                      ? Icons.directions_car
+                      : Icons.add_circle_outline,
+                  color:
+                      selectedVehicle != null
+                          ? AppColors.primary[500]
+                          : AppColors.neutral[400],
+                  size: 24,
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child:
+                      selectedVehicle != null
+                          ? Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                selectedVehicle.name,
+                                style: TextStyle(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w600,
+                                  color: AppColors.neutral[900],
+                                ),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              if (selectedVehicle.brand != null ||
+                                  selectedVehicle.model != null) ...[
+                                const SizedBox(height: 2),
+                                Text(
+                                  '${selectedVehicle.brand ?? ''} ${selectedVehicle.model ?? ''}'
+                                      .trim(),
+                                  style: TextStyle(
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w400,
+                                    color: AppColors.neutral[600],
+                                  ),
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ],
+                            ],
+                          )
+                          : Text(
+                            'Select a vehicle',
+                            style: TextStyle(
+                              fontSize: 15,
+                              fontWeight: FontWeight.w500,
+                              color: AppColors.neutral[400],
+                            ),
+                          ),
+                ),
+                Icon(
+                  Icons.keyboard_arrow_up,
+                  color: AppColors.neutral[500],
+                  size: 24,
+                ),
+              ],
             ),
           ),
-          const SizedBox(width: 16),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+        ),
+        if (vehicles.isEmpty) ...[
+          const SizedBox(height: 12),
+          Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: AppColors.tertiary[50],
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: AppColors.tertiary[200]!),
+            ),
+            child: Row(
               children: [
-                Text(
-                  vehicle.name,
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w700,
-                    color: AppColors.neutral[900],
-                    letterSpacing: -0.3,
-                  ),
+                Icon(
+                  Icons.info_outline,
+                  color: AppColors.tertiary[600],
+                  size: 20,
                 ),
-                const SizedBox(height: 4),
-                Text(
-                  '${vehicle.brand ?? ''} ${vehicle.model ?? ''}'.trim(),
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
-                    color: AppColors.neutral[600],
-                    letterSpacing: 0.1,
-                  ),
-                ),
-                if (vehicle.plateNumber != null &&
-                    vehicle.plateNumber!.isNotEmpty) ...[
-                  const SizedBox(height: 4),
-                  Text(
-                    vehicle.plateNumber!,
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Text(
+                    'No vehicles available. Please add a vehicle first.',
                     style: TextStyle(
-                      fontSize: 13,
-                      fontWeight: FontWeight.w500,
-                      color: AppColors.neutral[500],
-                      letterSpacing: 0.1,
+                      fontSize: 14,
+                      color: AppColors.tertiary[800],
                     ),
                   ),
-                ],
+                ),
               ],
             ),
           ),
         ],
-      ),
+      ],
+    );
+  }
+
+  void _showVehicleSelectionModal(List<dynamic> vehicles) {
+    print('📱 [AddServiceScreen] _showVehicleSelectionModal called');
+    print(
+      '📱 [AddServiceScreen]   Showing ${vehicles.length} vehicles in modal',
+    );
+    print('📱 [AddServiceScreen]   Current local _vehicleId: $_vehicleId');
+
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+      builder:
+          (context) => Container(
+            decoration: const BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+            ),
+            child: SafeArea(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      border: Border(
+                        bottom: BorderSide(
+                          color: AppColors.neutral[200]!,
+                          width: 1,
+                        ),
+                      ),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'Select Vehicle',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                            color: AppColors.neutral[900],
+                          ),
+                        ),
+                        GestureDetector(
+                          onTap: () => Navigator.pop(context),
+                          child: Icon(
+                            Icons.close_rounded,
+                            color: AppColors.neutral[500],
+                            size: 20,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Flexible(
+                    child: ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: vehicles.length,
+                      itemBuilder: (context, index) {
+                        final vehicle = vehicles[index];
+                        final isSelected = vehicle.id == _vehicleId;
+                        print(
+                          '📱 [AddServiceScreen]   Vehicle $index: id=${vehicle.id}, name="${vehicle.name}", isSelected=$isSelected (comparing with local _vehicleId=$_vehicleId)',
+                        );
+
+                        return InkWell(
+                          onTap: () {
+                            print(
+                              '📱 [AddServiceScreen]   Vehicle tapped: id=${vehicle.id}, name="${vehicle.name}"',
+                            );
+                            print(
+                              '📱 [AddServiceScreen]   Calling selectVehicle(${vehicle.id}) on cubit',
+                            );
+
+                            // Update cubit state
+                            context
+                                .read<ServiceVehicleSelectorCubit>()
+                                .selectVehicle(vehicle.id);
+
+                            // FIX: Also update local _vehicleId to stay in sync
+                            setState(() {
+                              _vehicleId = vehicle.id;
+                            });
+                            print(
+                              '📱 [AddServiceScreen]   Local _vehicleId updated to: $_vehicleId',
+                            );
+
+                            Navigator.pop(context);
+                            print('📱 [AddServiceScreen]   Modal closed');
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 16,
+                              vertical: 16,
+                            ),
+                            decoration: BoxDecoration(
+                              color:
+                                  isSelected
+                                      ? AppColors.primary.withOpacity(0.1)
+                                      : Colors.transparent,
+                            ),
+                            child: Row(
+                              children: [
+                                Container(
+                                  width: 40,
+                                  height: 40,
+                                  decoration: BoxDecoration(
+                                    color: AppColors.primary.withOpacity(0.1),
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  child: Icon(
+                                    Icons.directions_car,
+                                    size: 24,
+                                    color: AppColors.primary,
+                                  ),
+                                ),
+                                const SizedBox(width: 12),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        vehicle.name,
+                                        style: TextStyle(
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.w600,
+                                          color:
+                                              isSelected
+                                                  ? AppColors.primary
+                                                  : AppColors.neutral[900],
+                                        ),
+                                      ),
+                                      const SizedBox(height: 2),
+                                      Text(
+                                        '${vehicle.brand ?? ''} ${vehicle.model ?? ''}'
+                                            .trim(),
+                                        style: TextStyle(
+                                          fontSize: 13,
+                                          color: AppColors.neutral[600],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                if (isSelected)
+                                  Icon(
+                                    Icons.check_rounded,
+                                    color: AppColors.primary,
+                                    size: 18,
+                                  ),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
     );
   }
 
@@ -579,10 +892,24 @@ class _AddServiceScreenState extends State<AddServiceScreen> {
   }
 
   void _saveService() {
+    print('📱 [AddServiceScreen] _saveService called');
+    print(
+      '📱 [AddServiceScreen]   Form validation: ${_formKey.currentState!.validate()}',
+    );
+    print('📱 [AddServiceScreen]   _vehicleId: $_vehicleId');
+    print(
+      '📱 [AddServiceScreen]   _selectedServiceType: $_selectedServiceType',
+    );
+    print('📱 [AddServiceScreen]   _serviceDate: $_serviceDate');
+
     if (_formKey.currentState!.validate() &&
         _vehicleId != null &&
         _selectedServiceType != null &&
         _serviceDate != null) {
+      print(
+        '📱 [AddServiceScreen] ✅ All validations passed, creating service record',
+      );
+
       final service = ServiceRecordsCompanion.insert(
         vehicleId: _vehicleId!,
         serviceType: _selectedServiceType!,
@@ -605,9 +932,28 @@ class _AddServiceScreenState extends State<AddServiceScreen> {
                 : drift.Value(_notesController.text.trim()),
       );
 
+      print(
+        '📱 [AddServiceScreen]   Service record created with vehicleId: ${_vehicleId}',
+      );
+      print('📱 [AddServiceScreen]   Calling addServiceRecord on VehicleCubit');
       context.read<VehicleCubit>().addServiceRecord(service);
+      print('📱 [AddServiceScreen]   Navigating back');
       context.pop();
     } else {
+      print('📱 [AddServiceScreen] ❌ Validation failed');
+      print(
+        '📱 [AddServiceScreen]   Form valid: ${_formKey.currentState!.validate()}',
+      );
+      print(
+        '📱 [AddServiceScreen]   _vehicleId != null: ${_vehicleId != null}',
+      );
+      print(
+        '📱 [AddServiceScreen]   _selectedServiceType != null: ${_selectedServiceType != null}',
+      );
+      print(
+        '📱 [AddServiceScreen]   _serviceDate != null: ${_serviceDate != null}',
+      );
+
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Row(

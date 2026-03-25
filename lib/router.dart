@@ -21,6 +21,7 @@ class AppRoutes {
   static const String addVehicle = '/add-vehicle';
   static const String editVehicle = '/vehicle/:vehicleId/edit';
   static const String addService = '/vehicle/:vehicleId/add-service';
+  static const String addServiceGeneral = '/add-service';
   static const String editService =
       '/vehicle/:vehicleId/service/:serviceId/edit';
   static const String serviceLogs = '/service-logs';
@@ -121,6 +122,11 @@ final goRouter = GoRouter(
       path: AppRoutes.addVehicle,
       name: 'addVehicle',
       builder: (context, state) => const AddVehicleScreen(),
+    ),
+    GoRoute(
+      path: AppRoutes.addServiceGeneral,
+      name: 'addServiceGeneral',
+      builder: (context, state) => const AddServiceScreen(),
     ),
   ],
   errorBuilder:
