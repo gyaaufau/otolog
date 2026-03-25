@@ -315,33 +315,13 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
       ),
       child: Column(
         children: [
-          _buildInfoRow(
-            Icons.calendar_today_outlined,
-            'Service Date',
-            _formatDate(service.serviceDate),
-          ),
           if (service.mechanic != null && service.mechanic!.isNotEmpty) ...[
-            const SizedBox(height: 16),
             _buildInfoRow(
               Icons.person_outline,
               'Mechanic / Shop',
               service.mechanic!,
             ),
           ],
-          if (service.cost != null) ...[
-            const SizedBox(height: 16),
-            _buildInfoRow(
-              Icons.payments_outlined,
-              'Cost',
-              _formatCurrency(service.cost),
-            ),
-          ],
-          const SizedBox(height: 16),
-          _buildInfoRow(
-            Icons.access_time,
-            'Created At',
-            _formatDateTime(service.createdAt),
-          ),
         ],
       ),
     );
