@@ -99,7 +99,6 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
               ),
             );
           }
-
           if (state is VehicleError) {
             return _buildErrorState(state.message);
           }
@@ -335,7 +334,7 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
     if (specs.isEmpty) return const SizedBox.shrink();
 
     return Container(
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
@@ -359,7 +358,7 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
               letterSpacing: -0.3,
             ),
           ),
-          const SizedBox(height: 20),
+          SizedBox(height: 16.h),
           GridView.builder(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
@@ -381,8 +380,7 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
 
   Widget _buildSpecCard(_SpecItem spec) {
     return Container(
-      constraints: const BoxConstraints(minHeight: 100),
-      padding: const EdgeInsets.all(12),
+      padding: const EdgeInsets.all(8),
       decoration: BoxDecoration(
         color: AppColors.neutral[50],
         borderRadius: BorderRadius.circular(10),
@@ -403,7 +401,7 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
                     letterSpacing: 0.3,
                   ),
                 ),
-                const SizedBox(height: 4),
+                const SizedBox(height: 2),
                 Flexible(
                   child: Text(
                     spec.value,
