@@ -4,8 +4,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:otolog/cubit/service_vehicle_selector_cubit.dart';
 import 'shared/core/service_locator.dart';
 import 'cubit/vehicle_cubit.dart';
-import 'cubit/theme_cubit.dart';
-import 'cubit/theme_state.dart';
 import 'router.dart';
 import 'resources/theme.dart';
 import 'resources/colors.dart';
@@ -32,22 +30,15 @@ class MyApp extends StatelessWidget {
         return MultiBlocProvider(
           providers: [
             BlocProvider(create: (context) => sl<VehicleCubit>()),
-            BlocProvider(create: (context) => ThemeCubit()),
             BlocProvider(
               create: (context) => sl<ServiceVehicleSelectorCubit>(),
             ),
           ],
-          child: BlocBuilder<ThemeCubit, ThemeState>(
-            builder: (context, themeState) {
-              return MaterialApp.router(
-                title: 'OtoLog',
-                debugShowCheckedModeBanner: false,
-                theme: AppTheme.lightTheme,
-                darkTheme: AppTheme.darkTheme,
-                themeMode: themeState.themeMode,
-                routerConfig: goRouter,
-              );
-            },
+          child: MaterialApp.router(
+            title: 'OtoLog',
+            debugShowCheckedModeBanner: false,
+            theme: AppTheme.lightTheme,
+            routerConfig: goRouter,
           ),
         );
       },
