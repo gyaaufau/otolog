@@ -17,6 +17,9 @@ class ServiceLogsScreen extends StatefulWidget {
 class _ServiceLogsScreenState extends State<ServiceLogsScreen> {
   final TextEditingController _searchController = TextEditingController();
   dynamic? _selectedVehicle;
+  DateTime? _startDate;
+  DateTime? _endDate;
+  String _searchQuery = '';
 
   @override
   void initState() {
@@ -109,18 +112,15 @@ class _ServiceLogsScreenState extends State<ServiceLogsScreen> {
         final allServices =
             state is VehicleLoaded ? (state.serviceRecords ?? []) : [];
 
-        // Filter services by selected vehicle
-        final filteredServices =
-            _selectedVehicle != null
-                ? allServices
-                    .where((s) => s.vehicleId == _selectedVehicle!.id)
-                    .toList()
-                : allServices;
+        // Apply all filters
+        final filteredServices = _applyFilters(allServices);
 
         // Calculate total cost
         final totalCost = filteredServices.fold<double>(0.0, (sum, service) {
           return sum + (service.cost ?? 0.0);
         });
+
+        final hasActiveFilters = _hasActiveFilters();
 
         return Container(
           padding: const EdgeInsets.fromLTRB(24, 8, 24, 20),
@@ -166,99 +166,50 @@ class _ServiceLogsScreenState extends State<ServiceLogsScreen> {
                 ),
                 const SizedBox(height: 16),
               ],
-              // Vehicle Dropdown and Search
+              // Search and Filter Row
               if (vehicles.isNotEmpty) ...[
-                IntrinsicHeight(
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      Expanded(
-                        flex: 1,
-                        child: SearchBarWidget(
-                          controller: _searchController,
-                          hintText: 'Search services...',
-                          onChanged: (value) {
-                            // Filter services based on search
-                          },
-                          onClear: () {
-                            _searchController.clear();
-                          },
-                        ),
+                Row(
+                  children: [
+                    Expanded(
+                      child: SearchBarWidget(
+                        controller: _searchController,
+                        hintText: 'Search services...',
+                        onChanged: (value) {
+                          setState(() {
+                            _searchQuery = value;
+                          });
+                        },
+                        onClear: () {
+                          _searchController.clear();
+                          setState(() {
+                            _searchQuery = '';
+                          });
+                        },
                       ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        flex: 1,
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 16),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(12),
-                            border: Border.all(color: AppColors.neutral[200]!),
-                          ),
-                          child: DropdownButtonHideUnderline(
-                            child: DropdownButton<dynamic>(
-                              value: _selectedVehicle,
-                              hint: Text(
-                                'All Vehicles',
-                                style: TextStyle(
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.w500,
-                                  color: AppColors.neutral[700],
-                                ),
-                              ),
-                              icon: Icon(
-                                Icons.keyboard_arrow_down,
-                                color: AppColors.neutral[500],
-                              ),
-                              isExpanded: true,
-                              items: [
-                                DropdownMenuItem<dynamic>(
-                                  value: null,
-                                  child: Text(
-                                    'All Vehicles',
-                                    style: TextStyle(
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.w500,
-                                      color: AppColors.neutral[700],
-                                    ),
-                                  ),
-                                ),
-                                ...vehicles.map((vehicle) {
-                                  return DropdownMenuItem<dynamic>(
-                                    value: vehicle,
-                                    child: Text(
-                                      vehicle.name,
-                                      style: TextStyle(
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.w500,
-                                        color: AppColors.neutral[900],
-                                      ),
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                  );
-                                }).toList(),
-                              ],
-                              onChanged: (value) {
-                                setState(() {
-                                  _selectedVehicle = value;
-                                });
-                              },
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
+                    ),
+                    const SizedBox(width: 12),
+                    _buildFilterButton(hasActiveFilters),
+                  ],
                 ),
+                // Active Filters Display
+                if (hasActiveFilters) ...[
+                  const SizedBox(height: 12),
+                  _buildActiveFiltersChips(),
+                ],
               ] else ...[
                 SearchBarWidget(
                   controller: _searchController,
                   hintText: 'Search services...',
                   onChanged: (value) {
-                    // Filter services based on search
+                    setState(() {
+                      _searchQuery = value;
+                    });
                   },
                   onClear: () {
                     _searchController.clear();
+                    setState(() {
+                      _searchQuery = '';
+                    });
                   },
                 ),
               ],
@@ -269,17 +220,545 @@ class _ServiceLogsScreenState extends State<ServiceLogsScreen> {
     );
   }
 
+  List<dynamic> _applyFilters(List<dynamic> services) {
+    var filtered = services;
+
+    // Filter by vehicle
+    if (_selectedVehicle != null) {
+      filtered =
+          filtered.where((s) => s.vehicleId == _selectedVehicle!.id).toList();
+    }
+
+    // Filter by search query
+    if (_searchQuery.isNotEmpty) {
+      final query = _searchQuery.toLowerCase();
+      filtered =
+          filtered.where((s) {
+            return s.serviceType.toLowerCase().contains(query) ||
+                (s.mechanic != null &&
+                    s.mechanic!.toLowerCase().contains(query));
+          }).toList();
+    }
+
+    // Filter by date range
+    if (_startDate != null) {
+      filtered =
+          filtered
+              .where(
+                (s) =>
+                    s.serviceDate.isAfter(_startDate!) ||
+                    s.serviceDate.isAtSameMomentAs(_startDate!),
+              )
+              .toList();
+    }
+    if (_endDate != null) {
+      filtered =
+          filtered
+              .where(
+                (s) =>
+                    s.serviceDate.isBefore(_endDate!) ||
+                    s.serviceDate.isAtSameMomentAs(_endDate!),
+              )
+              .toList();
+    }
+
+    return filtered;
+  }
+
+  bool _hasActiveFilters() {
+    return _selectedVehicle != null ||
+        _startDate != null ||
+        _endDate != null ||
+        _searchQuery.isNotEmpty;
+  }
+
+  Widget _buildFilterButton(bool hasActiveFilters) {
+    return Stack(
+      children: [
+        Container(
+          width: 56,
+          height: 56,
+          decoration: BoxDecoration(
+            color: hasActiveFilters ? AppColors.primary : Colors.white,
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(
+              color:
+                  hasActiveFilters
+                      ? AppColors.primary
+                      : AppColors.neutral[200]!,
+              width: 1,
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: AppColors.neutral[900]!.withOpacity(0.04),
+                blurRadius: 20,
+                offset: const Offset(0, 4),
+              ),
+            ],
+          ),
+          child: Material(
+            color: Colors.transparent,
+            child: InkWell(
+              onTap: () => _showFilterBottomSheet(),
+              borderRadius: BorderRadius.circular(12),
+              child: Icon(
+                Icons.tune,
+                color: hasActiveFilters ? Colors.white : AppColors.neutral[700],
+                size: 24,
+              ),
+            ),
+          ),
+        ),
+        if (hasActiveFilters)
+          Positioned(
+            right: 0,
+            top: 0,
+            child: Container(
+              width: 8,
+              height: 8,
+              decoration: BoxDecoration(
+                color: AppColors.tertiary[600],
+                shape: BoxShape.circle,
+                border: Border.all(color: Colors.white, width: 1.5),
+              ),
+            ),
+          ),
+      ],
+    );
+  }
+
+  Widget _buildActiveFiltersChips() {
+    return Wrap(
+      spacing: 8,
+      runSpacing: 8,
+      children: [
+        if (_selectedVehicle != null)
+          _buildFilterChip(
+            label: _selectedVehicle!.name,
+            onRemove: () {
+              setState(() {
+                _selectedVehicle = null;
+              });
+            },
+          ),
+        if (_startDate != null || _endDate != null)
+          _buildFilterChip(
+            label: _formatDateRange(),
+            onRemove: () {
+              setState(() {
+                _startDate = null;
+                _endDate = null;
+              });
+            },
+          ),
+      ],
+    );
+  }
+
+  Widget _buildFilterChip({
+    required String label,
+    required VoidCallback onRemove,
+  }) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      decoration: BoxDecoration(
+        color: AppColors.primary.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: AppColors.primary.withOpacity(0.3)),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            label,
+            style: TextStyle(
+              fontSize: 13,
+              fontWeight: FontWeight.w600,
+              color: AppColors.primary,
+            ),
+          ),
+          const SizedBox(width: 6),
+          GestureDetector(
+            onTap: onRemove,
+            child: Icon(Icons.close, size: 16, color: AppColors.primary),
+          ),
+        ],
+      ),
+    );
+  }
+
+  String _formatDateRange() {
+    if (_startDate != null && _endDate != null) {
+      return '${_formatDate(_startDate!)} - ${_formatDate(_endDate!)}';
+    } else if (_startDate != null) {
+      return 'From ${_formatDate(_startDate!)}';
+    } else if (_endDate != null) {
+      return 'Until ${_formatDate(_endDate!)}';
+    }
+    return '';
+  }
+
+  void _showFilterBottomSheet() {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+      builder: (context) => _buildFilterBottomSheetContent(),
+    );
+  }
+
+  Widget _buildFilterBottomSheetContent() {
+    return BlocBuilder<VehicleCubit, VehicleState>(
+      builder: (context, state) {
+        final vehicles = state is VehicleLoaded ? state.vehicles : [];
+
+        return Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+          ),
+          child: SafeArea(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // Handle
+                Container(
+                  width: 40,
+                  height: 4,
+                  margin: const EdgeInsets.only(top: 12, bottom: 24),
+                  decoration: BoxDecoration(
+                    color: AppColors.neutral[200],
+                    borderRadius: BorderRadius.circular(2),
+                  ),
+                ),
+                // Header
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 24),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'Filters',
+                        style: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.w700,
+                          color: AppColors.neutral[900],
+                          letterSpacing: -0.5,
+                        ),
+                      ),
+                      TextButton(
+                        onPressed: _clearAllFilters,
+                        child: Text(
+                          'Clear All',
+                          style: TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.w600,
+                            color: AppColors.tertiary[600],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 24),
+                // Filter Options
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 24),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Vehicle Filter
+                      _buildFilterSection(
+                        title: 'Vehicle',
+                        child: _buildVehicleFilter(vehicles),
+                      ),
+                      const SizedBox(height: 24),
+                      // Date Range Filter
+                      _buildFilterSection(
+                        title: 'Date Range',
+                        child: _buildDateRangeFilter(),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 24),
+                // Apply Button
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 24),
+                  child: SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: () => Navigator.pop(context),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.primary,
+                        foregroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        elevation: 0,
+                      ),
+                      child: const Text(
+                        'Apply Filters',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          letterSpacing: 0.2,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 16),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildFilterSection({required String title, required Widget child}) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          title,
+          style: TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.w600,
+            color: AppColors.neutral[600],
+            letterSpacing: 0.3,
+          ),
+        ),
+        const SizedBox(height: 12),
+        child,
+      ],
+    );
+  }
+
+  Widget _buildVehicleFilter(List<dynamic> vehicles) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      decoration: BoxDecoration(
+        color: AppColors.neutral[50],
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: AppColors.neutral[200]!),
+      ),
+      child: DropdownButtonHideUnderline(
+        child: DropdownButton<dynamic>(
+          value: _selectedVehicle,
+          hint: Text(
+            'All Vehicles',
+            style: TextStyle(
+              fontSize: 15,
+              fontWeight: FontWeight.w500,
+              color: AppColors.neutral[700],
+            ),
+          ),
+          icon: Icon(Icons.keyboard_arrow_down, color: AppColors.neutral[500]),
+          isExpanded: true,
+          items: [
+            DropdownMenuItem<dynamic>(
+              value: null,
+              child: Text(
+                'All Vehicles',
+                style: TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w500,
+                  color: AppColors.neutral[700],
+                ),
+              ),
+            ),
+            ...vehicles.map((vehicle) {
+              return DropdownMenuItem<dynamic>(
+                value: vehicle,
+                child: Text(
+                  vehicle.name,
+                  style: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w500,
+                    color: AppColors.neutral[900],
+                  ),
+                  overflow: TextOverflow.ellipsis,
+                ),
+              );
+            }).toList(),
+          ],
+          onChanged: (value) {
+            setState(() {
+              _selectedVehicle = value;
+            });
+          },
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDateRangeFilter() {
+    return Column(
+      children: [
+        // Start Date
+        GestureDetector(
+          onTap: () => _selectDate(context, isStartDate: true),
+          child: Container(
+            width: double.infinity,
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+            decoration: BoxDecoration(
+              color: AppColors.neutral[50],
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: AppColors.neutral[200]!),
+            ),
+            child: Row(
+              children: [
+                Icon(
+                  Icons.calendar_today_outlined,
+                  color: AppColors.neutral[500],
+                  size: 20,
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Text(
+                    _startDate != null
+                        ? _formatDate(_startDate!)
+                        : 'Start Date',
+                    style: TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w500,
+                      color:
+                          _startDate != null
+                              ? AppColors.neutral[900]
+                              : AppColors.neutral[500],
+                    ),
+                  ),
+                ),
+                if (_startDate != null)
+                  GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        _startDate = null;
+                      });
+                    },
+                    child: Icon(
+                      Icons.close,
+                      color: AppColors.neutral[400],
+                      size: 20,
+                    ),
+                  ),
+              ],
+            ),
+          ),
+        ),
+        const SizedBox(height: 12),
+        // End Date
+        GestureDetector(
+          onTap: () => _selectDate(context, isStartDate: false),
+          child: Container(
+            width: double.infinity,
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+            decoration: BoxDecoration(
+              color: AppColors.neutral[50],
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: AppColors.neutral[200]!),
+            ),
+            child: Row(
+              children: [
+                Icon(
+                  Icons.calendar_today_outlined,
+                  color: AppColors.neutral[500],
+                  size: 20,
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Text(
+                    _endDate != null ? _formatDate(_endDate!) : 'End Date',
+                    style: TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w500,
+                      color:
+                          _endDate != null
+                              ? AppColors.neutral[900]
+                              : AppColors.neutral[500],
+                    ),
+                  ),
+                ),
+                if (_endDate != null)
+                  GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        _endDate = null;
+                      });
+                    },
+                    child: Icon(
+                      Icons.close,
+                      color: AppColors.neutral[400],
+                      size: 20,
+                    ),
+                  ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Future<void> _selectDate(
+    BuildContext context, {
+    required bool isStartDate,
+  }) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate:
+          isStartDate
+              ? (_startDate ?? DateTime.now())
+              : (_endDate ?? DateTime.now()),
+      firstDate: DateTime(2000),
+      lastDate: DateTime.now().add(const Duration(days: 365)),
+      builder: (context, child) {
+        return Theme(
+          data: Theme.of(context).copyWith(
+            colorScheme: ColorScheme.light(
+              primary: AppColors.primary,
+              onPrimary: Colors.white,
+              surface: Colors.white,
+              onSurface: AppColors.neutral[900]!,
+            ),
+            dialogBackgroundColor: Colors.white,
+          ),
+          child: child!,
+        );
+      },
+    );
+
+    if (picked != null) {
+      setState(() {
+        if (isStartDate) {
+          _startDate = picked;
+        } else {
+          _endDate = picked;
+        }
+      });
+    }
+  }
+
+  void _clearAllFilters() {
+    setState(() {
+      _selectedVehicle = null;
+      _startDate = null;
+      _endDate = null;
+      _searchQuery = '';
+      _searchController.clear();
+    });
+  }
+
   Widget _buildServiceLogsList(VehicleLoaded state) {
     final allServices = state.serviceRecords ?? [];
     final vehicles = state.vehicles;
 
-    // Filter services by selected vehicle
-    final filteredServices =
-        _selectedVehicle != null
-            ? allServices
-                .where((s) => s.vehicleId == _selectedVehicle!.id)
-                .toList()
-            : allServices;
+    // Apply all filters
+    final filteredServices = _applyFilters(allServices);
 
     if (filteredServices.isEmpty) {
       return Center(
