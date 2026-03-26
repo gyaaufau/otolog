@@ -668,14 +668,41 @@ class _HomeScreenState extends State<HomeScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            'Recent Services',
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.w600,
-              color: AppColors.neutral[900],
-              letterSpacing: -0.3,
-            ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Recent Services',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                  color: AppColors.neutral[900],
+                  letterSpacing: -0.3,
+                ),
+              ),
+              GestureDetector(
+                onTap: () => context.push(AppRoutes.serviceLogs),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      'See All',
+                      style: TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w500,
+                        color: AppColors.primary,
+                      ),
+                    ),
+                    const SizedBox(width: 4),
+                    Icon(
+                      Icons.arrow_forward_ios_rounded,
+                      size: 12,
+                      color: AppColors.primary,
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
           const SizedBox(height: 16),
           ...recentServices
@@ -691,8 +718,15 @@ class _HomeScreenState extends State<HomeScreen> {
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AppColors.neutral[100],
+        color: Colors.white,
         borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.04),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
       ),
       child: Row(
         children: [
@@ -700,16 +734,16 @@ class _HomeScreenState extends State<HomeScreen> {
             width: 48,
             height: 48,
             decoration: BoxDecoration(
-              color: AppColors.secondary[500]!.withOpacity(0.1),
+              color: AppColors.primary.withOpacity(0.1),
               borderRadius: BorderRadius.circular(10),
             ),
             child: Icon(
-              Icons.build_outlined,
+              _getServiceIcon(service.serviceType),
               size: 24,
-              color: AppColors.secondary[500],
+              color: AppColors.primary,
             ),
           ),
-          const SizedBox(width: 16),
+          const SizedBox(width: 14),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -751,11 +785,7 @@ class _HomeScreenState extends State<HomeScreen> {
               const SizedBox(height: 4),
               Text(
                 _formatDate(service.serviceDate),
-                style: TextStyle(
-                  fontSize: 11,
-                  color: AppColors.neutral[500],
-                  letterSpacing: 0.3,
-                ),
+                style: TextStyle(fontSize: 11, color: AppColors.neutral[500]),
               ),
             ],
           ),
@@ -819,5 +849,37 @@ class _HomeScreenState extends State<HomeScreen> {
     }
 
     return Icon(iconData, size: 24, color: AppColors.primary);
+  }
+
+  IconData _getServiceIcon(String serviceType) {
+    final type = serviceType.toLowerCase();
+
+    if (type.contains('oil') || type.contains('change')) {
+      return Icons.oil_barrel;
+    } else if (type.contains('tire') || type.contains('wheel')) {
+      return Icons.settings;
+    } else if (type.contains('brake')) {
+      return Icons.disc_full;
+    } else if (type.contains('battery') || type.contains('electrical')) {
+      return Icons.battery_charging_full;
+    } else if (type.contains('air') ||
+        type.contains('filter') ||
+        type.contains('ac')) {
+      return Icons.air;
+    } else if (type.contains('engine') || type.contains('motor')) {
+      return Icons.engineering;
+    } else if (type.contains('transmission') || type.contains('gear')) {
+      return Icons.settings_suggest;
+    } else if (type.contains('suspension') || type.contains('shock')) {
+      return Icons.car_repair;
+    } else if (type.contains('inspection') || type.contains('check')) {
+      return Icons.fact_check;
+    } else if (type.contains('wash') || type.contains('clean')) {
+      return Icons.cleaning_services;
+    } else if (type.contains('paint') || type.contains('body')) {
+      return Icons.format_paint;
+    } else {
+      return Icons.build;
+    }
   }
 }

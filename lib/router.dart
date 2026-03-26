@@ -11,6 +11,7 @@ import '../screens/service_logs_screen.dart';
 import 'screens/garage/vehicles_screen.dart';
 import 'screens/settings/settings_screen.dart';
 import '../widgets/main_shell.dart';
+import '../screens/database_viewer_screen.dart';
 
 /// Route names for type-safe navigation
 class AppRoutes {
@@ -26,6 +27,7 @@ class AppRoutes {
       '/vehicle/:vehicleId/service/:serviceId/edit';
   static const String serviceLogs = '/service-logs';
   static const String settings = '/settings';
+  static const String databaseViewer = '/database-viewer';
 }
 
 /// GoRouter configuration for the app
@@ -127,6 +129,11 @@ final goRouter = GoRouter(
       path: AppRoutes.addServiceGeneral,
       name: 'addServiceGeneral',
       builder: (context, state) => const AddServiceScreen(),
+    ),
+    GoRoute(
+      path: AppRoutes.databaseViewer,
+      name: 'databaseViewer',
+      builder: (context, state) => const DatabaseViewerScreen(),
     ),
   ],
   errorBuilder:

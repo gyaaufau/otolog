@@ -188,8 +188,9 @@ class _AddVehicleScreenState extends State<AddVehicleScreen> {
           }
         },
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            _buildStepIndicator(),
+            Center(child: _buildStepIndicator()),
             Expanded(
               child: Form(
                 key: _formKey,
