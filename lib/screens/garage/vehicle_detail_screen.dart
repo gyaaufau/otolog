@@ -122,22 +122,22 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _buildVehicleHeader(vehicle),
-          const SizedBox(height: 32),
+          SizedBox(height: 24.h),
           _buildVehicleSpecifications(vehicle),
-          const SizedBox(height: 32),
+          SizedBox(height: 24.h),
           _buildVehicleDetails(vehicle),
-          const SizedBox(height: 32),
+          SizedBox(height: 24.h),
           _buildPurchaseInfo(vehicle),
-          const SizedBox(height: 32),
+          SizedBox(height: 24.h),
           _buildServiceStatistics(state),
-          const SizedBox(height: 32),
+          SizedBox(height: 24.h),
           if (state.serviceRecords != null &&
               state.serviceRecords!.isNotEmpty) ...[
             _buildRecentServices(state.serviceRecords!),
-            const SizedBox(height: 32),
+            SizedBox(height: 24.h),
           ],
           _buildActionButtons(vehicle),
-          const SizedBox(height: 24),
+          SizedBox(height: 24.h),
         ],
       ),
     );
@@ -365,7 +365,7 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
             physics: const NeverScrollableScrollPhysics(),
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
-              childAspectRatio: 1.6,
+              childAspectRatio: 2.0,
               crossAxisSpacing: 16,
               mainAxisSpacing: 16,
             ),
