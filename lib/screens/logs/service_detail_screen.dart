@@ -75,7 +75,7 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
             },
           ),
           IconButton(
-            icon: Icon(Icons.delete_outline, color: AppColors.tertiary[600]),
+            icon: Icon(Icons.delete_outline, color: AppColors.error),
             onPressed: () {
               // Show delete confirmation
             },
@@ -177,14 +177,7 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
                 width: 72,
                 height: 72,
                 decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: [
-                      AppColors.primary.withOpacity(0.15),
-                      AppColors.primary.withOpacity(0.05),
-                    ],
-                  ),
+                  color: AppColors.primary.withOpacity(0.1),
                   borderRadius: BorderRadius.circular(16),
                 ),
                 child: Icon(
@@ -423,9 +416,7 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
         Container(
           width: double.infinity,
           decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [AppColors.primary, AppColors.primary[700]!],
-            ),
+            color: AppColors.primary,
             borderRadius: BorderRadius.circular(12),
             boxShadow: [
               BoxShadow(
@@ -476,9 +467,12 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
         Container(
           width: double.infinity,
           decoration: BoxDecoration(
-            color: AppColors.tertiary[50],
+            color: AppColors.error.withOpacity(0.1),
             borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: AppColors.tertiary[200]!, width: 1),
+            border: Border.all(
+              color: AppColors.error.withOpacity(0.3),
+              width: 1,
+            ),
           ),
           child: ElevatedButton(
             onPressed: () {
@@ -486,7 +480,7 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.transparent,
-              foregroundColor: AppColors.tertiary[600],
+              foregroundColor: AppColors.error,
               shadowColor: Colors.transparent,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12),
@@ -565,7 +559,7 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
                   context.pop();
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.tertiary[600],
+                  backgroundColor: AppColors.error,
                   foregroundColor: Colors.white,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
