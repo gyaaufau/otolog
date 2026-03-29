@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:otolog/l10n/app_localizations.dart';
+import 'package:otolog/widgets/language_selector.dart';
 import '../../router.dart';
 
 class SettingsScreen extends StatelessWidget {
@@ -7,10 +9,17 @@ class SettingsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Scaffold(
-      appBar: AppBar(title: const Text('Settings')),
+      appBar: AppBar(title: Text(l10n.settings)),
       body: ListView(
         children: [
+          // Language Selector
+          const LanguageSelector(),
+          const Divider(),
+
+          // Database Viewer
           ListTile(
             leading: const Icon(Icons.storage),
             title: const Text('Database Viewer'),
@@ -21,9 +30,11 @@ class SettingsScreen extends StatelessWidget {
             },
           ),
           const Divider(),
+
+          // About
           ListTile(
             leading: const Icon(Icons.info_outline),
-            title: const Text('About'),
+            title: Text(l10n.about),
             subtitle: const Text('App information'),
             trailing: const Icon(Icons.chevron_right),
             onTap: () {
@@ -32,12 +43,12 @@ class SettingsScreen extends StatelessWidget {
                 context: context,
                 builder:
                     (context) => AlertDialog(
-                      title: const Text('About'),
+                      title: Text(l10n.about),
                       content: const Text('OtoLog - Vehicle Service Log App'),
                       actions: [
                         TextButton(
                           onPressed: () => Navigator.pop(context),
-                          child: const Text('Close'),
+                          child: Text(l10n.close),
                         ),
                       ],
                     ),

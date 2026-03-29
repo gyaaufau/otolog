@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:otolog/cubit/language_cubit.dart';
 import 'package:otolog/cubit/service_vehicle_selector_cubit.dart';
+import 'package:otolog/l10n/app_localizations.dart';
+import 'package:otolog/shared/localization/l10n_helper.dart';
 import 'shared/core/service_locator.dart';
 import 'cubit/vehicle_cubit.dart';
 import 'router.dart';
@@ -33,12 +37,25 @@ class MyApp extends StatelessWidget {
             BlocProvider(
               create: (context) => sl<ServiceVehicleSelectorCubit>(),
             ),
+            BlocProvider(create: (context) => sl<LanguageCubit>()),
           ],
-          child: MaterialApp.router(
-            title: 'OtoLog',
-            debugShowCheckedModeBanner: false,
-            theme: AppTheme.lightTheme,
-            routerConfig: goRouter,
+          child: BlocBuilder<LanguageCubit, LanguageState>(
+            builder: (context, state) {
+              return MaterialApp.router(
+                title: 'OtoLog',
+                debugShowCheckedModeBanner: false,
+                theme: AppTheme.lightTheme,
+                routerConfig: goRouter,
+                localizationsDelegates: const [
+                  AppLocalizations.delegate,
+                  GlobalMaterialLocalizations.delegate,
+                  GlobalWidgetsLocalizations.delegate,
+                  GlobalCupertinoLocalizations.delegate,
+                ],
+                supportedLocales: AppLocales.supportedLocales,
+                locale: state.locale,
+              );
+            },
           ),
         );
       },

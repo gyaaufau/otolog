@@ -2,6 +2,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:otolog/l10n/app_localizations.dart';
+import 'package:otolog/shared/localization/l10n_helper.dart';
 import '../cubit/vehicle_cubit.dart';
 import '../cubit/vehicle_state.dart';
 import '../resources/colors.dart';
@@ -52,6 +54,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildErrorState(String message) {
+    final l10n = context.l10n;
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(24.0),
@@ -72,7 +75,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             const SizedBox(height: 16),
             Text(
-              'Something went wrong',
+              l10n.error,
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.w600,
@@ -101,7 +104,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   borderRadius: BorderRadius.circular(6),
                 ),
               ),
-              child: const Text('Retry'),
+              child: Text(l10n.retry),
             ),
           ],
         ),
@@ -142,6 +145,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildHeader(VehicleLoaded state) {
+    final l10n = context.l10n;
     return Container(
       padding: const EdgeInsets.fromLTRB(24, 24, 24, 16),
       color: AppColors.neutral[50],
@@ -157,7 +161,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Welcome Back',
+                      l10n.welcomeBack,
                       style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w400,
@@ -167,7 +171,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      'Your Garage',
+                      l10n.yourGarage,
                       style: TextStyle(
                         fontSize: 32,
                         fontWeight: FontWeight.w700,
@@ -216,7 +220,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           const SizedBox(height: 8),
           Text(
-            'Track your vehicle maintenance and service history',
+            l10n.trackVehicleMaintenance,
             style: TextStyle(
               fontSize: 14,
               color: AppColors.neutral[600],
@@ -338,7 +342,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                       const SizedBox(width: 4),
                       Text(
-                        'Switch',
+                        context.l10n.switchVehicle,
                         style: TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.w600,
@@ -357,6 +361,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void _showVehicleSelector(VehicleLoaded state) {
+    final l10n = context.l10n;
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
@@ -385,7 +390,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          'Select Vehicle',
+                          l10n.selectVehicle,
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
@@ -513,6 +518,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildStatistics(VehicleLoaded state) {
+    final l10n = context.l10n;
     final odometerValue = state.odometer ?? 0;
     final formattedOdometer = _formatOdometer(odometerValue);
     return Container(
@@ -533,7 +539,7 @@ class _HomeScreenState extends State<HomeScreen> {
         children: [
           Expanded(
             child: _buildStatItem(
-              'Last Odometer',
+              l10n.lastOdometer,
               formattedOdometer,
               Icons.speed_outlined,
             ),
@@ -541,7 +547,7 @@ class _HomeScreenState extends State<HomeScreen> {
           Container(width: 1, height: 40, color: Colors.white.withOpacity(0.2)),
           Expanded(
             child: _buildStatItem(
-              'Services',
+              l10n.totalServices,
               '${state.serviceCount ?? 0}',
               Icons.build_outlined,
             ),
@@ -580,13 +586,14 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildQuickActions(VehicleLoaded state) {
+    final l10n = context.l10n;
     return Container(
       margin: const EdgeInsets.fromLTRB(24, 24, 24, 0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Quick Actions',
+            l10n.quickActions,
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.w600,
@@ -601,7 +608,7 @@ class _HomeScreenState extends State<HomeScreen> {
               children: [
                 Expanded(
                   child: _buildActionButton(
-                    'Add Vehicle',
+                    l10n.addVehicle,
                     Icons.add_circle_outline,
                     AppColors.primary,
                     () => context.push(AppRoutes.addVehicle),
@@ -610,7 +617,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 const SizedBox(width: 12),
                 Expanded(
                   child: _buildActionButton(
-                    'Add Service',
+                    l10n.addService,
                     Icons.construction,
                     AppColors.tertiary,
                     () => context.push(AppRoutes.addService),
@@ -657,6 +664,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildRecentServices(VehicleLoaded state) {
+    final l10n = context.l10n;
     final recentServices = state.serviceRecords ?? [];
 
     if (recentServices.isEmpty) {
@@ -672,7 +680,7 @@ class _HomeScreenState extends State<HomeScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Recent Services',
+                l10n.recentServices,
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.w600,
@@ -686,7 +694,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      'See All',
+                      l10n.seeAll,
                       style: TextStyle(
                         fontSize: 13,
                         fontWeight: FontWeight.w500,
@@ -795,23 +803,25 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   String _formatDate(DateTime date) {
+    final l10n = context.l10n;
     final now = DateTime.now();
     final difference = now.difference(date);
 
     if (difference.inDays == 0) {
-      return 'Today';
+      return l10n.today;
     } else if (difference.inDays == 1) {
-      return 'Yesterday';
+      return l10n.yesterday;
     } else if (difference.inDays < 7) {
-      return '${difference.inDays} days ago';
+      return l10n.daysAgo(difference.inDays);
     } else {
       return '${date.day}/${date.month}/${date.year}';
     }
   }
 
   String _formatOdometer(int odometer) {
+    final l10n = context.l10n;
     if (odometer == 0) {
-      return '0 km';
+      return '0 ${l10n.km}';
     }
     // Format odometer value with comma separators (e.g., 50,000 km)
     final valueStr = odometer.toString();
@@ -823,7 +833,7 @@ class _HomeScreenState extends State<HomeScreen> {
         buffer.write(',');
       }
     }
-    return '${buffer.toString().split('').reversed.join()} km';
+    return '${buffer.toString().split('').reversed.join()} ${l10n.km}';
   }
 
   Widget _getVehicleTypeIcon(String? type) {

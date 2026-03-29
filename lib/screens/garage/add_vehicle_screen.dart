@@ -2,6 +2,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:otolog/l10n/app_localizations.dart';
+import 'package:otolog/shared/localization/l10n_helper.dart';
 import 'package:drift/drift.dart' as drift;
 import '../../cubit/vehicle_cubit.dart';
 import '../../cubit/vehicle_state.dart';
@@ -105,7 +107,7 @@ class _AddVehicleScreenState extends State<AddVehicleScreen> {
           onPressed: () => context.pop(),
         ),
         title: Text(
-          'Add Vehicle',
+          context.l10n.addVehicle,
           style: TextStyle(
             color: AppColors.neutral[900],
             fontSize: 20,
@@ -301,13 +303,14 @@ class _AddVehicleScreenState extends State<AddVehicleScreen> {
   }
 
   String _getStepTitle(int step) {
+    final l10n = context.l10n;
     switch (step) {
       case 0:
-        return 'Basic Information';
+        return l10n.basicInformation;
       case 1:
-        return 'Vehicle Details';
+        return l10n.vehicleDetails;
       case 2:
-        return 'Vehicle Photos';
+        return l10n.vehiclePhotos;
       default:
         return '';
     }

@@ -2,6 +2,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:otolog/l10n/app_localizations.dart';
+import 'package:otolog/shared/localization/l10n_helper.dart';
 import '../../cubit/vehicle_cubit.dart';
 import '../../cubit/vehicle_state.dart';
 import '../../resources/colors.dart';
@@ -71,6 +73,7 @@ class _VehiclesScreenState extends State<VehiclesScreen> {
   }
 
   Widget _buildHeader() {
+    final l10n = context.l10n;
     return Container(
       padding: const EdgeInsets.fromLTRB(24, 20, 24, 8),
       color: AppColors.neutral[50],
@@ -78,7 +81,7 @@ class _VehiclesScreenState extends State<VehiclesScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Vehicles',
+            l10n.vehicles,
             style: TextStyle(
               fontSize: 36,
               fontWeight: FontWeight.w700,
@@ -89,7 +92,7 @@ class _VehiclesScreenState extends State<VehiclesScreen> {
           ),
           const SizedBox(height: 6),
           Text(
-            'Manage your vehicle fleet',
+            l10n.manageVehicleFleet,
             style: TextStyle(
               fontSize: 15,
               color: AppColors.neutral[600],
@@ -103,6 +106,7 @@ class _VehiclesScreenState extends State<VehiclesScreen> {
   }
 
   Widget _buildSearchAndFilter() {
+    final l10n = context.l10n;
     return Container(
       padding: const EdgeInsets.fromLTRB(24, 8, 24, 20),
       child: Column(
@@ -110,7 +114,7 @@ class _VehiclesScreenState extends State<VehiclesScreen> {
           // Professional Search Bar
           SearchBarWidget(
             controller: _searchController,
-            hintText: 'Search vehicles...',
+            hintText: l10n.searchVehicles,
             onChanged: (value) {
               context.read<VehicleCubit>().searchVehicles(value);
             },
@@ -124,17 +128,17 @@ class _VehiclesScreenState extends State<VehiclesScreen> {
             scrollDirection: Axis.horizontal,
             child: Row(
               children: [
-                _buildFilterChip('All', null),
+                _buildFilterChip(l10n.all, null),
                 const SizedBox(width: 10),
-                _buildFilterChip('Sedan', 'Sedan'),
+                _buildFilterChip(l10n.sedan, 'Sedan'),
                 const SizedBox(width: 10),
-                _buildFilterChip('SUV', 'SUV'),
+                _buildFilterChip(l10n.suv, 'SUV'),
                 const SizedBox(width: 10),
-                _buildFilterChip('Truck', 'Truck'),
+                _buildFilterChip(l10n.truck, 'Truck'),
                 const SizedBox(width: 10),
-                _buildFilterChip('Motorcycle', 'Motorcycle'),
+                _buildFilterChip(l10n.motorcycle, 'Motorcycle'),
                 const SizedBox(width: 10),
-                _buildFilterChip('Van', 'Van'),
+                _buildFilterChip(l10n.van, 'Van'),
               ],
             ),
           ),
@@ -188,6 +192,7 @@ class _VehiclesScreenState extends State<VehiclesScreen> {
   }
 
   Widget _buildVehiclesList(VehicleLoaded state) {
+    final l10n = context.l10n;
     if (state.vehicles.isEmpty) {
       return Center(
         child: Padding(
@@ -209,7 +214,7 @@ class _VehiclesScreenState extends State<VehiclesScreen> {
               ),
               const SizedBox(height: 24),
               Text(
-                'No Vehicles Found',
+                l10n.noVehiclesFound,
                 style: TextStyle(
                   fontSize: 22,
                   fontWeight: FontWeight.w700,
@@ -220,8 +225,8 @@ class _VehiclesScreenState extends State<VehiclesScreen> {
               const SizedBox(height: 10),
               Text(
                 _searchController.text.isNotEmpty
-                    ? 'Try adjusting your search or filters'
-                    : 'Add your first vehicle to get started',
+                    ? l10n.tryAdjustingSearchOrFilters
+                    : l10n.addFirstVehicleToGetStarted,
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 15,
@@ -363,7 +368,7 @@ class _VehiclesScreenState extends State<VehiclesScreen> {
                       borderRadius: BorderRadius.circular(4),
                     ),
                     child: Text(
-                      'Primary',
+                      context.l10n.primary,
                       style: TextStyle(
                         fontSize: 11,
                         fontWeight: FontWeight.w600,
@@ -399,23 +404,23 @@ class _VehiclesScreenState extends State<VehiclesScreen> {
                 _buildInfoItem(
                   Icons.confirmation_number_outlined,
                   vehicle.plateNumber,
-                  'Plate',
+                  context.l10n.plate,
                 ),
                 if (vehicle.type != null) ...[
                   const SizedBox(width: 28),
                   _buildInfoItem(
                     Icons.category_outlined,
                     vehicle.type!,
-                    'Type',
+                    context.l10n.type,
                   ),
                 ],
                 const SizedBox(width: 28),
                 _buildInfoItem(
                   Icons.speed_outlined,
                   vehicle.odometer != null
-                      ? '${vehicle.odometer!.toString()} km'
-                      : '0 km',
-                  'Odometer',
+                      ? '${vehicle.odometer!.toString()} ${context.l10n.km}'
+                      : '0 ${context.l10n.km}',
+                  context.l10n.odometerLabel,
                 ),
               ],
             ),
@@ -491,8 +496,8 @@ class _VehiclesScreenState extends State<VehiclesScreen> {
         elevation: 0,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         icon: const Icon(Icons.add, size: 20),
-        label: const Text(
-          'Add Vehicle',
+        label: Text(
+          context.l10n.addVehicle,
           style: TextStyle(
             fontSize: 15,
             fontWeight: FontWeight.w600,
@@ -616,7 +621,7 @@ class _VehiclesScreenState extends State<VehiclesScreen> {
                   ),
                   const SizedBox(height: 16),
                   Text(
-                    'Vehicle Options',
+                    context.l10n.vehicleOptions,
                     style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.w700,
@@ -629,8 +634,8 @@ class _VehiclesScreenState extends State<VehiclesScreen> {
                     icon: Icons.star_outline,
                     label:
                         (vehicle.isPrimary ?? false) == true
-                            ? 'Primary Vehicle'
-                            : 'Mark as Primary',
+                            ? context.l10n.primaryVehicle
+                            : context.l10n.markAsPrimary,
                     onTap: () {
                       Navigator.pop(context);
                       if ((vehicle.isPrimary ?? false) != true) {
@@ -641,7 +646,7 @@ class _VehiclesScreenState extends State<VehiclesScreen> {
                   const SizedBox(height: 12),
                   _buildOptionButton(
                     icon: Icons.edit_outlined,
-                    label: 'Edit Vehicle',
+                    label: context.l10n.editVehicle,
                     onTap: () {
                       Navigator.pop(context);
                       context.push(
@@ -655,7 +660,7 @@ class _VehiclesScreenState extends State<VehiclesScreen> {
                   const SizedBox(height: 12),
                   _buildOptionButton(
                     icon: Icons.delete_outline,
-                    label: 'Delete Vehicle',
+                    label: context.l10n.deleteVehicle,
                     isDestructive: true,
                     onTap: () {
                       Navigator.pop(context);
@@ -730,6 +735,7 @@ class _VehiclesScreenState extends State<VehiclesScreen> {
   }
 
   void _showDeleteConfirmationDialog(dynamic vehicle) {
+    final l10n = context.l10n;
     showDialog(
       context: context,
       builder:
@@ -739,7 +745,7 @@ class _VehiclesScreenState extends State<VehiclesScreen> {
               borderRadius: BorderRadius.circular(16),
             ),
             title: Text(
-              'Delete Vehicle',
+              l10n.deleteVehicle,
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.w700,
@@ -748,7 +754,7 @@ class _VehiclesScreenState extends State<VehiclesScreen> {
               ),
             ),
             content: Text(
-              'Are you sure you want to delete "${vehicle.name}"? This action cannot be undone.',
+              l10n.deleteVehicleConfirmation(vehicle.name),
               style: TextStyle(
                 fontSize: 15,
                 color: AppColors.neutral[700],
@@ -760,7 +766,7 @@ class _VehiclesScreenState extends State<VehiclesScreen> {
               TextButton(
                 onPressed: () => Navigator.pop(context),
                 child: Text(
-                  'Cancel',
+                  l10n.cancel,
                   style: TextStyle(
                     fontSize: 15,
                     fontWeight: FontWeight.w600,
@@ -785,8 +791,8 @@ class _VehiclesScreenState extends State<VehiclesScreen> {
                     vertical: 12,
                   ),
                 ),
-                child: const Text(
-                  'Delete',
+                child: Text(
+                  l10n.delete,
                   style: TextStyle(
                     fontSize: 15,
                     fontWeight: FontWeight.w600,
