@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import '../resources/theme.dart';
+import '../shared/localization/l10n_helper.dart';
 
 class MainShell extends StatelessWidget {
   final StatefulNavigationShell navigationShell;
@@ -42,7 +43,7 @@ class MainShell extends StatelessWidget {
                   context: context,
                   icon: Icons.home_outlined,
                   activeIcon: Icons.home,
-                  label: 'Home',
+                  label: context.l10n.home,
                   index: 0,
                   isActive: navigationShell.currentIndex == 0,
                 ),
@@ -50,7 +51,7 @@ class MainShell extends StatelessWidget {
                   context: context,
                   icon: Icons.directions_car_outlined,
                   activeIcon: Icons.directions_car,
-                  label: 'Garage',
+                  label: context.l10n.garage,
                   index: 1,
                   isActive: navigationShell.currentIndex == 1,
                 ),
@@ -58,7 +59,7 @@ class MainShell extends StatelessWidget {
                   context: context,
                   icon: Icons.history_outlined,
                   activeIcon: Icons.history,
-                  label: 'Logs',
+                  label: context.l10n.serviceLogs,
                   index: 2,
                   isActive: navigationShell.currentIndex == 2,
                 ),
@@ -66,7 +67,7 @@ class MainShell extends StatelessWidget {
                   context: context,
                   icon: Icons.settings_outlined,
                   activeIcon: Icons.settings,
-                  label: 'Settings',
+                  label: context.l10n.settings,
                   index: 3,
                   isActive: navigationShell.currentIndex == 3,
                 ),
