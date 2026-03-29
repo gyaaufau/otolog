@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:otolog/l10n/app_localizations.dart';
+import 'package:otolog/shared/localization/l10n_helper.dart';
 import '../../cubit/vehicle_cubit.dart';
 import '../../cubit/vehicle_state.dart';
 import '../../resources/colors.dart';
@@ -49,7 +51,7 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
           onPressed: () => context.pop(),
         ),
         title: Text(
-          'Vehicle Details',
+          context.l10n.vehicleDetails,
           style: TextStyle(
             color: AppColors.neutral[900],
             fontSize: 20,
@@ -222,7 +224,7 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
                                 ),
                                 const SizedBox(width: 4),
                                 Text(
-                                  'Primary',
+                                  context.l10n.primary,
                                   style: TextStyle(
                                     fontSize: 11,
                                     fontWeight: FontWeight.w600,
@@ -270,7 +272,7 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
             children: [
               Expanded(
                 child: _buildSummaryItem(
-                  'Plate Number',
+                  context.l10n.plate,
                   vehicle.plateNumber,
                   Icons.confirmation_number_outlined,
                 ),
@@ -278,9 +280,9 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
               const SizedBox(width: 16),
               Expanded(
                 child: _buildSummaryItem(
-                  'Odometer',
+                  context.l10n.odometer,
                   vehicle.odometer != null
-                      ? '${vehicle.odometer!.toString()} km'
+                      ? '${vehicle.odometer!.toString()} ${context.l10n.km}'
                       : 'N/A',
                   Icons.speed_outlined,
                 ),
@@ -324,11 +326,12 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
 
   Widget _buildVehicleSpecifications(dynamic vehicle) {
     final specs = [
-      if (vehicle.type != null) _SpecItem('Type', vehicle.type!),
-      if (vehicle.color != null) _SpecItem('Color', vehicle.color!),
-      if (vehicle.fuelType != null) _SpecItem('Fuel Type', vehicle.fuelType!),
+      if (vehicle.type != null) _SpecItem(context.l10n.type, vehicle.type!),
+      if (vehicle.color != null) _SpecItem(context.l10n.color, vehicle.color!),
+      if (vehicle.fuelType != null)
+        _SpecItem(context.l10n.fuelType, vehicle.fuelType!),
       if (vehicle.transmissionType != null)
-        _SpecItem('Transmission', vehicle.transmissionType!),
+        _SpecItem(context.l10n.transmissionType, vehicle.transmissionType!),
     ];
 
     if (specs.isEmpty) return const SizedBox.shrink();
@@ -350,7 +353,7 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Specifications',
+            context.l10n.specifications,
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.w700,
@@ -426,7 +429,7 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
   Widget _buildVehicleDetails(dynamic vehicle) {
     final details = [
       if (vehicle.vin != null && vehicle.vin!.isNotEmpty)
-        _DetailItem('VIN', vehicle.vin!),
+        _DetailItem(context.l10n.vin, vehicle.vin!),
     ];
 
     if (details.isEmpty) return const SizedBox.shrink();
@@ -448,7 +451,7 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Vehicle Details',
+            context.l10n.vehicleDetails,
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.w700,
@@ -456,7 +459,7 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
               letterSpacing: -0.3,
             ),
           ),
-          const SizedBox(height: 20),
+          SizedBox(height: 20),
           ...details.map(
             (detail) => Padding(
               padding: const EdgeInsets.only(bottom: 16),
@@ -524,7 +527,7 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Purchase Date',
+                  context.l10n.purchaseDate,
                   style: TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.w600,
@@ -570,7 +573,7 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
       child: Column(
         children: [
           Text(
-            'Service Statistics',
+            context.l10n.serviceStatistics,
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.w700,
@@ -578,12 +581,12 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
               letterSpacing: -0.3,
             ),
           ),
-          const SizedBox(height: 20),
+          SizedBox(height: 20),
           Row(
             children: [
               Expanded(
                 child: _buildStatItem(
-                  'Total Services',
+                  context.l10n.totalServicesLabel,
                   serviceCount.toString(),
                   Icons.build_outlined,
                 ),
@@ -591,7 +594,7 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
               Container(width: 1, height: 50, color: AppColors.neutral[200]),
               Expanded(
                 child: _buildStatItem(
-                  'Total Cost',
+                  context.l10n.totalCostLabel,
                   _formatCurrency(totalCost),
                   Icons.payments_outlined,
                 ),
@@ -654,7 +657,7 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Recent Services',
+                context.l10n.recentServices,
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.w700,
@@ -668,7 +671,7 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
                     context.push(AppRoutes.serviceLogs);
                   },
                   child: Text(
-                    'View All',
+                    context.l10n.seeAll,
                     style: TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w600,
@@ -679,7 +682,7 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
                 ),
             ],
           ),
-          const SizedBox(height: 20),
+          SizedBox(height: 20),
           ...recentServices.asMap().entries.map((entry) {
             final index = entry.key;
             final service = entry.value;
@@ -807,14 +810,14 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
               elevation: 0,
               padding: const EdgeInsets.symmetric(vertical: 16),
             ),
-            child: const Row(
+            child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(Icons.add_outlined, size: 20),
-                SizedBox(width: 12),
+                const Icon(Icons.add_outlined, size: 20),
+                const SizedBox(width: 12),
                 Text(
-                  'Add Service Record',
-                  style: TextStyle(
+                  context.l10n.addServiceRecord,
+                  style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
                     letterSpacing: 0.3,
@@ -862,14 +865,14 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
                     elevation: 0,
                     padding: const EdgeInsets.symmetric(vertical: 16),
                   ),
-                  child: const Row(
+                  child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(Icons.edit_outlined, size: 20),
-                      SizedBox(width: 8),
+                      const Icon(Icons.edit_outlined, size: 20),
+                      const SizedBox(width: 8),
                       Text(
-                        'Edit',
-                        style: TextStyle(
+                        context.l10n.edit,
+                        style: const TextStyle(
                           fontSize: 15,
                           fontWeight: FontWeight.w600,
                           letterSpacing: 0.2,
@@ -915,7 +918,9 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
                       ),
                       const SizedBox(width: 8),
                       Text(
-                        vehicle.isPrimary ?? false ? 'Primary' : 'Set Primary',
+                        vehicle.isPrimary ?? false
+                            ? context.l10n.primary
+                            : context.l10n.setPrimary,
                         style: const TextStyle(
                           fontSize: 15,
                           fontWeight: FontWeight.w600,
@@ -954,7 +959,7 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
             ),
             const SizedBox(height: 24),
             Text(
-              'Something went wrong',
+              context.l10n.somethingWentWrong,
               style: TextStyle(
                 fontSize: 22,
                 fontWeight: FontWeight.w700,
@@ -996,7 +1001,7 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
               borderRadius: BorderRadius.circular(16),
             ),
             title: Text(
-              'Delete Vehicle',
+              context.l10n.deleteVehicle,
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.w700,
@@ -1005,7 +1010,7 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
               ),
             ),
             content: Text(
-              'Are you sure you want to delete "${vehicle.name}"? This action cannot be undone and will also delete all associated service records.',
+              context.l10n.deleteVehicleConfirmation,
               style: TextStyle(
                 fontSize: 15,
                 color: AppColors.neutral[700],
@@ -1017,7 +1022,7 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
               TextButton(
                 onPressed: () => Navigator.pop(context),
                 child: Text(
-                  'Cancel',
+                  context.l10n.cancel,
                   style: TextStyle(
                     fontSize: 15,
                     fontWeight: FontWeight.w600,
@@ -1043,8 +1048,8 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
                     vertical: 12,
                   ),
                 ),
-                child: const Text(
-                  'Delete',
+                child: Text(
+                  context.l10n.delete,
                   style: TextStyle(
                     fontSize: 15,
                     fontWeight: FontWeight.w600,

@@ -46,8 +46,8 @@ extension BuildContextL10nExtension on BuildContext {
 class AppLocales {
   static const List<Locale> supportedLocales = [
     Locale('en'), // English
+    Locale('id'), // Indonesian
     // Add more locales here in the future, e.g.:
-    // Locale('id'), // Indonesian
     // Locale('es'), // Spanish
   ];
 

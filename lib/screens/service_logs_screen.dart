@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:otolog/l10n/app_localizations.dart';
+import 'package:otolog/shared/localization/l10n_helper.dart';
 import '../cubit/vehicle_cubit.dart';
 import '../cubit/vehicle_state.dart';
 import '../resources/colors.dart';
@@ -74,6 +76,7 @@ class _ServiceLogsScreenState extends State<ServiceLogsScreen> {
   }
 
   Widget _buildHeader() {
+    final l10n = context.l10n;
     return Container(
       padding: const EdgeInsets.fromLTRB(24, 20, 24, 8),
       color: AppColors.neutral[50],
@@ -81,7 +84,7 @@ class _ServiceLogsScreenState extends State<ServiceLogsScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Service Logs',
+            l10n.serviceLogs,
             style: TextStyle(
               fontSize: 36,
               fontWeight: FontWeight.w700,
@@ -92,7 +95,7 @@ class _ServiceLogsScreenState extends State<ServiceLogsScreen> {
           ),
           const SizedBox(height: 6),
           Text(
-            'Track all your vehicle maintenance',
+            l10n.trackVehicleMaintenance,
             style: TextStyle(
               fontSize: 15,
               color: AppColors.neutral[600],
@@ -106,6 +109,7 @@ class _ServiceLogsScreenState extends State<ServiceLogsScreen> {
   }
 
   Widget _buildSearchAndFilter() {
+    final l10n = context.l10n;
     return BlocBuilder<VehicleCubit, VehicleState>(
       builder: (context, state) {
         final vehicles = state is VehicleLoaded ? state.vehicles : [];
@@ -143,7 +147,7 @@ class _ServiceLogsScreenState extends State<ServiceLogsScreen> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(
-                        'Total Cost',
+                        l10n.totalCost,
                         style: TextStyle(
                           fontSize: 11,
                           fontWeight: FontWeight.w600,
@@ -173,7 +177,7 @@ class _ServiceLogsScreenState extends State<ServiceLogsScreen> {
                     Expanded(
                       child: SearchBarWidget(
                         controller: _searchController,
-                        hintText: 'Search services...',
+                        hintText: l10n.searchServices,
                         onChanged: (value) {
                           setState(() {
                             _searchQuery = value;
@@ -199,7 +203,7 @@ class _ServiceLogsScreenState extends State<ServiceLogsScreen> {
               ] else ...[
                 SearchBarWidget(
                   controller: _searchController,
-                  hintText: 'Search services...',
+                  hintText: l10n.searchServices,
                   onChanged: (value) {
                     setState(() {
                       _searchQuery = value;
@@ -408,6 +412,7 @@ class _ServiceLogsScreenState extends State<ServiceLogsScreen> {
   }
 
   Widget _buildFilterBottomSheetContent() {
+    final l10n = context.l10n;
     return BlocBuilder<VehicleCubit, VehicleState>(
       builder: (context, state) {
         final vehicles = state is VehicleLoaded ? state.vehicles : [];
@@ -438,7 +443,7 @@ class _ServiceLogsScreenState extends State<ServiceLogsScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        'Filters',
+                        l10n.filters,
                         style: TextStyle(
                           fontSize: 24,
                           fontWeight: FontWeight.w700,
@@ -449,7 +454,7 @@ class _ServiceLogsScreenState extends State<ServiceLogsScreen> {
                       TextButton(
                         onPressed: _clearAllFilters,
                         child: Text(
-                          'Clear All',
+                          l10n.clearAll,
                           style: TextStyle(
                             fontSize: 15,
                             fontWeight: FontWeight.w600,
@@ -469,13 +474,13 @@ class _ServiceLogsScreenState extends State<ServiceLogsScreen> {
                     children: [
                       // Vehicle Filter
                       _buildFilterSection(
-                        title: 'Vehicle',
+                        title: l10n.vehicle,
                         child: _buildVehicleFilter(vehicles),
                       ),
                       const SizedBox(height: 24),
                       // Date Range Filter
                       _buildFilterSection(
-                        title: 'Date Range',
+                        title: l10n.dateRange,
                         child: _buildDateRangeFilter(),
                       ),
                     ],
@@ -498,9 +503,9 @@ class _ServiceLogsScreenState extends State<ServiceLogsScreen> {
                         ),
                         elevation: 0,
                       ),
-                      child: const Text(
-                        'Apply Filters',
-                        style: TextStyle(
+                      child: Text(
+                        l10n.applyFilters,
+                        style: const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w600,
                           letterSpacing: 0.2,
@@ -538,6 +543,7 @@ class _ServiceLogsScreenState extends State<ServiceLogsScreen> {
   }
 
   Widget _buildVehicleFilter(List<dynamic> vehicles) {
+    final l10n = context.l10n;
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -550,7 +556,7 @@ class _ServiceLogsScreenState extends State<ServiceLogsScreen> {
         child: DropdownButton<dynamic>(
           value: _selectedVehicle,
           hint: Text(
-            'All Vehicles',
+            l10n.allVehicles,
             style: TextStyle(
               fontSize: 15,
               fontWeight: FontWeight.w500,
@@ -563,7 +569,7 @@ class _ServiceLogsScreenState extends State<ServiceLogsScreen> {
             DropdownMenuItem<dynamic>(
               value: null,
               child: Text(
-                'All Vehicles',
+                l10n.allVehicles,
                 style: TextStyle(
                   fontSize: 15,
                   fontWeight: FontWeight.w500,
@@ -597,6 +603,7 @@ class _ServiceLogsScreenState extends State<ServiceLogsScreen> {
   }
 
   Widget _buildDateRangeFilter() {
+    final l10n = context.l10n;
     return Column(
       children: [
         // Start Date
@@ -622,7 +629,7 @@ class _ServiceLogsScreenState extends State<ServiceLogsScreen> {
                   child: Text(
                     _startDate != null
                         ? _formatDate(_startDate!)
-                        : 'Start Date',
+                        : l10n.startDate,
                     style: TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.w500,
@@ -672,7 +679,7 @@ class _ServiceLogsScreenState extends State<ServiceLogsScreen> {
                 const SizedBox(width: 12),
                 Expanded(
                   child: Text(
-                    _endDate != null ? _formatDate(_endDate!) : 'End Date',
+                    _endDate != null ? _formatDate(_endDate!) : l10n.endDate,
                     style: TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.w500,
@@ -761,6 +768,7 @@ class _ServiceLogsScreenState extends State<ServiceLogsScreen> {
     final filteredServices = _applyFilters(allServices);
 
     if (filteredServices.isEmpty) {
+      final l10n = context.l10n;
       return Center(
         child: Padding(
           padding: const EdgeInsets.all(24.0),
@@ -781,7 +789,7 @@ class _ServiceLogsScreenState extends State<ServiceLogsScreen> {
               ),
               const SizedBox(height: 24),
               Text(
-                'No Service Records',
+                l10n.noServiceRecords,
                 style: TextStyle(
                   fontSize: 22,
                   fontWeight: FontWeight.w700,
@@ -792,10 +800,10 @@ class _ServiceLogsScreenState extends State<ServiceLogsScreen> {
               const SizedBox(height: 10),
               Text(
                 vehicles.isEmpty
-                    ? 'Add a vehicle first to start tracking services'
+                    ? l10n.addVehicleFirstToStartTracking
                     : _selectedVehicle != null
-                    ? 'No service records for ${_selectedVehicle!.name}'
-                    : 'Add your first service record to get started',
+                    ? '${l10n.noServiceRecordsFor} ${_selectedVehicle!.name}'
+                    : l10n.addFirstServiceRecordToGetStarted,
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 15,
@@ -926,34 +934,36 @@ class _ServiceLogsScreenState extends State<ServiceLogsScreen> {
   }
 
   String _formatDateHeader(DateTime date) {
+    final l10n = context.l10n;
     final now = DateTime.now();
     final today = DateTime(now.year, now.month, now.day);
     final yesterday = today.subtract(const Duration(days: 1));
     final serviceDate = DateTime(date.year, date.month, date.day);
 
     if (serviceDate == today) {
-      return 'Today';
+      return l10n.today;
     } else if (serviceDate == yesterday) {
-      return 'Yesterday';
+      return l10n.yesterday;
     } else {
       return '${date.day} ${_getMonthName(date.month)} ${date.year}';
     }
   }
 
   String _getMonthName(int month) {
-    const months = [
-      'January',
-      'February',
-      'March',
-      'April',
-      'May',
-      'June',
-      'July',
-      'August',
-      'September',
-      'October',
-      'November',
-      'December',
+    final l10n = context.l10n;
+    final months = [
+      l10n.january,
+      l10n.february,
+      l10n.march,
+      l10n.april,
+      l10n.may,
+      l10n.june,
+      l10n.july,
+      l10n.august,
+      l10n.september,
+      l10n.october,
+      l10n.november,
+      l10n.december,
     ];
     return months[month - 1];
   }
@@ -1058,7 +1068,7 @@ class _ServiceLogsScreenState extends State<ServiceLogsScreen> {
                   _buildInfoItem(
                     Icons.payments_outlined,
                     _formatCurrency(service.cost),
-                    'Cost',
+                    context.l10n.cost,
                   ),
                 ],
                 if (service.mechanic != null &&
@@ -1067,7 +1077,7 @@ class _ServiceLogsScreenState extends State<ServiceLogsScreen> {
                   _buildInfoItem(
                     Icons.person_outline,
                     service.mechanic!,
-                    'Mechanic',
+                    context.l10n.mechanic,
                     isFlexible: true,
                   ),
                 ],
@@ -1162,9 +1172,9 @@ class _ServiceLogsScreenState extends State<ServiceLogsScreen> {
               borderRadius: BorderRadius.circular(12),
             ),
             icon: const Icon(Icons.add, size: 20),
-            label: const Text(
-              'Add Service',
-              style: TextStyle(
+            label: Text(
+              context.l10n.addService,
+              style: const TextStyle(
                 fontSize: 15,
                 fontWeight: FontWeight.w600,
                 letterSpacing: 0.2,
@@ -1177,6 +1187,7 @@ class _ServiceLogsScreenState extends State<ServiceLogsScreen> {
   }
 
   Widget _buildErrorState(String message) {
+    final l10n = context.l10n;
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(24.0),
@@ -1197,7 +1208,7 @@ class _ServiceLogsScreenState extends State<ServiceLogsScreen> {
             ),
             const SizedBox(height: 24),
             Text(
-              'Something went wrong',
+              l10n.somethingWentWrong,
               style: TextStyle(
                 fontSize: 22,
                 fontWeight: FontWeight.w700,
@@ -1247,9 +1258,9 @@ class _ServiceLogsScreenState extends State<ServiceLogsScreen> {
                     borderRadius: BorderRadius.circular(8),
                   ),
                 ),
-                child: const Text(
-                  'Retry',
-                  style: TextStyle(
+                child: Text(
+                  l10n.retry,
+                  style: const TextStyle(
                     fontSize: 15,
                     fontWeight: FontWeight.w600,
                     letterSpacing: 0.3,
@@ -1264,6 +1275,7 @@ class _ServiceLogsScreenState extends State<ServiceLogsScreen> {
   }
 
   void _showServiceOptionsSheet(dynamic service, dynamic vehicle) {
+    final l10n = context.l10n;
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
@@ -1289,7 +1301,7 @@ class _ServiceLogsScreenState extends State<ServiceLogsScreen> {
                   ),
                   const SizedBox(height: 16),
                   Text(
-                    'Service Options',
+                    l10n.serviceOptions,
                     style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.w700,
@@ -1300,7 +1312,7 @@ class _ServiceLogsScreenState extends State<ServiceLogsScreen> {
                   const SizedBox(height: 24),
                   _buildOptionButton(
                     icon: Icons.visibility_outlined,
-                    label: 'View Details',
+                    label: l10n.viewDetails,
                     onTap: () {
                       Navigator.pop(context);
                       context.push(
@@ -1316,7 +1328,7 @@ class _ServiceLogsScreenState extends State<ServiceLogsScreen> {
                   const SizedBox(height: 12),
                   _buildOptionButton(
                     icon: Icons.edit_outlined,
-                    label: 'Edit Service',
+                    label: l10n.editService,
                     onTap: () {
                       Navigator.pop(context);
                       context.push(
@@ -1332,7 +1344,7 @@ class _ServiceLogsScreenState extends State<ServiceLogsScreen> {
                   const SizedBox(height: 12),
                   _buildOptionButton(
                     icon: Icons.delete_outline,
-                    label: 'Delete Service',
+                    label: l10n.deleteService,
                     isDestructive: true,
                     onTap: () {
                       Navigator.pop(context);
@@ -1407,6 +1419,7 @@ class _ServiceLogsScreenState extends State<ServiceLogsScreen> {
   }
 
   void _showDeleteConfirmationDialog(dynamic service, dynamic vehicle) {
+    final l10n = context.l10n;
     showDialog(
       context: context,
       builder:
@@ -1416,7 +1429,7 @@ class _ServiceLogsScreenState extends State<ServiceLogsScreen> {
               borderRadius: BorderRadius.circular(16),
             ),
             title: Text(
-              'Delete Service',
+              l10n.deleteService,
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.w700,
@@ -1425,7 +1438,7 @@ class _ServiceLogsScreenState extends State<ServiceLogsScreen> {
               ),
             ),
             content: Text(
-              'Are you sure you want to delete "${service.serviceType}" for ${vehicle.name}? This action cannot be undone.',
+              l10n.deleteServiceConfirmation(service.serviceType, vehicle.name),
               style: TextStyle(
                 fontSize: 15,
                 color: AppColors.neutral[700],
@@ -1437,7 +1450,7 @@ class _ServiceLogsScreenState extends State<ServiceLogsScreen> {
               TextButton(
                 onPressed: () => Navigator.pop(context),
                 child: Text(
-                  'Cancel',
+                  l10n.cancel,
                   style: TextStyle(
                     fontSize: 15,
                     fontWeight: FontWeight.w600,
@@ -1465,9 +1478,9 @@ class _ServiceLogsScreenState extends State<ServiceLogsScreen> {
                     vertical: 12,
                   ),
                 ),
-                child: const Text(
-                  'Delete',
-                  style: TextStyle(
+                child: Text(
+                  l10n.delete,
+                  style: const TextStyle(
                     fontSize: 15,
                     fontWeight: FontWeight.w600,
                     letterSpacing: 0.2,

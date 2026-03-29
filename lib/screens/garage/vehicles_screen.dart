@@ -258,9 +258,6 @@ class _VehiclesScreenState extends State<VehiclesScreen> {
   }
 
   Widget _buildVehicleCard(dynamic vehicle) {
-    // Debug log for isPrimary value
-    print('Vehicle: ${vehicle.name}, isPrimary: ${vehicle.isPrimary}');
-
     return GestureDetector(
       onTap:
           () => context.push(
@@ -509,6 +506,7 @@ class _VehiclesScreenState extends State<VehiclesScreen> {
   }
 
   Widget _buildErrorState(String message) {
+    final l10n = context.l10n;
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(24.0),
@@ -529,7 +527,7 @@ class _VehiclesScreenState extends State<VehiclesScreen> {
             ),
             const SizedBox(height: 24),
             Text(
-              'Something went wrong',
+              l10n.somethingWentWrong,
               style: TextStyle(
                 fontSize: 22,
                 fontWeight: FontWeight.w700,
@@ -579,9 +577,9 @@ class _VehiclesScreenState extends State<VehiclesScreen> {
                     borderRadius: BorderRadius.circular(8),
                   ),
                 ),
-                child: const Text(
-                  'Retry',
-                  style: TextStyle(
+                child: Text(
+                  l10n.retry,
+                  style: const TextStyle(
                     fontSize: 15,
                     fontWeight: FontWeight.w600,
                     letterSpacing: 0.3,
@@ -754,7 +752,7 @@ class _VehiclesScreenState extends State<VehiclesScreen> {
               ),
             ),
             content: Text(
-              l10n.deleteVehicleConfirmation(vehicle.name),
+              l10n.deleteVehicleConfirmation,
               style: TextStyle(
                 fontSize: 15,
                 color: AppColors.neutral[700],

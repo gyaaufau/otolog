@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:otolog/l10n/app_localizations.dart';
+import 'package:otolog/shared/localization/l10n_helper.dart';
 import 'package:drift/drift.dart' as drift;
 import '../../cubit/vehicle_cubit.dart';
 import '../../cubit/vehicle_state.dart';
@@ -119,7 +121,7 @@ class _EditVehicleScreenState extends State<EditVehicleScreen> {
           onPressed: () => context.pop(),
         ),
         title: Text(
-          'Edit Vehicle',
+          context.l10n.editVehicle,
           style: TextStyle(
             color: AppColors.neutral[900],
             fontSize: 20,
@@ -134,7 +136,7 @@ class _EditVehicleScreenState extends State<EditVehicleScreen> {
           TextButton(
             onPressed: _saveVehicle,
             style: TextButton.styleFrom(foregroundColor: AppColors.primary),
-            child: const Text('Save'),
+            child: Text(context.l10n.save),
           ),
         ],
       ),
@@ -186,7 +188,7 @@ class _EditVehicleScreenState extends State<EditVehicleScreen> {
             child: ListView(
               padding: const EdgeInsets.all(24),
               children: [
-                _buildSectionHeader('Basic Information'),
+                _buildSectionHeader(context.l10n.basicInformation),
                 const SizedBox(height: 16),
                 _buildNameField(),
                 const SizedBox(height: 16),
@@ -201,7 +203,7 @@ class _EditVehicleScreenState extends State<EditVehicleScreen> {
                 _buildColorField(),
                 const SizedBox(height: 24),
 
-                _buildSectionHeader('Vehicle Details'),
+                _buildSectionHeader(context.l10n.vehicleDetails),
                 const SizedBox(height: 16),
                 _buildTypeDropdown(),
                 const SizedBox(height: 16),
@@ -240,12 +242,12 @@ class _EditVehicleScreenState extends State<EditVehicleScreen> {
   Widget _buildNameField() {
     return _buildTextField(
       controller: _nameController,
-      label: 'Vehicle Name',
+      label: context.l10n.vehicleName,
       hint: 'e.g., My Toyota Camry',
       icon: Icons.drive_eta,
       validator: (value) {
         if (value == null || value.trim().isEmpty) {
-          return 'Vehicle name is required';
+          return context.l10n.vehicleNameRequired;
         }
         return null;
       },
@@ -255,13 +257,13 @@ class _EditVehicleScreenState extends State<EditVehicleScreen> {
   Widget _buildPlateNumberField() {
     return _buildTextField(
       controller: _plateNumberController,
-      label: 'Plate Number',
+      label: context.l10n.plateNumber,
       hint: 'e.g., B 1234 ABC',
       icon: Icons.confirmation_number,
       textCapitalization: TextCapitalization.characters,
       validator: (value) {
         if (value == null || value.trim().isEmpty) {
-          return 'Plate number is required';
+          return context.l10n.plateNumberRequired;
         }
         return null;
       },
@@ -271,7 +273,7 @@ class _EditVehicleScreenState extends State<EditVehicleScreen> {
   Widget _buildBrandField() {
     return _buildTextField(
       controller: _brandController,
-      label: 'Brand',
+      label: context.l10n.brand,
       hint: 'e.g., Toyota',
       icon: Icons.business,
     );
@@ -280,7 +282,7 @@ class _EditVehicleScreenState extends State<EditVehicleScreen> {
   Widget _buildModelField() {
     return _buildTextField(
       controller: _modelController,
-      label: 'Model',
+      label: context.l10n.model,
       hint: 'e.g., Camry',
       icon: Icons.directions_car,
     );
@@ -289,8 +291,8 @@ class _EditVehicleScreenState extends State<EditVehicleScreen> {
   Widget _buildYearField() {
     return _buildTextField(
       controller: _yearController,
-      label: 'Year',
-      hint: 'e.g., 2020',
+      label: context.l10n.year,
+      hint: context.l10n.yearHint,
       icon: Icons.calendar_today,
       keyboardType: TextInputType.number,
       maxLength: 4,
@@ -298,7 +300,7 @@ class _EditVehicleScreenState extends State<EditVehicleScreen> {
         if (value != null && value.isNotEmpty) {
           final year = int.tryParse(value);
           if (year == null || year < 1900 || year > DateTime.now().year + 1) {
-            return 'Please enter a valid year';
+            return context.l10n.yearInvalid;
           }
         }
         return null;
@@ -309,16 +311,16 @@ class _EditVehicleScreenState extends State<EditVehicleScreen> {
   Widget _buildColorField() {
     return _buildTextField(
       controller: _colorController,
-      label: 'Color',
-      hint: 'e.g., Black',
+      label: context.l10n.color,
+      hint: context.l10n.colorHint,
       icon: Icons.palette,
     );
   }
 
   Widget _buildTypeDropdown() {
     return _buildDropdownField(
-      label: 'Vehicle Type',
-      hint: 'Select vehicle type',
+      label: context.l10n.vehicleType,
+      hint: context.l10n.selectVehicleType,
       icon: Icons.category,
       value: _selectedType,
       items: _vehicleTypes,
@@ -332,8 +334,8 @@ class _EditVehicleScreenState extends State<EditVehicleScreen> {
 
   Widget _buildFuelTypeDropdown() {
     return _buildDropdownField(
-      label: 'Fuel Type',
-      hint: 'Select fuel type',
+      label: context.l10n.fuelType,
+      hint: context.l10n.selectFuelType,
       icon: Icons.local_gas_station,
       value: _selectedFuelType,
       items: _fuelTypes,
@@ -347,8 +349,8 @@ class _EditVehicleScreenState extends State<EditVehicleScreen> {
 
   Widget _buildTransmissionTypeDropdown() {
     return _buildDropdownField(
-      label: 'Transmission',
-      hint: 'Select transmission type',
+      label: context.l10n.transmissionType,
+      hint: context.l10n.selectTransmissionType,
       icon: Icons.settings,
       value: _selectedTransmissionType,
       items: _transmissionTypes,
@@ -363,8 +365,8 @@ class _EditVehicleScreenState extends State<EditVehicleScreen> {
   Widget _buildVINField() {
     return _buildTextField(
       controller: _vinController,
-      label: 'VIN (Vehicle Identification Number)',
-      hint: 'e.g., 1HGCM82633A123456',
+      label: context.l10n.vin,
+      hint: context.l10n.vinHint,
       icon: Icons.qr_code_2,
       textCapitalization: TextCapitalization.characters,
       maxLength: 17,
@@ -374,15 +376,15 @@ class _EditVehicleScreenState extends State<EditVehicleScreen> {
   Widget _buildOdometerField() {
     return _buildTextField(
       controller: _odometerController,
-      label: 'Current Odometer (km)',
-      hint: 'e.g., 50000',
+      label: context.l10n.currentOdometer,
+      hint: context.l10n.odometerHint,
       icon: Icons.speed,
       keyboardType: TextInputType.number,
       validator: (value) {
         if (value != null && value.isNotEmpty) {
           final odometer = int.tryParse(value);
           if (odometer == null || odometer < 0) {
-            return 'Please enter a valid odometer reading';
+            return context.l10n.odometerRequired;
           }
         }
         return null;
@@ -406,7 +408,7 @@ class _EditVehicleScreenState extends State<EditVehicleScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Purchase Date',
+                  context.l10n.purchaseDate,
                   style: TextStyle(
                     fontSize: 12,
                     color: AppColors.neutral[600],
@@ -417,7 +419,7 @@ class _EditVehicleScreenState extends State<EditVehicleScreen> {
                 Text(
                   _purchaseDate != null
                       ? '${_purchaseDate!.day}/${_purchaseDate!.month}/${_purchaseDate!.year}'
-                      : 'Select purchase date',
+                      : context.l10n.selectPurchaseDate,
                   style: TextStyle(
                     fontSize: 14,
                     color:
@@ -432,7 +434,7 @@ class _EditVehicleScreenState extends State<EditVehicleScreen> {
           TextButton(
             onPressed: _selectPurchaseDate,
             style: TextButton.styleFrom(foregroundColor: AppColors.primary),
-            child: const Text('Select'),
+            child: Text('Select'),
           ),
         ],
       ),
@@ -686,7 +688,7 @@ class _EditVehicleScreenState extends State<EditVehicleScreen> {
               borderRadius: BorderRadius.circular(16),
             ),
             title: Text(
-              'Delete Vehicle',
+              context.l10n.deleteVehicle,
               style: TextStyle(
                 color: AppColors.neutral[900],
                 fontSize: 20,
@@ -703,7 +705,7 @@ class _EditVehicleScreenState extends State<EditVehicleScreen> {
                 style: TextButton.styleFrom(
                   foregroundColor: AppColors.neutral[600],
                 ),
-                child: const Text('Cancel'),
+                child: Text(context.l10n.cancel),
               ),
               ElevatedButton(
                 onPressed: () {
@@ -719,7 +721,7 @@ class _EditVehicleScreenState extends State<EditVehicleScreen> {
                     borderRadius: BorderRadius.circular(8),
                   ),
                 ),
-                child: const Text('Delete'),
+                child: Text(context.l10n.delete),
               ),
             ],
           ),

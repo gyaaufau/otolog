@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import '../../l10n/app_localizations.dart';
+import '../../shared/localization/l10n_helper.dart';
 import '../../cubit/vehicle_cubit.dart';
 import '../../cubit/vehicle_state.dart';
 import '../../resources/colors.dart';
@@ -53,7 +55,7 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
           onPressed: () => context.pop(),
         ),
         title: Text(
-          'Service Details',
+          context.l10n.serviceDetails,
           style: TextStyle(
             color: AppColors.neutral[900],
             fontSize: 20,
@@ -139,17 +141,21 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
           if (service.description != null &&
               service.description!.isNotEmpty) ...[
             _buildSection(
-              'Description',
+              context.l10n.description,
               Icons.description_outlined,
               service.description!,
             ),
             const SizedBox(height: 24),
           ],
           if (service.notes != null && service.notes!.isNotEmpty) ...[
-            _buildSection('Notes', Icons.note_outlined, service.notes!),
+            _buildSection(
+              context.l10n.notes,
+              Icons.note_outlined,
+              service.notes!,
+            ),
             const SizedBox(height: 24),
           ],
-          _buildActionButtons(service, vehicle),
+          _buildActionButtons(context, service, vehicle),
         ],
       ),
     );
@@ -243,7 +249,7 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
               if (service.cost != null) ...[
                 Expanded(
                   child: _buildSummaryItem(
-                    'Total Cost',
+                    context.l10n.totalCost,
                     _formatCurrency(service.cost),
                     Icons.payments_outlined,
                   ),
@@ -252,7 +258,7 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
               ],
               Expanded(
                 child: _buildSummaryItem(
-                  'Service Date',
+                  context.l10n.serviceDate,
                   _formatDate(service.serviceDate),
                   Icons.calendar_today_outlined,
                 ),
@@ -311,7 +317,7 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
           if (service.mechanic != null && service.mechanic!.isNotEmpty) ...[
             _buildInfoRow(
               Icons.person_outline,
-              'Mechanic / Shop',
+              context.l10n.mechanicShop,
               service.mechanic!,
             ),
           ],
@@ -410,7 +416,11 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
     );
   }
 
-  Widget _buildActionButtons(dynamic service, dynamic vehicle) {
+  Widget _buildActionButtons(
+    BuildContext context,
+    dynamic service,
+    dynamic vehicle,
+  ) {
     return Column(
       children: [
         Container(
@@ -446,14 +456,14 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
               elevation: 0,
               padding: const EdgeInsets.symmetric(vertical: 16),
             ),
-            child: const Row(
+            child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(Icons.edit_outlined, size: 20),
-                SizedBox(width: 12),
+                const Icon(Icons.edit_outlined, size: 20),
+                const SizedBox(width: 12),
                 Text(
-                  'Edit Service',
-                  style: TextStyle(
+                  context.l10n.editService,
+                  style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
                     letterSpacing: 0.3,
@@ -488,13 +498,13 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
               elevation: 0,
               padding: const EdgeInsets.symmetric(vertical: 16),
             ),
-            child: const Row(
+            child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Icon(Icons.delete_outline, size: 20),
                 SizedBox(width: 12),
                 Text(
-                  'Delete Service',
+                  context.l10n.deleteService,
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
@@ -519,7 +529,7 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
               borderRadius: BorderRadius.circular(16),
             ),
             title: Text(
-              'Delete Service',
+              context.l10n.deleteService,
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.w700,
@@ -528,7 +538,10 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
               ),
             ),
             content: Text(
-              'Are you sure you want to delete "${service.serviceType}" for ${vehicle.name}? This action cannot be undone.',
+              context.l10n.deleteServiceConfirmation(
+                service.serviceType,
+                vehicle.name,
+              ),
               style: TextStyle(
                 fontSize: 15,
                 color: AppColors.neutral[700],
@@ -540,7 +553,7 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
               TextButton(
                 onPressed: () => Navigator.pop(context),
                 child: Text(
-                  'Cancel',
+                  context.l10n.cancel,
                   style: TextStyle(
                     fontSize: 15,
                     fontWeight: FontWeight.w600,
@@ -569,9 +582,9 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
                     vertical: 12,
                   ),
                 ),
-                child: const Text(
-                  'Delete',
-                  style: TextStyle(
+                child: Text(
+                  context.l10n.delete,
+                  style: const TextStyle(
                     fontSize: 15,
                     fontWeight: FontWeight.w600,
                     letterSpacing: 0.2,
@@ -604,7 +617,7 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
             ),
             const SizedBox(height: 24),
             Text(
-              'Something went wrong',
+              context.l10n.somethingWentWrong,
               style: TextStyle(
                 fontSize: 22,
                 fontWeight: FontWeight.w700,

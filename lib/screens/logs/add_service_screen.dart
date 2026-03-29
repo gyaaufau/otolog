@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:drift/drift.dart' as drift;
+import '../../l10n/app_localizations.dart';
+import '../../shared/localization/l10n_helper.dart';
 import '../../cubit/vehicle_cubit.dart';
 import '../../cubit/vehicle_state.dart';
 import '../../cubit/service_vehicle_selector_cubit.dart';
@@ -101,7 +103,7 @@ class _AddServiceScreenState extends State<AddServiceScreen> {
           onPressed: () => context.pop(),
         ),
         title: Text(
-          'Add Service Record',
+          context.l10n.addServiceRecord,
           style: TextStyle(
             color: AppColors.neutral[900],
             fontSize: 20,
@@ -145,8 +147,8 @@ class _AddServiceScreenState extends State<AddServiceScreen> {
                 print(
                   '📱 [AddServiceScreen]   State is Error: ${vehicleSelectorState.message}',
                 );
-                return const Expanded(
-                  child: Center(child: Text('Failed to load vehicles')),
+                return Expanded(
+                  child: Center(child: Text(context.l10n.failedToLoadVehicles)),
                 );
               }
 
@@ -222,6 +224,7 @@ class _AddServiceScreenState extends State<AddServiceScreen> {
   }
 
   Widget _buildVehicleSelector(List<dynamic> vehicles, int? selectedVehicleId) {
+    final l10n = context.l10n;
     print('📱 [AddServiceScreen] _buildVehicleSelector called');
     print('📱 [AddServiceScreen]   vehicles.length: ${vehicles.length}');
     print(
@@ -255,7 +258,7 @@ class _AddServiceScreenState extends State<AddServiceScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Select Vehicle',
+          l10n.selectVehicle,
           style: TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.w600,
@@ -331,7 +334,7 @@ class _AddServiceScreenState extends State<AddServiceScreen> {
                             ],
                           )
                           : Text(
-                            'Select a vehicle',
+                            l10n.selectAVehicle,
                             style: TextStyle(
                               fontSize: 15,
                               fontWeight: FontWeight.w500,
@@ -367,7 +370,7 @@ class _AddServiceScreenState extends State<AddServiceScreen> {
                 const SizedBox(width: 12),
                 Expanded(
                   child: Text(
-                    'No vehicles available. Please add a vehicle first.',
+                    l10n.noVehiclesAvailablePleaseAddVehicleFirst,
                     style: TextStyle(
                       fontSize: 14,
                       color: AppColors.tertiary[800],
@@ -383,6 +386,7 @@ class _AddServiceScreenState extends State<AddServiceScreen> {
   }
 
   void _showVehicleSelectionModal(List<dynamic> vehicles) {
+    final l10n = context.l10n;
     print('📱 [AddServiceScreen] _showVehicleSelectionModal called');
     print(
       '📱 [AddServiceScreen]   Showing ${vehicles.length} vehicles in modal',
@@ -417,7 +421,7 @@ class _AddServiceScreenState extends State<AddServiceScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          'Select Vehicle',
+                          l10n.selectVehicle,
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
@@ -547,9 +551,10 @@ class _AddServiceScreenState extends State<AddServiceScreen> {
   }
 
   Widget _buildServiceTypeField() {
+    final l10n = context.l10n;
     return ModalDropdownField(
-      label: 'Service Type',
-      hint: 'Select service type',
+      label: l10n.serviceType,
+      hint: l10n.selectServiceType,
       value: _selectedServiceType,
       items: _serviceTypes,
       showLabel: true,
@@ -562,11 +567,12 @@ class _AddServiceScreenState extends State<AddServiceScreen> {
   }
 
   Widget _buildServiceDatePicker() {
+    final l10n = context.l10n;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Service Date',
+          l10n.serviceDate,
           style: TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.w600,
@@ -634,7 +640,7 @@ class _AddServiceScreenState extends State<AddServiceScreen> {
                   child: Text(
                     _serviceDate != null
                         ? '${_serviceDate!.day}/${_serviceDate!.month}/${_serviceDate!.year}'
-                        : 'Select service date',
+                        : l10n.selectServiceDate,
                     style: TextStyle(
                       color:
                           _serviceDate != null
@@ -654,11 +660,12 @@ class _AddServiceScreenState extends State<AddServiceScreen> {
   }
 
   Widget _buildDescriptionField() {
+    final l10n = context.l10n;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Description',
+          l10n.description,
           style: TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.w600,
@@ -671,7 +678,7 @@ class _AddServiceScreenState extends State<AddServiceScreen> {
           controller: _descriptionController,
           maxLines: 3,
           decoration: InputDecoration(
-            hintText: 'Describe the service performed...',
+            hintText: l10n.describeServicePerformed,
             hintStyle: TextStyle(color: AppColors.neutral[400], fontSize: 15),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
@@ -699,11 +706,12 @@ class _AddServiceScreenState extends State<AddServiceScreen> {
   }
 
   Widget _buildCostField() {
+    final l10n = context.l10n;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Cost (IDR)',
+          l10n.costIDR,
           style: TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.w600,
@@ -716,7 +724,7 @@ class _AddServiceScreenState extends State<AddServiceScreen> {
           controller: _costController,
           keyboardType: TextInputType.number,
           decoration: InputDecoration(
-            hintText: 'e.g., 500000',
+            hintText: l10n.exampleCost,
             hintStyle: TextStyle(color: AppColors.neutral[400], fontSize: 15),
             prefixIcon: Icon(Icons.attach_money, color: AppColors.neutral[500]),
             border: OutlineInputBorder(
@@ -745,11 +753,12 @@ class _AddServiceScreenState extends State<AddServiceScreen> {
   }
 
   Widget _buildMechanicField() {
+    final l10n = context.l10n;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Mechanic / Shop',
+          l10n.mechanicShop,
           style: TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.w600,
@@ -761,7 +770,7 @@ class _AddServiceScreenState extends State<AddServiceScreen> {
         TextFormField(
           controller: _mechanicController,
           decoration: InputDecoration(
-            hintText: 'e.g., Bengkel Jaya',
+            hintText: l10n.exampleMechanic,
             hintStyle: TextStyle(color: AppColors.neutral[400], fontSize: 15),
             prefixIcon: Icon(
               Icons.person_outline,
@@ -793,11 +802,12 @@ class _AddServiceScreenState extends State<AddServiceScreen> {
   }
 
   Widget _buildNotesField() {
+    final l10n = context.l10n;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Notes',
+          l10n.notes,
           style: TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.w600,
@@ -810,7 +820,7 @@ class _AddServiceScreenState extends State<AddServiceScreen> {
           controller: _notesController,
           maxLines: 3,
           decoration: InputDecoration(
-            hintText: 'Additional notes or observations...',
+            hintText: l10n.additionalNotesOrObservations,
             hintStyle: TextStyle(color: AppColors.neutral[400], fontSize: 15),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
@@ -877,9 +887,9 @@ class _AddServiceScreenState extends State<AddServiceScreen> {
                         valueColor: AlwaysStoppedAnimation(Colors.white),
                       ),
                     )
-                    : const Text(
-                      'Save Service Record',
-                      style: TextStyle(
+                    : Text(
+                      context.l10n.saveServiceRecord,
+                      style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
                         letterSpacing: 0.3,
@@ -962,7 +972,7 @@ class _AddServiceScreenState extends State<AddServiceScreen> {
               const SizedBox(width: 12),
               Expanded(
                 child: Text(
-                  'Please fill in all required fields',
+                  context.l10n.pleaseFillInAllRequiredFields,
                   style: TextStyle(
                     fontSize: 15,
                     fontWeight: FontWeight.w500,

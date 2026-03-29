@@ -6,6 +6,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:intl/intl.dart' as intl;
 
 import 'app_localizations_en.dart';
+import 'app_localizations_id.dart';
 
 // ignore_for_file: type=lint
 
@@ -92,7 +93,10 @@ abstract class AppLocalizations {
       ];
 
   /// A list of this localizations delegate's supported locales.
-  static const List<Locale> supportedLocales = <Locale>[Locale('en')];
+  static const List<Locale> supportedLocales = <Locale>[
+    Locale('en'),
+    Locale('id'),
+  ];
 
   /// The title of the application
   ///
@@ -766,10 +770,10 @@ abstract class AppLocalizations {
   /// **'Your Garage'**
   String get yourGarage;
 
-  /// Subtitle for home screen
+  /// Subtitle for service logs screen
   ///
   /// In en, this message translates to:
-  /// **'Track your vehicle maintenance and service history'**
+  /// **'Track all your vehicle maintenance'**
   String get trackVehicleMaintenance;
 
   /// Switch vehicle button
@@ -861,12 +865,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Vehicle Options'**
   String get vehicleOptions;
-
-  /// Delete vehicle confirmation message
-  ///
-  /// In en, this message translates to:
-  /// **'Are you sure you want to delete \"{vehicleName}\"? This action cannot be undone.'**
-  String deleteVehicleConfirmation(String vehicleName);
 
   /// All filter option
   ///
@@ -1053,6 +1051,342 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Delete Vehicle'**
   String get deleteVehicle;
+
+  /// Select button label
+  ///
+  /// In en, this message translates to:
+  /// **'Select'**
+  String get select;
+
+  /// Save changes button
+  ///
+  /// In en, this message translates to:
+  /// **'Save Changes'**
+  String get saveChanges;
+
+  /// Delete vehicle confirmation message
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete this vehicle? This action cannot be undone and will also delete all associated service records.'**
+  String get deleteVehicleConfirmation;
+
+  /// Specifications section title
+  ///
+  /// In en, this message translates to:
+  /// **'Specifications'**
+  String get specifications;
+
+  /// Service statistics section title
+  ///
+  /// In en, this message translates to:
+  /// **'Service Statistics'**
+  String get serviceStatistics;
+
+  /// Total services label in statistics
+  ///
+  /// In en, this message translates to:
+  /// **'Total Services'**
+  String get totalServicesLabel;
+
+  /// Total cost label in statistics
+  ///
+  /// In en, this message translates to:
+  /// **'Total Cost'**
+  String get totalCostLabel;
+
+  /// Add service record button
+  ///
+  /// In en, this message translates to:
+  /// **'Add Service Record'**
+  String get addServiceRecord;
+
+  /// Set as primary vehicle button
+  ///
+  /// In en, this message translates to:
+  /// **'Set Primary'**
+  String get setPrimary;
+
+  /// Total cost label
+  ///
+  /// In en, this message translates to:
+  /// **'Total Cost'**
+  String get totalCost;
+
+  /// Filters section title
+  ///
+  /// In en, this message translates to:
+  /// **'Filters'**
+  String get filters;
+
+  /// Clear all filters button
+  ///
+  /// In en, this message translates to:
+  /// **'Clear All'**
+  String get clearAll;
+
+  /// Vehicle label
+  ///
+  /// In en, this message translates to:
+  /// **'Vehicle'**
+  String get vehicle;
+
+  /// Date range filter label
+  ///
+  /// In en, this message translates to:
+  /// **'Date Range'**
+  String get dateRange;
+
+  /// All vehicles filter option
+  ///
+  /// In en, this message translates to:
+  /// **'All Vehicles'**
+  String get allVehicles;
+
+  /// Start date label
+  ///
+  /// In en, this message translates to:
+  /// **'Start Date'**
+  String get startDate;
+
+  /// End date label
+  ///
+  /// In en, this message translates to:
+  /// **'End Date'**
+  String get endDate;
+
+  /// Empty state message when no services found
+  ///
+  /// In en, this message translates to:
+  /// **'No Service Records'**
+  String get noServiceRecords;
+
+  /// Empty state suggestion when no vehicles exist
+  ///
+  /// In en, this message translates to:
+  /// **'Add a vehicle first to start tracking services'**
+  String get addVehicleFirstToStartTracking;
+
+  /// Empty state suggestion when no services exist
+  ///
+  /// In en, this message translates to:
+  /// **'Add your first service record to get started'**
+  String get addFirstServiceRecordToGetStarted;
+
+  /// Service options bottom sheet title
+  ///
+  /// In en, this message translates to:
+  /// **'Service Options'**
+  String get serviceOptions;
+
+  /// View details option
+  ///
+  /// In en, this message translates to:
+  /// **'View Details'**
+  String get viewDetails;
+
+  /// Delete service button
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Service'**
+  String get deleteService;
+
+  /// Delete service confirmation message
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete \"{serviceType}\" for {vehicleName}? This action cannot be undone.'**
+  String deleteServiceConfirmation(String serviceType, String vehicleName);
+
+  /// Mechanic field label
+  ///
+  /// In en, this message translates to:
+  /// **'Mechanic'**
+  String get mechanic;
+
+  /// Select a vehicle hint
+  ///
+  /// In en, this message translates to:
+  /// **'Select a vehicle'**
+  String get selectAVehicle;
+
+  /// No vehicles available message
+  ///
+  /// In en, this message translates to:
+  /// **'No vehicles available. Please add a vehicle first.'**
+  String get noVehiclesAvailablePleaseAddVehicleFirst;
+
+  /// Service type dropdown hint
+  ///
+  /// In en, this message translates to:
+  /// **'Select service type'**
+  String get selectServiceType;
+
+  /// Service date dropdown hint
+  ///
+  /// In en, this message translates to:
+  /// **'Select service date'**
+  String get selectServiceDate;
+
+  /// Description field hint
+  ///
+  /// In en, this message translates to:
+  /// **'Describe service performed...'**
+  String get describeServicePerformed;
+
+  /// Cost field label
+  ///
+  /// In en, this message translates to:
+  /// **'Cost (IDR)'**
+  String get costIDR;
+
+  /// Cost field hint
+  ///
+  /// In en, this message translates to:
+  /// **'e.g., 500000'**
+  String get exampleCost;
+
+  /// Mechanic field label
+  ///
+  /// In en, this message translates to:
+  /// **'Mechanic / Shop'**
+  String get mechanicShop;
+
+  /// Mechanic field hint
+  ///
+  /// In en, this message translates to:
+  /// **'e.g., Bengkel Jaya'**
+  String get exampleMechanic;
+
+  /// Notes field hint
+  ///
+  /// In en, this message translates to:
+  /// **'Additional notes or observations...'**
+  String get additionalNotesOrObservations;
+
+  /// Save service record button
+  ///
+  /// In en, this message translates to:
+  /// **'Save Service Record'**
+  String get saveServiceRecord;
+
+  /// Validation error message
+  ///
+  /// In en, this message translates to:
+  /// **'Please fill in all required fields'**
+  String get pleaseFillInAllRequiredFields;
+
+  /// Update service record button
+  ///
+  /// In en, this message translates to:
+  /// **'Update Service Record'**
+  String get updateServiceRecord;
+
+  /// Database viewer menu item
+  ///
+  /// In en, this message translates to:
+  /// **'Database Viewer'**
+  String get databaseViewer;
+
+  /// Database viewer subtitle
+  ///
+  /// In en, this message translates to:
+  /// **'View all database records'**
+  String get viewAllDatabaseRecords;
+
+  /// App information text
+  ///
+  /// In en, this message translates to:
+  /// **'OtoLog - Vehicle Service Log App'**
+  String get appInformation;
+
+  /// January month name
+  ///
+  /// In en, this message translates to:
+  /// **'January'**
+  String get january;
+
+  /// February month name
+  ///
+  /// In en, this message translates to:
+  /// **'February'**
+  String get february;
+
+  /// March month name
+  ///
+  /// In en, this message translates to:
+  /// **'March'**
+  String get march;
+
+  /// April month name
+  ///
+  /// In en, this message translates to:
+  /// **'April'**
+  String get april;
+
+  /// May month name
+  ///
+  /// In en, this message translates to:
+  /// **'May'**
+  String get may;
+
+  /// June month name
+  ///
+  /// In en, this message translates to:
+  /// **'June'**
+  String get june;
+
+  /// July month name
+  ///
+  /// In en, this message translates to:
+  /// **'July'**
+  String get july;
+
+  /// August month name
+  ///
+  /// In en, this message translates to:
+  /// **'August'**
+  String get august;
+
+  /// September month name
+  ///
+  /// In en, this message translates to:
+  /// **'September'**
+  String get september;
+
+  /// October month name
+  ///
+  /// In en, this message translates to:
+  /// **'October'**
+  String get october;
+
+  /// November month name
+  ///
+  /// In en, this message translates to:
+  /// **'November'**
+  String get november;
+
+  /// December month name
+  ///
+  /// In en, this message translates to:
+  /// **'December'**
+  String get december;
+
+  /// Apply filters button
+  ///
+  /// In en, this message translates to:
+  /// **'Apply Filters'**
+  String get applyFilters;
+
+  /// No service records for specific vehicle message
+  ///
+  /// In en, this message translates to:
+  /// **'No service records for'**
+  String get noServiceRecordsFor;
+
+  /// Failed to load vehicles error message
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load vehicles'**
+  String get failedToLoadVehicles;
 }
 
 class _AppLocalizationsDelegate
@@ -1066,7 +1400,7 @@ class _AppLocalizationsDelegate
 
   @override
   bool isSupported(Locale locale) =>
-      <String>['en'].contains(locale.languageCode);
+      <String>['en', 'id'].contains(locale.languageCode);
 
   @override
   bool shouldReload(_AppLocalizationsDelegate old) => false;
@@ -1077,6 +1411,8 @@ AppLocalizations lookupAppLocalizations(Locale locale) {
   switch (locale.languageCode) {
     case 'en':
       return AppLocalizationsEn();
+    case 'id':
+      return AppLocalizationsId();
   }
 
   throw FlutterError(

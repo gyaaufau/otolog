@@ -347,8 +347,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get yourGarage => 'Your Garage';
 
   @override
-  String get trackVehicleMaintenance =>
-      'Track your vehicle maintenance and service history';
+  String get trackVehicleMaintenance => 'Track all your vehicle maintenance';
 
   @override
   String get switchVehicle => 'Switch';
@@ -398,11 +397,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get vehicleOptions => 'Vehicle Options';
-
-  @override
-  String deleteVehicleConfirmation(String vehicleName) {
-    return 'Are you sure you want to delete \"$vehicleName\"? This action cannot be undone.';
-  }
 
   @override
   String get all => 'All';
@@ -496,4 +490,180 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get deleteVehicle => 'Delete Vehicle';
+
+  @override
+  String get select => 'Select';
+
+  @override
+  String get saveChanges => 'Save Changes';
+
+  @override
+  String get deleteVehicleConfirmation =>
+      'Are you sure you want to delete this vehicle? This action cannot be undone and will also delete all associated service records.';
+
+  @override
+  String get specifications => 'Specifications';
+
+  @override
+  String get serviceStatistics => 'Service Statistics';
+
+  @override
+  String get totalServicesLabel => 'Total Services';
+
+  @override
+  String get totalCostLabel => 'Total Cost';
+
+  @override
+  String get addServiceRecord => 'Add Service Record';
+
+  @override
+  String get setPrimary => 'Set Primary';
+
+  @override
+  String get totalCost => 'Total Cost';
+
+  @override
+  String get filters => 'Filters';
+
+  @override
+  String get clearAll => 'Clear All';
+
+  @override
+  String get vehicle => 'Vehicle';
+
+  @override
+  String get dateRange => 'Date Range';
+
+  @override
+  String get allVehicles => 'All Vehicles';
+
+  @override
+  String get startDate => 'Start Date';
+
+  @override
+  String get endDate => 'End Date';
+
+  @override
+  String get noServiceRecords => 'No Service Records';
+
+  @override
+  String get addVehicleFirstToStartTracking =>
+      'Add a vehicle first to start tracking services';
+
+  @override
+  String get addFirstServiceRecordToGetStarted =>
+      'Add your first service record to get started';
+
+  @override
+  String get serviceOptions => 'Service Options';
+
+  @override
+  String get viewDetails => 'View Details';
+
+  @override
+  String get deleteService => 'Delete Service';
+
+  @override
+  String deleteServiceConfirmation(String serviceType, String vehicleName) {
+    return 'Are you sure you want to delete \"$serviceType\" for $vehicleName? This action cannot be undone.';
+  }
+
+  @override
+  String get mechanic => 'Mechanic';
+
+  @override
+  String get selectAVehicle => 'Select a vehicle';
+
+  @override
+  String get noVehiclesAvailablePleaseAddVehicleFirst =>
+      'No vehicles available. Please add a vehicle first.';
+
+  @override
+  String get selectServiceType => 'Select service type';
+
+  @override
+  String get selectServiceDate => 'Select service date';
+
+  @override
+  String get describeServicePerformed => 'Describe service performed...';
+
+  @override
+  String get costIDR => 'Cost (IDR)';
+
+  @override
+  String get exampleCost => 'e.g., 500000';
+
+  @override
+  String get mechanicShop => 'Mechanic / Shop';
+
+  @override
+  String get exampleMechanic => 'e.g., Bengkel Jaya';
+
+  @override
+  String get additionalNotesOrObservations =>
+      'Additional notes or observations...';
+
+  @override
+  String get saveServiceRecord => 'Save Service Record';
+
+  @override
+  String get pleaseFillInAllRequiredFields =>
+      'Please fill in all required fields';
+
+  @override
+  String get updateServiceRecord => 'Update Service Record';
+
+  @override
+  String get databaseViewer => 'Database Viewer';
+
+  @override
+  String get viewAllDatabaseRecords => 'View all database records';
+
+  @override
+  String get appInformation => 'OtoLog - Vehicle Service Log App';
+
+  @override
+  String get january => 'January';
+
+  @override
+  String get february => 'February';
+
+  @override
+  String get march => 'March';
+
+  @override
+  String get april => 'April';
+
+  @override
+  String get may => 'May';
+
+  @override
+  String get june => 'June';
+
+  @override
+  String get july => 'July';
+
+  @override
+  String get august => 'August';
+
+  @override
+  String get september => 'September';
+
+  @override
+  String get october => 'October';
+
+  @override
+  String get november => 'November';
+
+  @override
+  String get december => 'December';
+
+  @override
+  String get applyFilters => 'Apply Filters';
+
+  @override
+  String get noServiceRecordsFor => 'No service records for';
+
+  @override
+  String get failedToLoadVehicles => 'Failed to load vehicles';
 }
