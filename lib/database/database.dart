@@ -24,6 +24,7 @@ class Vehicles extends Table {
   TextColumn get fuelType => text().nullable()();
   TextColumn get transmissionType => text().nullable()();
   TextColumn get imagePath => text().nullable()();
+  BoolColumn get isPrimary => boolean().withDefault(const Constant(false))();
   DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
   DateTimeColumn get updatedAt => dateTime().withDefault(currentDateAndTime)();
 }
@@ -50,7 +51,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase(QueryExecutor e) : super(e);
 
   @override
-  int get schemaVersion => 1;
+  int get schemaVersion => 3;
 
   @override
   MigrationStrategy get migration {
@@ -59,7 +60,26 @@ class AppDatabase extends _$AppDatabase {
         await m.createAll();
       },
       onUpgrade: (Migrator m, int from, int to) async {
-        // Handle future migrations here
+        // Migration from version 1 to 2: Add isPrimary column
+        if (from == 1 && to >= 2) {
+          await customStatement(
+            'ALTER TABLE vehicles ADD COLUMN isPrimary INTEGER NOT NULL DEFAULT 0',
+          );
+        }
+        // Migration from version 2 to 3: Ensure isPrimary column exists
+        if (from == 2 && to >= 3) {
+          // Check if isPrimary column exists, if not add it
+          try {
+            await customStatement(
+              'ALTER TABLE vehicles ADD COLUMN isPrimary INTEGER NOT NULL DEFAULT 0',
+            );
+          } catch (e) {
+            // Column already exists, ignore the error
+            if (!e.toString().contains('duplicate column name')) {
+              rethrow;
+            }
+          }
+        }
       },
     );
   }
@@ -75,6 +95,20 @@ class AppDatabase extends _$AppDatabase {
     ).replace(vehicle.copyWith(updatedAt: DateTime.now()));
   }
 
+  Future<void> markAsPrimary(int vehicleId) async {
+    print('DEBUG: markAsPrimary called with vehicleId: $vehicleId');
+    // First, set all vehicles' isPrimary to false
+    await (update(vehicles)..where(
+      (tbl) => tbl.id.isBiggerThanValue(0),
+    )).write(const VehiclesCompanion(isPrimary: Value(false)));
+    print('DEBUG: Set all vehicles isPrimary to false');
+    // Then, set the selected vehicle's isPrimary to true
+    await (update(vehicles)..where(
+      (tbl) => tbl.id.equals(vehicleId),
+    )).write(const VehiclesCompanion(isPrimary: Value(true)));
+    print('DEBUG: Set vehicle $vehicleId isPrimary to true');
+  }
+
   Future<int> deleteVehicle(int id) {
     return (delete(vehicles)..where((tbl) => tbl.id.equals(id))).go();
   }
@@ -85,8 +119,10 @@ class AppDatabase extends _$AppDatabase {
   }
 
   Future<List<Vehicle>> getAllVehicles() {
-    return (select(vehicles)
-      ..orderBy([(tbl) => OrderingTerm.desc(tbl.createdAt)])).get();
+    return (select(vehicles)..orderBy([
+      (tbl) => OrderingTerm.desc(tbl.isPrimary), // Primary vehicles first
+      (tbl) => OrderingTerm.desc(tbl.createdAt), // Then by creation date
+    ])).get();
   }
 
   Future<List<Vehicle>> searchVehicles(String query) {

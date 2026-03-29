@@ -1,0 +1,1052 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
+import 'package:drift/drift.dart' as drift;
+import '../../l10n/app_localizations.dart';
+import '../../shared/localization/l10n_helper.dart';
+import '../../cubit/vehicle_cubit.dart';
+import '../../cubit/vehicle_state.dart';
+import '../../cubit/service_vehicle_selector_cubit.dart';
+import '../../cubit/service_vehicle_selector_state.dart';
+import '../../database/database.dart';
+import '../../resources/colors.dart';
+import '../../widgets/modal_dropdown_field.dart';
+import '../../router.dart';
+
+class EditServiceScreen extends StatefulWidget {
+  const EditServiceScreen({super.key});
+
+  @override
+  State<EditServiceScreen> createState() => _EditServiceScreenState();
+}
+
+class _EditServiceScreenState extends State<EditServiceScreen> {
+  final _formKey = GlobalKey<FormState>();
+  final _descriptionController = TextEditingController();
+  final _costController = TextEditingController();
+  final _mechanicController = TextEditingController();
+  final _notesController = TextEditingController();
+
+  DateTime? _serviceDate;
+  String? _selectedServiceType;
+  int? _vehicleId;
+  int? _serviceId;
+  ServiceRecord? _existingService;
+
+  final List<String> _serviceTypes = [
+    'Oil Change',
+    'Tire Rotation',
+    'Brake Service',
+    'Battery Replacement',
+    'Engine Tune-up',
+    'Air Filter Replacement',
+    'Transmission Service',
+    'Coolant Flush',
+    'Spark Plug Replacement',
+    'Wheel Alignment',
+    'Suspension Service',
+    'Exhaust System Repair',
+    'AC Service',
+    'Inspection',
+    'Other',
+  ];
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    print('📱 [EditServiceScreen] didChangeDependencies called');
+
+    if (_vehicleId == null || _serviceId == null) {
+      final vehicleId = int.tryParse(
+        GoRouterState.of(context).pathParameters['vehicleId'] ?? '',
+      );
+      final serviceId = int.tryParse(
+        GoRouterState.of(context).pathParameters['serviceId'] ?? '',
+      );
+      print('📱 [EditServiceScreen] Vehicle ID from route: $vehicleId');
+      print('📱 [EditServiceScreen] Service ID from route: $serviceId');
+
+      if (vehicleId != null && serviceId != null) {
+        setState(() {
+          _vehicleId = vehicleId;
+          _serviceId = serviceId;
+        });
+        print(
+          '📱 [EditServiceScreen] Local IDs set to: $_vehicleId, $_serviceId',
+        );
+        context.read<VehicleCubit>().loadVehicleWithServices(vehicleId);
+      }
+    } else {
+      print(
+        '📱 [EditServiceScreen] Local IDs already set: $_vehicleId, $_serviceId',
+      );
+    }
+
+    // Load all vehicles for vehicle selection
+    print(
+      '📱 [EditServiceScreen] Calling loadVehicles() on ServiceVehicleSelectorCubit',
+    );
+    context.read<ServiceVehicleSelectorCubit>().loadVehicles();
+  }
+
+  @override
+  void dispose() {
+    _descriptionController.dispose();
+    _costController.dispose();
+    _mechanicController.dispose();
+    _notesController.dispose();
+    super.dispose();
+  }
+
+  void _loadServiceData(ServiceRecord service) {
+    print('📱 [EditServiceScreen] Loading service data');
+    setState(() {
+      _existingService = service;
+      _serviceDate = service.serviceDate;
+      _selectedServiceType = service.serviceType;
+      _vehicleId = service.vehicleId;
+
+      _descriptionController.text = service.description ?? '';
+      _costController.text = service.cost?.toString() ?? '';
+      _mechanicController.text = service.mechanic ?? '';
+      _notesController.text = service.notes ?? '';
+    });
+    print('📱 [EditServiceScreen] Service data loaded');
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: AppColors.neutral[50],
+      appBar: AppBar(
+        backgroundColor: AppColors.neutral[50],
+        elevation: 0,
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back_ios_new_rounded,
+            color: AppColors.neutral[900],
+          ),
+          onPressed: () => context.pop(),
+        ),
+        title: Text(
+          context.l10n.updateServiceRecord,
+          style: TextStyle(
+            color: AppColors.neutral[900],
+            fontSize: 20,
+            fontWeight: FontWeight.w600,
+            letterSpacing: -0.3,
+          ),
+        ),
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(1),
+          child: Container(
+            decoration: BoxDecoration(
+              border: Border(
+                bottom: BorderSide(color: AppColors.neutral[200]!, width: 1),
+              ),
+            ),
+          ),
+        ),
+      ),
+      body: BlocBuilder<VehicleCubit, VehicleState>(
+        builder: (context, state) {
+          // Load existing service data if not loaded yet
+          if (state is VehicleLoaded &&
+              _existingService == null &&
+              _serviceId != null) {
+            final service = state.serviceRecords?.firstWhere(
+              (s) => s.id == _serviceId,
+              orElse: () => state.serviceRecords!.first,
+            );
+            if (service != null) {
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                _loadServiceData(service);
+              });
+            }
+          }
+
+          return Column(
+            children: [
+              BlocBuilder<
+                ServiceVehicleSelectorCubit,
+                ServiceVehicleSelectorState
+              >(
+                builder: (context, vehicleSelectorState) {
+                  print('📱 [EditServiceScreen] BlocBuilder rebuilt');
+                  print(
+                    '📱 [EditServiceScreen]   State type: ${vehicleSelectorState.runtimeType}',
+                  );
+
+                  if (vehicleSelectorState is ServiceVehicleSelectorLoading) {
+                    print('📱 [EditServiceScreen]   State is Loading');
+                    return const Expanded(
+                      child: Center(
+                        child: CircularProgressIndicator(
+                          valueColor: AlwaysStoppedAnimation(AppColors.primary),
+                          strokeWidth: 2,
+                        ),
+                      ),
+                    );
+                  }
+
+                  if (vehicleSelectorState is ServiceVehicleSelectorError) {
+                    print(
+                      '📱 [EditServiceScreen]   State is Error: ${vehicleSelectorState.message}',
+                    );
+                    return const Expanded(
+                      child: Center(child: Text('Failed to load vehicles')),
+                    );
+                  }
+
+                  if (vehicleSelectorState is ServiceVehicleSelectorLoaded) {
+                    print(
+                      '📱 [EditServiceScreen]   State is Loaded with ${vehicleSelectorState.vehicles.length} vehicles',
+                    );
+                    print(
+                      '📱 [EditServiceScreen]   selectedVehicleId in state: ${vehicleSelectorState.selectedVehicleId}',
+                    );
+                    print(
+                      '📱 [EditServiceScreen]   local _vehicleId: $_vehicleId',
+                    );
+
+                    // Sync local _vehicleId with cubit state if they differ
+                    if (vehicleSelectorState.selectedVehicleId != null &&
+                        vehicleSelectorState.selectedVehicleId != _vehicleId) {
+                      print(
+                        '📱 [EditServiceScreen]   ⚠️ Syncing local _vehicleId with cubit state',
+                      );
+                      WidgetsBinding.instance.addPostFrameCallback((_) {
+                        setState(() {
+                          _vehicleId = vehicleSelectorState.selectedVehicleId;
+                        });
+                        print(
+                          '📱 [EditServiceScreen]   Local _vehicleId synced to: $_vehicleId',
+                        );
+                      });
+                    }
+                  }
+
+                  final vehicles =
+                      vehicleSelectorState is ServiceVehicleSelectorLoaded
+                          ? vehicleSelectorState.vehicles
+                          : <dynamic>[];
+
+                  final selectedVehicleId =
+                      vehicleSelectorState is ServiceVehicleSelectorLoaded
+                          ? vehicleSelectorState.selectedVehicleId
+                          : null;
+
+                  return Expanded(
+                    child: SingleChildScrollView(
+                      padding: const EdgeInsets.fromLTRB(24, 24, 24, 100),
+                      child: Form(
+                        key: _formKey,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            _buildVehicleSelector(vehicles, selectedVehicleId),
+                            const SizedBox(height: 24),
+                            _buildServiceTypeField(),
+                            const SizedBox(height: 20),
+                            _buildServiceDatePicker(),
+                            const SizedBox(height: 20),
+                            _buildDescriptionField(),
+                            const SizedBox(height: 20),
+                            _buildCostField(),
+                            const SizedBox(height: 20),
+                            _buildMechanicField(),
+                            const SizedBox(height: 20),
+                            _buildNotesField(),
+                            const SizedBox(height: 32),
+                            _buildSaveButton(),
+                          ],
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ],
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _buildVehicleSelector(List<dynamic> vehicles, int? selectedVehicleId) {
+    final l10n = context.l10n;
+    print('📱 [EditServiceScreen] _buildVehicleSelector called');
+    print('📱 [EditServiceScreen]   vehicles.length: ${vehicles.length}');
+    print(
+      '📱 [EditServiceScreen]   selectedVehicleId from cubit: $selectedVehicleId',
+    );
+    print('📱 [EditServiceScreen]   local _vehicleId: $_vehicleId');
+
+    dynamic selectedVehicle;
+    if (_vehicleId != null && vehicles.isNotEmpty) {
+      try {
+        selectedVehicle = vehicles.firstWhere((v) => v.id == _vehicleId);
+        print(
+          '📱 [EditServiceScreen]   Found selected vehicle: id=${selectedVehicle.id}, name="${selectedVehicle.name}"',
+        );
+      } catch (e) {
+        print(
+          '📱 [EditServiceScreen]   ⚠️ Vehicle with id=$_vehicleId not found, using first vehicle',
+        );
+        selectedVehicle = vehicles.first;
+      }
+    } else if (vehicles.isNotEmpty) {
+      print('📱 [EditServiceScreen]   No _vehicleId, using first vehicle');
+      selectedVehicle = vehicles.first;
+    } else {
+      print('📱 [EditServiceScreen]   No vehicles available');
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          l10n.selectVehicle,
+          style: TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.w600,
+            color:
+                _vehicleId != null
+                    ? AppColors.primary[500]
+                    : AppColors.neutral[700],
+            letterSpacing: 0.15,
+          ),
+        ),
+        const SizedBox(height: 8),
+        InkWell(
+          onTap:
+              vehicles.isEmpty
+                  ? null
+                  : () => _showVehicleSelectionModal(vehicles),
+          borderRadius: BorderRadius.circular(12),
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(
+                color:
+                    _vehicleId != null
+                        ? AppColors.primary[500]!
+                        : AppColors.neutral[200]!,
+                width: _vehicleId != null ? 1.5 : 1.0,
+              ),
+            ),
+            child: Row(
+              children: [
+                Icon(
+                  selectedVehicle != null
+                      ? Icons.directions_car
+                      : Icons.add_circle_outline,
+                  color:
+                      selectedVehicle != null
+                          ? AppColors.primary[500]
+                          : AppColors.neutral[400],
+                  size: 24,
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child:
+                      selectedVehicle != null
+                          ? Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                selectedVehicle.name,
+                                style: TextStyle(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w600,
+                                  color: AppColors.neutral[900],
+                                ),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              if (selectedVehicle.brand != null ||
+                                  selectedVehicle.model != null) ...[
+                                const SizedBox(height: 2),
+                                Text(
+                                  '${selectedVehicle.brand ?? ''} ${selectedVehicle.model ?? ''}'
+                                      .trim(),
+                                  style: TextStyle(
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w400,
+                                    color: AppColors.neutral[600],
+                                  ),
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ],
+                            ],
+                          )
+                          : Text(
+                            context.l10n.selectAVehicle,
+                            style: TextStyle(
+                              fontSize: 15,
+                              fontWeight: FontWeight.w500,
+                              color: AppColors.neutral[400],
+                            ),
+                          ),
+                ),
+                Icon(
+                  Icons.keyboard_arrow_up,
+                  color: AppColors.neutral[500],
+                  size: 24,
+                ),
+              ],
+            ),
+          ),
+        ),
+        if (vehicles.isEmpty) ...[
+          const SizedBox(height: 12),
+          Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: AppColors.tertiary[50],
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: AppColors.tertiary[200]!),
+            ),
+            child: Row(
+              children: [
+                Icon(
+                  Icons.info_outline,
+                  color: AppColors.tertiary[600],
+                  size: 20,
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Text(
+                    context.l10n.noVehiclesAvailablePleaseAddVehicleFirst,
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: AppColors.tertiary[800],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ],
+    );
+  }
+
+  void _showVehicleSelectionModal(List<dynamic> vehicles) {
+    final l10n = context.l10n;
+    print('📱 [EditServiceScreen] _showVehicleSelectionModal called');
+    print(
+      '📱 [EditServiceScreen]   Showing ${vehicles.length} vehicles in modal',
+    );
+    print('📱 [EditServiceScreen]   Current local _vehicleId: $_vehicleId');
+
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+      builder:
+          (context) => Container(
+            decoration: const BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+            ),
+            child: SafeArea(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      border: Border(
+                        bottom: BorderSide(
+                          color: AppColors.neutral[200]!,
+                          width: 1,
+                        ),
+                      ),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          l10n.selectVehicle,
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                            color: AppColors.neutral[900],
+                          ),
+                        ),
+                        GestureDetector(
+                          onTap: () => Navigator.pop(context),
+                          child: Icon(
+                            Icons.close_rounded,
+                            color: AppColors.neutral[500],
+                            size: 20,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Flexible(
+                    child: ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: vehicles.length,
+                      itemBuilder: (context, index) {
+                        final vehicle = vehicles[index];
+                        final isSelected = vehicle.id == _vehicleId;
+                        print(
+                          '📱 [EditServiceScreen]   Vehicle $index: id=${vehicle.id}, name="${vehicle.name}", isSelected=$isSelected (comparing with local _vehicleId=$_vehicleId)',
+                        );
+
+                        return InkWell(
+                          onTap: () {
+                            print(
+                              '📱 [EditServiceScreen]   Vehicle tapped: id=${vehicle.id}, name="${vehicle.name}"',
+                            );
+                            print(
+                              '📱 [EditServiceScreen]   Calling selectVehicle(${vehicle.id}) on cubit',
+                            );
+
+                            // Update cubit state
+                            context
+                                .read<ServiceVehicleSelectorCubit>()
+                                .selectVehicle(vehicle.id);
+
+                            // FIX: Also update local _vehicleId to stay in sync
+                            setState(() {
+                              _vehicleId = vehicle.id;
+                            });
+                            print(
+                              '📱 [EditServiceScreen]   Local _vehicleId updated to: $_vehicleId',
+                            );
+
+                            Navigator.pop(context);
+                            print('📱 [EditServiceScreen]   Modal closed');
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 16,
+                              vertical: 16,
+                            ),
+                            decoration: BoxDecoration(
+                              color:
+                                  isSelected
+                                      ? AppColors.primary.withOpacity(0.1)
+                                      : Colors.transparent,
+                            ),
+                            child: Row(
+                              children: [
+                                Container(
+                                  width: 40,
+                                  height: 40,
+                                  decoration: BoxDecoration(
+                                    color: AppColors.primary.withOpacity(0.1),
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  child: Icon(
+                                    Icons.directions_car,
+                                    size: 24,
+                                    color: AppColors.primary,
+                                  ),
+                                ),
+                                const SizedBox(width: 12),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        vehicle.name,
+                                        style: TextStyle(
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.w600,
+                                          color:
+                                              isSelected
+                                                  ? AppColors.primary
+                                                  : AppColors.neutral[900],
+                                        ),
+                                      ),
+                                      const SizedBox(height: 2),
+                                      Text(
+                                        '${vehicle.brand ?? ''} ${vehicle.model ?? ''}'
+                                            .trim(),
+                                        style: TextStyle(
+                                          fontSize: 13,
+                                          color: AppColors.neutral[600],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                if (isSelected)
+                                  Icon(
+                                    Icons.check_rounded,
+                                    color: AppColors.primary,
+                                    size: 18,
+                                  ),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+    );
+  }
+
+  Widget _buildServiceTypeField() {
+    final l10n = context.l10n;
+    return ModalDropdownField(
+      label: l10n.serviceType,
+      hint: l10n.selectServiceType,
+      value: _selectedServiceType,
+      items: _serviceTypes,
+      showLabel: true,
+      onChanged: (value) {
+        setState(() {
+          _selectedServiceType = value;
+        });
+      },
+    );
+  }
+
+  Widget _buildServiceDatePicker() {
+    final l10n = context.l10n;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          l10n.serviceDate,
+          style: TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.w600,
+            color:
+                _serviceDate != null
+                    ? AppColors.primary[500]
+                    : AppColors.neutral[700],
+            letterSpacing: 0.15,
+          ),
+        ),
+        const SizedBox(height: 8),
+        InkWell(
+          onTap: () async {
+            final DateTime? picked = await showDatePicker(
+              context: context,
+              initialDate: _serviceDate ?? DateTime.now(),
+              firstDate: DateTime(2000),
+              lastDate: DateTime.now().add(const Duration(days: 30)),
+              builder: (context, child) {
+                return Theme(
+                  data: Theme.of(context).copyWith(
+                    colorScheme: ColorScheme.light(
+                      primary: AppColors.primary[500]!,
+                      onPrimary: Colors.white,
+                      surface: Colors.white,
+                      onSurface: AppColors.neutral[900]!,
+                    ),
+                  ),
+                  child: child!,
+                );
+              },
+            );
+            if (picked != null && mounted) {
+              setState(() {
+                _serviceDate = picked;
+              });
+            }
+          },
+          borderRadius: BorderRadius.circular(12),
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(
+                color:
+                    _serviceDate != null
+                        ? AppColors.primary[500]!
+                        : AppColors.neutral[200]!,
+                width: _serviceDate != null ? 1.5 : 1.0,
+              ),
+            ),
+            child: Row(
+              children: [
+                Icon(
+                  Icons.calendar_today_rounded,
+                  color:
+                      _serviceDate != null
+                          ? AppColors.primary[500]
+                          : AppColors.neutral[500],
+                  size: 20,
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Text(
+                    _serviceDate != null
+                        ? '${_serviceDate!.day}/${_serviceDate!.month}/${_serviceDate!.year}'
+                        : l10n.selectServiceDate,
+                    style: TextStyle(
+                      color:
+                          _serviceDate != null
+                              ? AppColors.neutral[900]
+                              : AppColors.neutral[400],
+                      fontSize: 15,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildDescriptionField() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Description',
+          style: TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.w600,
+            color: AppColors.neutral[700],
+            letterSpacing: 0.15,
+          ),
+        ),
+        const SizedBox(height: 8),
+        TextFormField(
+          controller: _descriptionController,
+          maxLines: 3,
+          decoration: InputDecoration(
+            hintText: 'Describe the service performed...',
+            hintStyle: TextStyle(color: AppColors.neutral[400], fontSize: 15),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(color: AppColors.neutral[200]!),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(color: AppColors.neutral[200]!),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(
+                color: AppColors.primary[500]!,
+                width: 1.5,
+              ),
+            ),
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 16,
+              vertical: 16,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildCostField() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          context.l10n.costIDR,
+          style: TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.w600,
+            color: AppColors.neutral[700],
+            letterSpacing: 0.15,
+          ),
+        ),
+        const SizedBox(height: 8),
+        TextFormField(
+          controller: _costController,
+          keyboardType: TextInputType.number,
+          decoration: InputDecoration(
+            hintText: context.l10n.exampleCost,
+            hintStyle: TextStyle(color: AppColors.neutral[400], fontSize: 15),
+            prefixIcon: Icon(Icons.attach_money, color: AppColors.neutral[500]),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(color: AppColors.neutral[200]!),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(color: AppColors.neutral[200]!),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(
+                color: AppColors.primary[500]!,
+                width: 1.5,
+              ),
+            ),
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 16,
+              vertical: 16,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildMechanicField() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          context.l10n.mechanicShop,
+          style: TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.w600,
+            color: AppColors.neutral[700],
+            letterSpacing: 0.15,
+          ),
+        ),
+        const SizedBox(height: 8),
+        TextFormField(
+          controller: _mechanicController,
+          decoration: InputDecoration(
+            hintText: context.l10n.exampleMechanic,
+            hintStyle: TextStyle(color: AppColors.neutral[400], fontSize: 15),
+            prefixIcon: Icon(
+              Icons.person_outline,
+              color: AppColors.neutral[500],
+            ),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(color: AppColors.neutral[200]!),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(color: AppColors.neutral[200]!),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(
+                color: AppColors.primary[500]!,
+                width: 1.5,
+              ),
+            ),
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 16,
+              vertical: 16,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildNotesField() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          context.l10n.notes,
+          style: TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.w600,
+            color: AppColors.neutral[700],
+            letterSpacing: 0.15,
+          ),
+        ),
+        const SizedBox(height: 8),
+        TextFormField(
+          controller: _notesController,
+          maxLines: 3,
+          decoration: InputDecoration(
+            hintText: context.l10n.additionalNotesOrObservations,
+            hintStyle: TextStyle(color: AppColors.neutral[400], fontSize: 15),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(color: AppColors.neutral[200]!),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(color: AppColors.neutral[200]!),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(
+                color: AppColors.primary[500]!,
+                width: 1.5,
+              ),
+            ),
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 16,
+              vertical: 16,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildSaveButton() {
+    return BlocBuilder<VehicleCubit, VehicleState>(
+      builder: (context, state) {
+        final isLoading = state is VehicleLoading;
+        return Container(
+          width: double.infinity,
+          decoration: BoxDecoration(
+            color: AppColors.primary[500]!,
+            borderRadius: BorderRadius.circular(12),
+            boxShadow: [
+              BoxShadow(
+                color: AppColors.primary.withOpacity(0.2),
+                blurRadius: 12,
+                offset: const Offset(0, 4),
+              ),
+            ],
+          ),
+          child: ElevatedButton(
+            onPressed: isLoading ? null : _updateService,
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.transparent,
+              foregroundColor: Colors.white,
+              disabledBackgroundColor: Colors.transparent,
+              shadowColor: Colors.transparent,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+              elevation: 0,
+              padding: const EdgeInsets.symmetric(vertical: 16),
+            ),
+            child:
+                isLoading
+                    ? const SizedBox(
+                      height: 24,
+                      width: 24,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2.5,
+                        valueColor: AlwaysStoppedAnimation(Colors.white),
+                      ),
+                    )
+                    : Text(
+                      context.l10n.updateServiceRecord,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        letterSpacing: 0.3,
+                      ),
+                    ),
+          ),
+        );
+      },
+    );
+  }
+
+  void _updateService() {
+    print('📱 [EditServiceScreen] _updateService called');
+    print(
+      '📱 [EditServiceScreen]   Form validation: ${_formKey.currentState!.validate()}',
+    );
+    print('📱 [EditServiceScreen]   _vehicleId: $_vehicleId');
+    print('📱 [EditServiceScreen]   _serviceId: $_serviceId');
+    print(
+      '📱 [EditServiceScreen]   _selectedServiceType: $_selectedServiceType',
+    );
+    print('📱 [EditServiceScreen]   _serviceDate: $_serviceDate');
+    print('📱 [EditServiceScreen]   _existingService: $_existingService');
+
+    if (_formKey.currentState!.validate() &&
+        _vehicleId != null &&
+        _serviceId != null &&
+        _selectedServiceType != null &&
+        _serviceDate != null &&
+        _existingService != null) {
+      print(
+        '📱 [EditServiceScreen] ✅ All validations passed, updating service record',
+      );
+
+      final updatedService = ServiceRecord(
+        id: _serviceId!,
+        vehicleId: _vehicleId!,
+        serviceType: _selectedServiceType!,
+        serviceDate: _serviceDate!,
+        description:
+            _descriptionController.text.trim().isEmpty
+                ? null
+                : _descriptionController.text.trim(),
+        cost:
+            _costController.text.trim().isEmpty
+                ? null
+                : double.tryParse(_costController.text.trim()),
+        mechanic:
+            _mechanicController.text.trim().isEmpty
+                ? null
+                : _mechanicController.text.trim(),
+        notes:
+            _notesController.text.trim().isEmpty
+                ? null
+                : _notesController.text.trim(),
+        createdAt: _existingService!.createdAt,
+        updatedAt: DateTime.now(),
+      );
+
+      print(
+        '📱 [EditServiceScreen]   Service record updated with vehicleId: ${_vehicleId}',
+      );
+      print(
+        '📱 [EditServiceScreen]   Calling updateServiceRecord on VehicleCubit',
+      );
+      context.read<VehicleCubit>().updateServiceRecord(updatedService);
+      print('📱 [EditServiceScreen]   Navigating back');
+      context.pop();
+    } else {
+      print('📱 [EditServiceScreen] ❌ Validation failed');
+      print(
+        '📱 [EditServiceScreen]   Form valid: ${_formKey.currentState!.validate()}',
+      );
+      print(
+        '📱 [EditServiceScreen]   _vehicleId != null: ${_vehicleId != null}',
+      );
+      print(
+        '📱 [EditServiceScreen]   _serviceId != null: ${_serviceId != null}',
+      );
+      print(
+        '📱 [EditServiceScreen]   _selectedServiceType != null: ${_selectedServiceType != null}',
+      );
+      print(
+        '📱 [EditServiceScreen]   _serviceDate != null: ${_serviceDate != null}',
+      );
+      print(
+        '📱 [EditServiceScreen]   _existingService != null: ${_existingService != null}',
+      );
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Row(
+            children: [
+              Icon(Icons.error_outline, color: Colors.white, size: 20),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Text(
+                  context.l10n.pleaseFillInAllRequiredFields,
+                  style: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w500,
+                    letterSpacing: 0.2,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          backgroundColor: AppColors.tertiary[600],
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+          margin: const EdgeInsets.all(16),
+        ),
+      );
+    }
+  }
+}

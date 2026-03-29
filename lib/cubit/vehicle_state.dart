@@ -22,6 +22,8 @@ class VehicleLoaded extends VehicleState {
   final double? totalCost;
   final int? serviceCount;
   final String? filterType;
+  final int? selectedVehicleId;
+  final int? odometer;
 
   const VehicleLoaded({
     required this.vehicles,
@@ -29,6 +31,8 @@ class VehicleLoaded extends VehicleState {
     this.totalCost,
     this.serviceCount,
     this.filterType,
+    this.selectedVehicleId,
+    this.odometer,
   });
 
   VehicleLoaded copyWith({
@@ -37,6 +41,8 @@ class VehicleLoaded extends VehicleState {
     double? totalCost,
     int? serviceCount,
     String? filterType,
+    int? selectedVehicleId,
+    int? odometer,
   }) {
     return VehicleLoaded(
       vehicles: vehicles ?? this.vehicles,
@@ -44,6 +50,8 @@ class VehicleLoaded extends VehicleState {
       totalCost: totalCost ?? this.totalCost,
       serviceCount: serviceCount ?? this.serviceCount,
       filterType: filterType ?? this.filterType,
+      selectedVehicleId: selectedVehicleId ?? this.selectedVehicleId,
+      odometer: odometer ?? this.odometer,
     );
   }
 
@@ -54,6 +62,8 @@ class VehicleLoaded extends VehicleState {
     totalCost,
     serviceCount,
     filterType,
+    selectedVehicleId,
+    odometer,
   ];
 }
 

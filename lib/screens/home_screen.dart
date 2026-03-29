@@ -1,13 +1,13 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
-import 'package:intl/intl.dart';
+import 'package:otolog/l10n/app_localizations.dart';
+import 'package:otolog/shared/localization/l10n_helper.dart';
 import '../cubit/vehicle_cubit.dart';
 import '../cubit/vehicle_state.dart';
-import '../resources/theme.dart';
+import '../resources/colors.dart';
 import '../router.dart';
-import '../database/database.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -17,659 +17,879 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  IconData _getVehicleTypeIcon(String? type) {
-    if (type == null) return Icons.directions_car;
-
-    switch (type.toLowerCase()) {
-      case 'car':
-        return Icons.directions_car;
-      case 'motorcycle':
-        return Icons.two_wheeler;
-      case 'truck':
-        return Icons.local_shipping;
-      case 'van':
-        return Icons.airport_shuttle;
-      case 'bus':
-        return Icons.directions_bus;
-      case 'suv':
-        return Icons.sports_score;
-      case 'sedan':
-        return Icons.directions_car_filled;
-      case 'hatchback':
-        return Icons.car_repair;
-      case 'coupe':
-        return Icons.car_rental;
-      case 'convertible':
-        return Icons.directions_car_rounded;
-      case 'wagon':
-        return Icons.airport_shuttle;
-      default:
-        return Icons.directions_car;
-    }
-  }
-
   @override
   void initState() {
     super.initState();
     context.read<VehicleCubit>().loadHomeData();
   }
 
-  String _getGreeting() {
-    final hour = DateTime.now().hour;
-    if (hour >= 5 && hour < 12) {
-      return 'Good Morning';
-    } else if (hour >= 12 && hour < 17) {
-      return 'Good Afternoon';
-    } else if (hour >= 17 && hour < 21) {
-      return 'Good Evening';
-    } else {
-      return 'Good Night';
-    }
-  }
-
-  String _formatCurrency(double amount) {
-    return NumberFormat.currency(symbol: '\$', decimalDigits: 0).format(amount);
-  }
-
-  String _formatDate(DateTime date) {
-    return DateFormat('MMM dd, yyyy').format(date);
-  }
-
-  Vehicle? _getVehicleById(List<Vehicle> vehicles, int vehicleId) {
-    try {
-      return vehicles.firstWhere((v) => v.id == vehicleId);
-    } catch (e) {
-      return null;
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: AppColors.neutral[50],
       body: SafeArea(
-        child: RefreshIndicator(
-          onRefresh: () async {
-            context.read<VehicleCubit>().loadHomeData();
+        child: BlocBuilder<VehicleCubit, VehicleState>(
+          builder: (context, state) {
+            if (state is VehicleLoading) {
+              return const Center(
+                child: CircularProgressIndicator(
+                  valueColor: AlwaysStoppedAnimation(AppColors.primary),
+                ),
+              );
+            }
+
+            if (state is VehicleError) {
+              return _buildErrorState(state.message);
+            }
+
+            if (state is VehicleLoaded) {
+              return _buildContent(state);
+            }
+
+            return const SizedBox.shrink();
           },
-          color: AppColors.accent,
-          backgroundColor: AppColors.surface,
-          child: SingleChildScrollView(
-            physics: const AlwaysScrollableScrollPhysics(),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _buildHeader(),
-                _buildStatsSection(),
-                _buildRecentServicesSection(),
-                SizedBox(height: 20.h),
-              ],
-            ),
-          ),
         ),
       ),
     );
   }
 
-  Widget _buildHeader() {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
-      child: Text(
-        _getGreeting(),
-        style: TextStyle(
-          fontSize: 22.sp,
-          fontWeight: FontWeight.bold,
-          color: AppColors.primaryText,
+  Widget _buildErrorState(String message) {
+    final l10n = context.l10n;
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(24.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: AppColors.primary.withOpacity(0.1),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                Icons.error_outline,
+                size: 48,
+                color: AppColors.primary,
+              ),
+            ),
+            const SizedBox(height: 16),
+            Text(
+              l10n.error,
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.w600,
+                color: AppColors.neutral[900],
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              message,
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 14, color: AppColors.neutral[600]),
+            ),
+            const SizedBox(height: 24),
+            ElevatedButton(
+              onPressed: () {
+                context.read<VehicleCubit>().loadHomeData();
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.primary,
+                foregroundColor: Colors.white,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 32,
+                  vertical: 16,
+                ),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(6),
+                ),
+              ),
+              child: Text(l10n.retry),
+            ),
+          ],
         ),
       ),
     );
   }
 
-  Widget _buildStatsSection() {
-    return BlocBuilder<VehicleCubit, VehicleState>(
-      builder: (context, state) {
-        if (state is VehicleLoaded) {
-          final vehicleCount = state.vehicles.length;
-          final serviceCount = state.serviceCount ?? 0;
-          final totalCost = state.totalCost ?? 0;
-
-          // Show first-time CTA if no vehicles
-          if (vehicleCount == 0) {
-            return _buildFirstTimeCTA();
-          }
-
-          return Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 20.h),
-            child: Column(
-              children: [
-                // Top Row: Last Service and Vehicle Count
-                Row(
-                  children: [
-                    Expanded(flex: 2, child: _buildOverviewCard(state)),
-                    SizedBox(width: 12.w),
-                    Expanded(
-                      flex: 1,
-                      child: _buildStatCard(
-                        icon: Icons.directions_car,
-                        label: 'Vehicles',
-                        value: vehicleCount.toString(),
-                        color: AppColors.accent,
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 12.h),
-                // Bottom Row: Service Count and Total Cost
-                Row(
-                  children: [
-                    Expanded(
-                      flex: 1,
-                      child: _buildStatCard(
-                        icon: Icons.build,
-                        label: 'Services',
-                        value: serviceCount.toString(),
-                        color: AppColors.warning,
-                      ),
-                    ),
-                    SizedBox(width: 12.w),
-                    Expanded(
-                      flex: 2,
-                      child: _buildStatCard(
-                        icon: Icons.attach_money,
-                        label: 'Total Cost',
-                        value: _formatCurrency(totalCost),
-                        color: AppColors.success,
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          );
-        }
-        return const SizedBox.shrink();
+  Widget _buildContent(VehicleLoaded state) {
+    return RefreshIndicator(
+      onRefresh: () async {
+        await context.read<VehicleCubit>().loadHomeData(
+          selectedVehicleId: state.selectedVehicleId,
+        );
       },
+      color: AppColors.primary,
+      child: CustomScrollView(
+        slivers: [
+          // Header Section
+          SliverToBoxAdapter(child: _buildHeader(state)),
+
+          // Vehicle Switcher Section
+          SliverToBoxAdapter(child: _buildVehicleSwitcher(state)),
+
+          // Statistics Section
+          SliverToBoxAdapter(child: _buildStatistics(state)),
+
+          // Quick Actions
+          SliverToBoxAdapter(child: _buildQuickActions(state)),
+
+          // Recent Services Section
+          SliverToBoxAdapter(child: _buildRecentServices(state)),
+
+          // Bottom spacing
+          const SliverToBoxAdapter(child: SizedBox(height: 100)),
+        ],
+      ),
     );
   }
 
-  Widget _buildStatCard({
-    required IconData icon,
-    required String label,
-    required String value,
-    required Color color,
-  }) {
+  Widget _buildHeader(VehicleLoaded state) {
+    final l10n = context.l10n;
     return Container(
-      padding: EdgeInsets.all(16.w),
-      height: 120.h,
-      decoration: BoxDecoration(
-        color: AppColors.surface,
-        borderRadius: BorderRadius.circular(16.r),
-        border: Border.all(color: AppColors.border),
-      ),
+      padding: const EdgeInsets.fromLTRB(24, 24, 24, 16),
+      color: AppColors.neutral[50],
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
-            padding: EdgeInsets.all(8.w),
-            decoration: BoxDecoration(
-              color: color.withOpacity(0.15),
-              borderRadius: BorderRadius.circular(8.r),
-            ),
-            child: Icon(icon, color: color, size: 20.sp),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      l10n.welcomeBack,
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400,
+                        color: AppColors.neutral[600],
+                        letterSpacing: 0.5,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      l10n.yourGarage,
+                      style: TextStyle(
+                        fontSize: 32,
+                        fontWeight: FontWeight.w700,
+                        color: AppColors.neutral[900],
+                        letterSpacing: -0.5,
+                        height: 1.2,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 6,
+                ),
+                decoration: BoxDecoration(
+                  color: AppColors.primary.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(
+                    color: AppColors.primary.withOpacity(0.3),
+                    width: 1,
+                  ),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      Icons.directions_car,
+                      size: 16,
+                      color: AppColors.primary,
+                    ),
+                    const SizedBox(width: 6),
+                    Text(
+                      '${state.vehicles.length}',
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                        color: AppColors.primary,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
-          SizedBox(height: 12.h),
+          const SizedBox(height: 8),
           Text(
-            value,
+            l10n.trackVehicleMaintenance,
             style: TextStyle(
-              fontSize: 20.sp,
-              fontWeight: FontWeight.bold,
-              color: AppColors.primaryText,
+              fontSize: 14,
+              color: AppColors.neutral[600],
+              height: 1.5,
             ),
-          ),
-          SizedBox(height: 4.h),
-          Text(
-            label,
-            style: TextStyle(fontSize: 12.sp, color: AppColors.secondaryText),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildFirstTimeCTA() {
+  Widget _buildVehicleSwitcher(VehicleLoaded state) {
+    if (state.vehicles.isEmpty) {
+      return const SizedBox.shrink();
+    }
+
+    final selectedVehicle =
+        state.selectedVehicleId != null
+            ? state.vehicles.firstWhere(
+              (v) => v.id == state.selectedVehicleId,
+              orElse: () => state.vehicles.first,
+            )
+            : state.vehicles.first;
+
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
-      padding: EdgeInsets.all(16.w),
+      margin: const EdgeInsets.fromLTRB(24, 16, 24, 0),
+      child: InkWell(
+        onTap: () {
+          if (state.vehicles.length > 1) {
+            _showVehicleSelector(state);
+          }
+        },
+        borderRadius: BorderRadius.circular(12),
+        child: Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(12),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.03),
+                blurRadius: 10,
+                offset: const Offset(0, 2),
+              ),
+            ],
+          ),
+          child: Row(
+            children: [
+              Container(
+                width: 48,
+                height: 48,
+                decoration: BoxDecoration(
+                  color: AppColors.primary.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child:
+                    selectedVehicle.imagePath != null &&
+                            selectedVehicle.imagePath!.isNotEmpty
+                        ? ClipRRect(
+                          borderRadius: BorderRadius.circular(10),
+                          child: Image.file(
+                            File(selectedVehicle.imagePath!),
+                            width: 48,
+                            height: 48,
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) {
+                              return _getVehicleTypeIcon(selectedVehicle.type);
+                            },
+                          ),
+                        )
+                        : _getVehicleTypeIcon(selectedVehicle.type),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      selectedVehicle.name,
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        color: AppColors.neutral[900],
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      '${selectedVehicle.brand ?? ''} ${selectedVehicle.model ?? ''}'
+                          .trim(),
+                      style: TextStyle(
+                        fontSize: 13,
+                        color: AppColors.neutral[600],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              if (state.vehicles.length > 1)
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 6,
+                  ),
+                  decoration: BoxDecoration(
+                    color: AppColors.primary.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(6),
+                    border: Border.all(
+                      color: AppColors.primary.withOpacity(0.3),
+                      width: 1,
+                    ),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        Icons.swap_horiz_rounded,
+                        size: 14,
+                        color: AppColors.primary,
+                      ),
+                      const SizedBox(width: 4),
+                      Text(
+                        context.l10n.switchVehicle,
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w600,
+                          color: AppColors.primary,
+                          letterSpacing: 0.3,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _showVehicleSelector(VehicleLoaded state) {
+    final l10n = context.l10n;
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+      builder:
+          (context) => Container(
+            decoration: const BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+            ),
+            child: SafeArea(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      border: Border(
+                        bottom: BorderSide(
+                          color: AppColors.neutral[200]!,
+                          width: 1,
+                        ),
+                      ),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          l10n.selectVehicle,
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                            color: AppColors.neutral[900],
+                          ),
+                        ),
+                        GestureDetector(
+                          onTap: () => Navigator.pop(context),
+                          child: Icon(
+                            Icons.close_rounded,
+                            color: AppColors.neutral[500],
+                            size: 20,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Flexible(
+                    child: ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: state.vehicles.length,
+                      itemBuilder: (context, index) {
+                        final vehicle = state.vehicles[index];
+                        final isSelected =
+                            vehicle.id == state.selectedVehicleId;
+                        return InkWell(
+                          onTap: () {
+                            context.read<VehicleCubit>().selectVehicle(
+                              vehicle.id,
+                            );
+                            Navigator.pop(context);
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 16,
+                              vertical: 16,
+                            ),
+                            decoration: BoxDecoration(
+                              color:
+                                  isSelected
+                                      ? AppColors.primary.withOpacity(0.1)
+                                      : Colors.transparent,
+                            ),
+                            child: Row(
+                              children: [
+                                Container(
+                                  width: 40,
+                                  height: 40,
+                                  decoration: BoxDecoration(
+                                    color: AppColors.primary.withOpacity(0.1),
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  child:
+                                      vehicle.imagePath != null &&
+                                              vehicle.imagePath!.isNotEmpty
+                                          ? ClipRRect(
+                                            borderRadius: BorderRadius.circular(
+                                              8,
+                                            ),
+                                            child: Image.file(
+                                              File(vehicle.imagePath!),
+                                              width: 40,
+                                              height: 40,
+                                              fit: BoxFit.cover,
+                                              errorBuilder: (
+                                                context,
+                                                error,
+                                                stackTrace,
+                                              ) {
+                                                return _getVehicleTypeIcon(
+                                                  vehicle.type,
+                                                );
+                                              },
+                                            ),
+                                          )
+                                          : _getVehicleTypeIcon(vehicle.type),
+                                ),
+                                const SizedBox(width: 12),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        vehicle.name,
+                                        style: TextStyle(
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.w600,
+                                          color:
+                                              isSelected
+                                                  ? AppColors.primary
+                                                  : AppColors.neutral[900],
+                                        ),
+                                      ),
+                                      const SizedBox(height: 2),
+                                      Text(
+                                        '${vehicle.brand ?? ''} ${vehicle.model ?? ''}'
+                                            .trim(),
+                                        style: TextStyle(
+                                          fontSize: 13,
+                                          color: AppColors.neutral[600],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                if (isSelected)
+                                  Icon(
+                                    Icons.check_rounded,
+                                    color: AppColors.primary,
+                                    size: 18,
+                                  ),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+    );
+  }
+
+  Widget _buildStatistics(VehicleLoaded state) {
+    final l10n = context.l10n;
+    final odometerValue = state.odometer ?? 0;
+    final formattedOdometer = _formatOdometer(odometerValue);
+    return Container(
+      margin: const EdgeInsets.fromLTRB(24, 16, 24, 0),
+      padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: AppColors.surface,
-        borderRadius: BorderRadius.circular(16.r),
-        border: Border.all(color: AppColors.accent.withOpacity(0.3), width: 1),
+        color: AppColors.primary,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.primary.withOpacity(0.3),
+            blurRadius: 20,
+            offset: const Offset(0, 8),
+          ),
+        ],
       ),
       child: Row(
         children: [
-          // Compact Icon
-          Container(
-            width: 48.w,
-            height: 48.h,
-            decoration: BoxDecoration(
-              color: AppColors.accent.withOpacity(0.15),
-              borderRadius: BorderRadius.circular(12.r),
-            ),
-            child: Icon(
-              Icons.directions_car_rounded,
-              size: 24.sp,
-              color: AppColors.accent,
+          Expanded(
+            child: _buildStatItem(
+              l10n.lastOdometer,
+              formattedOdometer,
+              Icons.speed_outlined,
             ),
           ),
-          SizedBox(width: 12.w),
-          // Content
+          Container(width: 1, height: 40, color: Colors.white.withOpacity(0.2)),
+          Expanded(
+            child: _buildStatItem(
+              l10n.totalServices,
+              '${state.serviceCount ?? 0}',
+              Icons.build_outlined,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildStatItem(String label, String value, IconData icon) {
+    return Column(
+      children: [
+        Icon(icon, size: 24, color: Colors.white.withOpacity(0.9)),
+        const SizedBox(height: 8),
+        Text(
+          value,
+          style: const TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.w700,
+            color: Colors.white,
+            letterSpacing: -0.5,
+          ),
+        ),
+        const SizedBox(height: 4),
+        Text(
+          label,
+          style: TextStyle(
+            fontSize: 11,
+            fontWeight: FontWeight.w500,
+            color: Colors.white.withOpacity(0.8),
+            letterSpacing: 0.3,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildQuickActions(VehicleLoaded state) {
+    final l10n = context.l10n;
+    return Container(
+      margin: const EdgeInsets.fromLTRB(24, 24, 24, 0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            l10n.quickActions,
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.w600,
+              color: AppColors.neutral[900],
+              letterSpacing: -0.3,
+            ),
+          ),
+          const SizedBox(height: 16),
+          IntrinsicHeight(
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Expanded(
+                  child: _buildActionButton(
+                    l10n.addVehicle,
+                    Icons.add_circle_outline,
+                    AppColors.primary,
+                    () => context.push(AppRoutes.addVehicle),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: _buildActionButton(
+                    l10n.addService,
+                    Icons.construction,
+                    AppColors.tertiary,
+                    () => context.push(AppRoutes.addService),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildActionButton(
+    String label,
+    IconData icon,
+    Color color,
+    VoidCallback onTap,
+  ) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: color.withOpacity(0.1),
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Column(
+          children: [
+            Icon(icon, size: 28, color: color),
+            const SizedBox(height: 8),
+            Text(
+              label,
+              style: TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.w600,
+                color: color,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildRecentServices(VehicleLoaded state) {
+    final l10n = context.l10n;
+    final recentServices = state.serviceRecords ?? [];
+
+    if (recentServices.isEmpty) {
+      return const SizedBox.shrink();
+    }
+
+    return Container(
+      margin: const EdgeInsets.fromLTRB(24, 24, 24, 0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                l10n.recentServices,
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                  color: AppColors.neutral[900],
+                  letterSpacing: -0.3,
+                ),
+              ),
+              GestureDetector(
+                onTap: () => context.push(AppRoutes.serviceLogs),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      l10n.seeAll,
+                      style: TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w500,
+                        color: AppColors.primary,
+                      ),
+                    ),
+                    const SizedBox(width: 4),
+                    Icon(
+                      Icons.arrow_forward_ios_rounded,
+                      size: 12,
+                      color: AppColors.primary,
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          ...recentServices
+              .take(3)
+              .map((service) => _buildServiceCard(service)),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildServiceCard(dynamic service) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 12),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.04),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          Container(
+            width: 48,
+            height: 48,
+            decoration: BoxDecoration(
+              color: AppColors.primary.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Icon(
+              _getServiceIcon(service.serviceType),
+              size: 24,
+              color: AppColors.primary,
+            ),
+          ),
+          const SizedBox(width: 14),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Welcome to OtoLog!',
+                  service.serviceType,
                   style: TextStyle(
-                    fontSize: 14.sp,
-                    fontWeight: FontWeight.bold,
-                    color: AppColors.primaryText,
+                    fontSize: 15,
+                    fontWeight: FontWeight.w600,
+                    color: AppColors.neutral[900],
                   ),
                 ),
-                SizedBox(height: 2.h),
-                Text(
-                  'Add your first vehicle to start tracking',
-                  style: TextStyle(
-                    fontSize: 12.sp,
-                    color: AppColors.secondaryText,
+                const SizedBox(height: 4),
+                if (service.description != null &&
+                    service.description!.isNotEmpty)
+                  Text(
+                    service.description!,
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: AppColors.neutral[600],
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
-                ),
               ],
             ),
           ),
-          // CTA Button
-          ElevatedButton(
-            onPressed: () {
-              context.push(AppRoutes.addVehicle);
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.accent,
-              foregroundColor: AppColors.background,
-              padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 8.h),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8.r),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Text(
+                '\$${service.cost?.toStringAsFixed(0) ?? '0'}',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w700,
+                  color: AppColors.neutral[900],
+                ),
               ),
-              elevation: 0,
-            ),
-            child: Text(
-              'Add',
-              style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w600),
-            ),
+              const SizedBox(height: 4),
+              Text(
+                _formatDate(service.serviceDate),
+                style: TextStyle(fontSize: 11, color: AppColors.neutral[500]),
+              ),
+            ],
           ),
         ],
       ),
     );
   }
 
-  Widget _buildOverviewCard(VehicleLoaded state) {
-    // Get the latest service
-    ServiceRecord? latestService;
-    Vehicle? latestVehicle;
+  String _formatDate(DateTime date) {
+    final l10n = context.l10n;
+    final now = DateTime.now();
+    final difference = now.difference(date);
 
-    if (state.serviceRecords != null && state.serviceRecords!.isNotEmpty) {
-      // Find the service with the most recent date
-      latestService = state.serviceRecords!.reduce(
-        (a, b) => a.serviceDate.isAfter(b.serviceDate) ? a : b,
-      );
-      latestVehicle = _getVehicleById(state.vehicles, latestService.vehicleId);
+    if (difference.inDays == 0) {
+      return l10n.today;
+    } else if (difference.inDays == 1) {
+      return l10n.yesterday;
+    } else if (difference.inDays < 7) {
+      return l10n.daysAgo(difference.inDays);
+    } else {
+      return '${date.day}/${date.month}/${date.year}';
+    }
+  }
+
+  String _formatOdometer(int odometer) {
+    final l10n = context.l10n;
+    if (odometer == 0) {
+      return '0 ${l10n.km}';
+    }
+    // Format odometer value with comma separators (e.g., 50,000 km)
+    final valueStr = odometer.toString();
+    final buffer = StringBuffer();
+    for (int i = 0; i < valueStr.length; i++) {
+      final char = valueStr[valueStr.length - 1 - i];
+      buffer.write(char);
+      if ((i + 1) % 3 == 0 && i != valueStr.length - 1) {
+        buffer.write(',');
+      }
+    }
+    return '${buffer.toString().split('').reversed.join()} ${l10n.km}';
+  }
+
+  Widget _getVehicleTypeIcon(String? type) {
+    IconData iconData;
+    switch (type?.toLowerCase()) {
+      case 'sedan':
+        iconData = Icons.directions_car;
+        break;
+      case 'suv':
+        iconData = Icons.directions_car;
+        break;
+      case 'truck':
+        iconData = Icons.local_shipping;
+        break;
+      case 'motorcycle':
+        iconData = Icons.two_wheeler;
+        break;
+      case 'van':
+        iconData = Icons.airport_shuttle;
+        break;
+      default:
+        iconData = Icons.directions_car;
     }
 
-    return Container(
-      width: double.infinity,
-      constraints: BoxConstraints(minHeight: 120.h),
-      padding: EdgeInsets.all(16.w),
-      decoration: BoxDecoration(
-        color: AppColors.surface,
-        borderRadius: BorderRadius.circular(16.r),
-        border: Border.all(color: AppColors.border),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Latest Service',
-            style: TextStyle(
-              fontSize: 14.sp,
-              color: AppColors.secondaryText,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-          SizedBox(height: 12.h),
-          if (latestService != null && latestVehicle != null)
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  _formatDate(latestService.serviceDate),
-                  style: TextStyle(
-                    fontSize: 22.sp,
-                    fontWeight: FontWeight.bold,
-                    color: AppColors.primaryText,
-                  ),
-                ),
-                SizedBox(height: 8.h),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        Icon(
-                          _getVehicleTypeIcon(latestVehicle.type),
-                          size: 14.sp,
-                          color: AppColors.accent,
-                        ),
-                        SizedBox(width: 6.w),
-                        Expanded(
-                          child: Text(
-                            latestVehicle.name,
-                            style: TextStyle(
-                              fontSize: 14.sp,
-                              color: AppColors.primaryText,
-                              fontWeight: FontWeight.w500,
-                            ),
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 1,
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 6.h),
-                    if (latestVehicle.type != null)
-                      Container(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 8.w,
-                          vertical: 4.h,
-                        ),
-                        decoration: BoxDecoration(
-                          color: AppColors.accent.withOpacity(0.1),
-                          borderRadius: BorderRadius.circular(6.r),
-                        ),
-                        child: Text(
-                          latestVehicle.type!,
-                          style: TextStyle(
-                            fontSize: 12.sp,
-                            fontWeight: FontWeight.w500,
-                            color: AppColors.accent,
-                          ),
-                        ),
-                      ),
-                  ],
-                ),
-              ],
-            )
-          else
-            Text(
-              'No services recorded yet',
-              style: TextStyle(fontSize: 14.sp, color: AppColors.secondaryText),
-            ),
-        ],
-      ),
-    );
+    return Icon(iconData, size: 24, color: AppColors.primary);
   }
 
-  Widget _buildRecentServicesSection() {
-    return BlocBuilder<VehicleCubit, VehicleState>(
-      builder: (context, state) {
-        if (state is VehicleLoaded) {
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20.w),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'Recent Services',
-                      style: TextStyle(
-                        fontSize: 18.sp,
-                        fontWeight: FontWeight.bold,
-                        color: AppColors.primaryText,
-                      ),
-                    ),
-                    if (state.serviceRecords != null &&
-                        state.serviceRecords!.isNotEmpty)
-                      TextButton(
-                        onPressed: () {
-                          context.push(AppRoutes.analytics);
-                        },
-                        child: Text(
-                          'View All',
-                          style: TextStyle(
-                            fontSize: 14.sp,
-                            color: AppColors.accent,
-                          ),
-                        ),
-                      ),
-                  ],
-                ),
-              ),
-              SizedBox(height: 12.h),
-              if (state.serviceRecords != null &&
-                  state.serviceRecords!.isNotEmpty)
-                SizedBox(
-                  height: 140.h,
-                  child: ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    padding: EdgeInsets.symmetric(horizontal: 20.w),
-                    itemCount: state.serviceRecords!.length,
-                    itemBuilder: (context, index) {
-                      final service = state.serviceRecords![index];
-                      final vehicle = _getVehicleById(
-                        state.vehicles,
-                        service.vehicleId,
-                      );
-                      return _buildRecentServiceCard(service, vehicle);
-                    },
-                  ),
-                )
-              else
-                _buildEmptyServicesState(state),
-              SizedBox(height: 24.h),
-            ],
-          );
-        }
-        return const SizedBox.shrink();
-      },
-    );
-  }
+  IconData _getServiceIcon(String serviceType) {
+    final type = serviceType.toLowerCase();
 
-  Widget _buildEmptyServicesState(VehicleLoaded state) {
-    return Container(
-      margin: EdgeInsets.symmetric(horizontal: 20.w),
-      padding: EdgeInsets.symmetric(vertical: 32.h, horizontal: 20.w),
-      decoration: BoxDecoration(
-        color: AppColors.surface,
-        borderRadius: BorderRadius.circular(16.r),
-        border: Border.all(color: AppColors.border),
-      ),
-      child: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              width: 56.w,
-              height: 56.h,
-              decoration: BoxDecoration(
-                color: AppColors.accent.withOpacity(0.15),
-                shape: BoxShape.circle,
-              ),
-              child: Icon(
-                Icons.build_circle_outlined,
-                size: 28.sp,
-                color: AppColors.accent,
-              ),
-            ),
-            SizedBox(height: 12.h),
-            Text(
-              'Ready to Track?',
-              style: TextStyle(
-                fontSize: 16.sp,
-                fontWeight: FontWeight.bold,
-                color: AppColors.primaryText,
-              ),
-            ),
-            SizedBox(height: 6.h),
-            Text(
-              'Add your first service record',
-              style: TextStyle(fontSize: 13.sp, color: AppColors.secondaryText),
-            ),
-            SizedBox(height: 16.h),
-            if (state.vehicles.isNotEmpty)
-              ElevatedButton.icon(
-                onPressed: () {
-                  context.push(
-                    AppRoutes.vehicleDetail.replaceAll(
-                      ':vehicleId',
-                      state.vehicles.first.id.toString(),
-                    ),
-                  );
-                },
-                icon: Icon(Icons.add, size: 16.sp),
-                label: Text(
-                  'Add Service',
-                  style: TextStyle(
-                    fontSize: 13.sp,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.accent,
-                  foregroundColor: AppColors.background,
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 16.w,
-                    vertical: 10.h,
-                  ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10.r),
-                  ),
-                  elevation: 0,
-                ),
-              ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildRecentServiceCard(ServiceRecord service, Vehicle? vehicle) {
-    return InkWell(
-      onTap: () {
-        context.push(
-          AppRoutes.serviceDetail
-              .replaceAll(':vehicleId', service.vehicleId.toString())
-              .replaceAll(':serviceId', service.id.toString()),
-        );
-      },
-      borderRadius: BorderRadius.circular(16.r),
-      child: Container(
-        width: 280.w,
-        margin: EdgeInsets.only(right: 12.w),
-        padding: EdgeInsets.all(16.w),
-        decoration: BoxDecoration(
-          color: AppColors.surface,
-          borderRadius: BorderRadius.circular(16.r),
-          border: Border.all(color: AppColors.border),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Container(
-                  padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
-                  decoration: BoxDecoration(
-                    color: AppColors.accent.withOpacity(0.15),
-                    borderRadius: BorderRadius.circular(6.r),
-                  ),
-                  child: Text(
-                    service.serviceType,
-                    style: TextStyle(
-                      fontSize: 11.sp,
-                      fontWeight: FontWeight.w600,
-                      color: AppColors.accent,
-                    ),
-                  ),
-                ),
-                if (service.cost != null)
-                  Text(
-                    _formatCurrency(service.cost!),
-                    style: TextStyle(
-                      fontSize: 14.sp,
-                      fontWeight: FontWeight.bold,
-                      color: AppColors.success,
-                    ),
-                  ),
-              ],
-            ),
-            SizedBox(height: 12.h),
-            if (vehicle != null)
-              Row(
-                children: [
-                  Icon(
-                    _getVehicleTypeIcon(vehicle.type),
-                    size: 14.sp,
-                    color: AppColors.secondaryText,
-                  ),
-                  SizedBox(width: 4.w),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          vehicle.name,
-                          style: TextStyle(
-                            fontSize: 13.sp,
-                            color: AppColors.primaryText,
-                            fontWeight: FontWeight.w500,
-                          ),
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 1,
-                        ),
-                        if (vehicle.type != null)
-                          Text(
-                            vehicle.type!,
-                            style: TextStyle(
-                              fontSize: 11.sp,
-                              color: AppColors.secondaryText,
-                            ),
-                          ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            SizedBox(height: 8.h),
-            Row(
-              children: [
-                Icon(
-                  Icons.calendar_today,
-                  size: 14.sp,
-                  color: AppColors.secondaryText,
-                ),
-                SizedBox(width: 4.w),
-                Text(
-                  _formatDate(service.serviceDate),
-                  style: TextStyle(
-                    fontSize: 12.sp,
-                    color: AppColors.secondaryText,
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
+    if (type.contains('oil') || type.contains('change')) {
+      return Icons.oil_barrel;
+    } else if (type.contains('tire') || type.contains('wheel')) {
+      return Icons.settings;
+    } else if (type.contains('brake')) {
+      return Icons.disc_full;
+    } else if (type.contains('battery') || type.contains('electrical')) {
+      return Icons.battery_charging_full;
+    } else if (type.contains('air') ||
+        type.contains('filter') ||
+        type.contains('ac')) {
+      return Icons.air;
+    } else if (type.contains('engine') || type.contains('motor')) {
+      return Icons.engineering;
+    } else if (type.contains('transmission') || type.contains('gear')) {
+      return Icons.settings_suggest;
+    } else if (type.contains('suspension') || type.contains('shock')) {
+      return Icons.car_repair;
+    } else if (type.contains('inspection') || type.contains('check')) {
+      return Icons.fact_check;
+    } else if (type.contains('wash') || type.contains('clean')) {
+      return Icons.cleaning_services;
+    } else if (type.contains('paint') || type.contains('body')) {
+      return Icons.format_paint;
+    } else {
+      return Icons.build;
+    }
   }
 }

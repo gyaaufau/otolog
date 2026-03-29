@@ -23,7 +23,7 @@ class MainShell extends StatelessWidget {
       body: navigationShell,
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
-          color: AppColors.surface,
+          color: Theme.of(context).colorScheme.surface,
           boxShadow: [
             BoxShadow(
               color: Colors.black.withOpacity(0.1),
@@ -50,17 +50,25 @@ class MainShell extends StatelessWidget {
                   context: context,
                   icon: Icons.directions_car_outlined,
                   activeIcon: Icons.directions_car,
-                  label: 'Vehicles',
+                  label: 'Garage',
                   index: 1,
                   isActive: navigationShell.currentIndex == 1,
                 ),
                 _buildNavItem(
                   context: context,
-                  icon: Icons.bar_chart_outlined,
-                  activeIcon: Icons.bar_chart,
-                  label: 'Analytics',
+                  icon: Icons.history_outlined,
+                  activeIcon: Icons.history,
+                  label: 'Logs',
                   index: 2,
                   isActive: navigationShell.currentIndex == 2,
+                ),
+                _buildNavItem(
+                  context: context,
+                  icon: Icons.settings_outlined,
+                  activeIcon: Icons.settings,
+                  label: 'Settings',
+                  index: 3,
+                  isActive: navigationShell.currentIndex == 3,
                 ),
               ],
             ),
@@ -86,14 +94,22 @@ class MainShell extends StatelessWidget {
         children: [
           Icon(
             isActive ? activeIcon : icon,
-            color: isActive ? AppColors.accent : AppColors.secondaryText,
+            color:
+                isActive
+                    ? Theme.of(context).colorScheme.primary
+                    : Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
             size: 24.sp,
           ),
           SizedBox(height: 4.h),
           Text(
             label,
             style: TextStyle(
-              color: isActive ? AppColors.accent : AppColors.secondaryText,
+              color:
+                  isActive
+                      ? Theme.of(context).colorScheme.primary
+                      : Theme.of(
+                        context,
+                      ).colorScheme.onSurface.withOpacity(0.6),
               fontSize: 12.sp,
               fontWeight: isActive ? FontWeight.w600 : FontWeight.normal,
             ),

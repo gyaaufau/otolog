@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../screens/home_screen.dart';
-import '../screens/vehicle_detail_screen.dart';
-import '../screens/service_detail_screen.dart';
-import '../screens/add_vehicle_screen.dart';
-import '../screens/edit_vehicle_screen.dart';
-import '../screens/add_service_screen.dart';
-import '../screens/analytics_screen.dart';
-import '../screens/vehicles_screen.dart';
+import 'screens/garage/vehicle_detail_screen.dart';
+import 'screens/logs/service_detail_screen.dart';
+import 'screens/garage/add_vehicle_screen.dart';
+import 'screens/garage/edit_vehicle_screen.dart';
+import 'screens/logs/add_service_screen.dart';
+import 'screens/logs/edit_service_screen.dart';
+import '../screens/service_logs_screen.dart';
+import 'screens/garage/vehicles_screen.dart';
+import 'screens/settings/settings_screen.dart';
 import '../widgets/main_shell.dart';
+import '../screens/database_viewer_screen.dart';
 
 /// Route names for type-safe navigation
 class AppRoutes {
@@ -19,7 +22,12 @@ class AppRoutes {
   static const String addVehicle = '/add-vehicle';
   static const String editVehicle = '/vehicle/:vehicleId/edit';
   static const String addService = '/vehicle/:vehicleId/add-service';
-  static const String analytics = '/analytics';
+  static const String addServiceGeneral = '/add-service';
+  static const String editService =
+      '/vehicle/:vehicleId/service/:serviceId/edit';
+  static const String serviceLogs = '/service-logs';
+  static const String settings = '/settings';
+  static const String databaseViewer = '/database-viewer';
 }
 
 /// GoRouter configuration for the app
@@ -56,15 +64,27 @@ final goRouter = GoRouter(
             ),
           ],
         ),
-        // Analytics branch
+        // Service Logs branch
         StatefulShellBranch(
           routes: [
             GoRoute(
-              path: AppRoutes.analytics,
-              name: 'analytics',
+              path: AppRoutes.serviceLogs,
+              name: 'serviceLogs',
               pageBuilder:
                   (context, state) =>
-                      const NoTransitionPage(child: AnalyticsScreen()),
+                      const NoTransitionPage(child: ServiceLogsScreen()),
+            ),
+          ],
+        ),
+        // Settings branch
+        StatefulShellBranch(
+          routes: [
+            GoRoute(
+              path: AppRoutes.settings,
+              name: 'settings',
+              pageBuilder:
+                  (context, state) =>
+                      const NoTransitionPage(child: SettingsScreen()),
             ),
           ],
         ),
@@ -74,38 +94,29 @@ final goRouter = GoRouter(
     GoRoute(
       path: AppRoutes.vehicleDetail,
       name: 'vehicleDetail',
-      builder: (context, state) {
-        final vehicleId = int.parse(state.pathParameters['vehicleId']!);
-        return VehicleDetailScreen(vehicleId: vehicleId);
-      },
+      builder: (context, state) => const VehicleDetailScreen(),
       routes: [
         GoRoute(
           path: 'edit',
           name: 'editVehicle',
-          builder: (context, state) {
-            final vehicleId = int.parse(state.pathParameters['vehicleId']!);
-            return EditVehicleScreen(vehicleId: vehicleId);
-          },
+          builder: (context, state) => const EditVehicleScreen(),
         ),
         GoRoute(
           path: 'add-service',
           name: 'addService',
-          builder: (context, state) {
-            final vehicleId = int.parse(state.pathParameters['vehicleId']!);
-            return AddServiceScreen(vehicleId: vehicleId);
-          },
+          builder: (context, state) => const AddServiceScreen(),
         ),
         GoRoute(
           path: 'service/:serviceId',
           name: 'serviceDetail',
-          builder: (context, state) {
-            final vehicleId = int.parse(state.pathParameters['vehicleId']!);
-            final serviceId = int.parse(state.pathParameters['serviceId']!);
-            return ServiceDetailScreen(
-              serviceId: serviceId,
-              vehicleId: vehicleId,
-            );
-          },
+          builder: (context, state) => const ServiceDetailScreen(),
+          routes: [
+            GoRoute(
+              path: 'edit',
+              name: 'editService',
+              builder: (context, state) => const EditServiceScreen(),
+            ),
+          ],
         ),
       ],
     ),
@@ -113,6 +124,16 @@ final goRouter = GoRouter(
       path: AppRoutes.addVehicle,
       name: 'addVehicle',
       builder: (context, state) => const AddVehicleScreen(),
+    ),
+    GoRoute(
+      path: AppRoutes.addServiceGeneral,
+      name: 'addServiceGeneral',
+      builder: (context, state) => const AddServiceScreen(),
+    ),
+    GoRoute(
+      path: AppRoutes.databaseViewer,
+      name: 'databaseViewer',
+      builder: (context, state) => const DatabaseViewerScreen(),
     ),
   ],
   errorBuilder:

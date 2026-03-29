@@ -1,0 +1,945 @@
+{
+  "@@locale": "en",
+  "appTitle": "OtoLog",
+  "@appTitle": {
+    "description": "The title of the application"
+  },
+  
+  "home": "Home",
+  "@home": {
+    "description": "Home tab label"
+  },
+  "garage": "Garage",
+  "@garage": {
+    "description": "Garage tab label"
+  },
+  "serviceLogs": "Service Logs",
+  "@serviceLogs": {
+    "description": "Service Logs tab label"
+  },
+  "settings": "Settings",
+  "@settings": {
+    "description": "Settings tab label"
+  },
+  
+  "add": "Add",
+  "@add": {
+    "description": "Add action button"
+  },
+  "edit": "Edit",
+  "@edit": {
+    "description": "Edit action button"
+  },
+  "delete": "Delete",
+  "@delete": {
+    "description": "Delete action button"
+  },
+  "save": "Save",
+  "@save": {
+    "description": "Save action button"
+  },
+  "cancel": "Cancel",
+  "@cancel": {
+    "description": "Cancel action button"
+  },
+  "confirm": "Confirm",
+  "@confirm": {
+    "description": "Confirm action button"
+  },
+  
+  "vehicles": "Vehicles",
+  "@vehicles": {
+    "description": "Vehicles section title"
+  },
+  "addVehicle": "Add Vehicle",
+  "@addVehicle": {
+    "description": "Add vehicle button title"
+  },
+  "editVehicle": "Edit Vehicle",
+  "@editVehicle": {
+    "description": "Edit vehicle button title"
+  },
+  "vehicleDetails": "Vehicle Details",
+  "@vehicleDetails": {
+    "description": "Vehicle details section title"
+  },
+  "vehicleName": "Vehicle Name",
+  "@vehicleName": {
+    "description": "Vehicle name field label"
+  },
+  "vehicleType": "Vehicle Type",
+  "@vehicleType": {
+    "description": "Vehicle type field label"
+  },
+  "make": "Make",
+  "@make": {
+    "description": "Vehicle make field label"
+  },
+  "model": "Model",
+  "@model": {
+    "description": "Vehicle model field label"
+  },
+  "year": "Year",
+  "@year": {
+    "description": "Vehicle year field label"
+  },
+  "licensePlate": "License Plate",
+  "@licensePlate": {
+    "description": "License plate field label"
+  },
+  "vin": "VIN",
+  "@vin": {
+    "description": "VIN field label"
+  },
+  "odometer": "Odometer",
+  "@odometer": {
+    "description": "Odometer field label"
+  },
+  "color": "Color",
+  "@color": {
+    "description": "Vehicle color field label"
+  },
+  "purchaseDate": "Purchase Date",
+  "@purchaseDate": {
+    "description": "Purchase date field label"
+  },
+  "purchasePrice": "Purchase Price",
+  "@purchasePrice": {
+    "description": "Purchase price field label"
+  },
+  "currentValue": "Current Value",
+  "@currentValue": {
+    "description": "Current value field label"
+  },
+  "notes": "Notes",
+  "@notes": {
+    "description": "Notes field label"
+  },
+  "selectVehicle": "Select Vehicle",
+  "@selectVehicle": {
+    "description": "Select vehicle dropdown label"
+  },
+  "noVehicles": "No vehicles added yet",
+  "@noVehicles": {
+    "description": "Message when no vehicles exist"
+  },
+  "addFirstVehicle": "Add your first vehicle to get started",
+  "@addFirstVehicle": {
+    "description": "Message encouraging to add first vehicle"
+  },
+  
+  "service": "Service",
+  "@service": {
+    "description": "Service section title"
+  },
+  "addService": "Add Service",
+  "@addService": {
+    "description": "Add service button title"
+  },
+  "editService": "Edit Service",
+  "@editService": {
+    "description": "Edit service button title"
+  },
+  "serviceDetails": "Service Details",
+  "@serviceDetails": {
+    "description": "Service details section title"
+  },
+  "serviceDate": "Service Date",
+  "@serviceDate": {
+    "description": "Service date field label"
+  },
+  "serviceType": "Service Type",
+  "@serviceType": {
+    "description": "Service type field label"
+  },
+  "serviceProvider": "Service Provider",
+  "@serviceProvider": {
+    "description": "Service provider field label"
+  },
+  "cost": "Cost",
+  "@cost": {
+    "description": "Cost field label"
+  },
+  "odometerReading": "Odometer Reading",
+  "@odometerReading": {
+    "description": "Odometer reading field label"
+  },
+  "description": "Description",
+  "@description": {
+    "description": "Description field label"
+  },
+  "nextServiceDate": "Next Service Date",
+  "@nextServiceDate": {
+    "description": "Next service date field label"
+  },
+  "nextServiceOdometer": "Next Service Odometer",
+  "@nextServiceOdometer": {
+    "description": "Next service odometer field label"
+  },
+  "noServices": "No service records yet",
+  "@noServices": {
+    "description": "Message when no services exist"
+  },
+  "addFirstService": "Add your first service record",
+  "@addFirstService": {
+    "description": "Message encouraging to add first service"
+  },
+  
+  "oilChange": "Oil Change",
+  "@oilChange": {
+    "description": "Oil change service type"
+  },
+  "tireRotation": "Tire Rotation",
+  "@tireRotation": {
+    "description": "Tire rotation service type"
+  },
+  "brakeService": "Brake Service",
+  "@brakeService": {
+    "description": "Brake service type"
+  },
+  "inspection": "Inspection",
+  "@inspection": {
+    "description": "Inspection service type"
+  },
+  "maintenance": "Maintenance",
+  "@maintenance": {
+    "description": "General maintenance service type"
+  },
+  "repair": "Repair",
+  "@repair": {
+    "description": "Repair service type"
+  },
+  "other": "Other",
+  "@other": {
+    "description": "Other service type"
+  },
+  
+  "car": "Car",
+  "@car": {
+    "description": "Car vehicle type"
+  },
+  "motorcycle": "Motorcycle",
+  "@motorcycle": {
+    "description": "Motorcycle vehicle type"
+  },
+  "truck": "Truck",
+  "@truck": {
+    "description": "Truck vehicle type"
+  },
+  "suv": "SUV",
+  "@suv": {
+    "description": "SUV vehicle type"
+  },
+  "van": "Van",
+  "@van": {
+    "description": "Van vehicle type"
+  },
+  
+  "required": "Required",
+  "@required": {
+    "description": "Required field indicator"
+  },
+  "optional": "Optional",
+  "@optional": {
+    "description": "Optional field indicator"
+  },
+  
+  "search": "Search",
+  "@search": {
+    "description": "Search field placeholder"
+  },
+  "searchVehicles": "Search vehicles...",
+  "@searchVehicles": {
+    "description": "Search vehicles placeholder"
+  },
+  "searchServices": "Search services...",
+  "@searchServices": {
+    "description": "Search services placeholder"
+  },
+  
+  "deleteConfirmation": "Delete Confirmation",
+  "@deleteConfirmation": {
+    "description": "Delete confirmation dialog title"
+  },
+  "deleteVehicleMessage": "Are you sure you want to delete this vehicle? This action cannot be undone.",
+  "@deleteVehicleMessage": {
+    "description": "Delete vehicle confirmation message"
+  },
+  "deleteServiceMessage": "Are you sure you want to delete this service record? This action cannot be undone.",
+  "@deleteServiceMessage": {
+    "description": "Delete service confirmation message"
+  },
+  
+  "success": "Success",
+  "@success": {
+    "description": "Success message title"
+  },
+  "vehicleAdded": "Vehicle added successfully",
+  "@vehicleAdded": {
+    "description": "Vehicle added success message"
+  },
+  "vehicleUpdated": "Vehicle updated successfully",
+  "@vehicleUpdated": {
+    "description": "Vehicle updated success message"
+  },
+  "vehicleDeleted": "Vehicle deleted successfully",
+  "@vehicleDeleted": {
+    "description": "Vehicle deleted success message"
+  },
+  "serviceAdded": "Service record added successfully",
+  "@serviceAdded": {
+    "description": "Service added success message"
+  },
+  "serviceUpdated": "Service record updated successfully",
+  "@serviceUpdated": {
+    "description": "Service updated success message"
+  },
+  "serviceDeleted": "Service record deleted successfully",
+  "@serviceDeleted": {
+    "description": "Service deleted success message"
+  },
+  
+  "error": "Error",
+  "@error": {
+    "description": "Error message title"
+  },
+  "somethingWentWrong": "Something went wrong. Please try again.",
+  "@somethingWentWrong": {
+    "description": "Generic error message"
+  },
+  "requiredField": "This field is required",
+  "@requiredField": {
+    "description": "Required field validation error"
+  },
+  "invalidFormat": "Invalid format",
+  "@invalidFormat": {
+    "description": "Invalid format validation error"
+  },
+  
+  "totalVehicles": "Total Vehicles",
+  "@totalVehicles": {
+    "description": "Total vehicles count label"
+  },
+  "totalServices": "Total Services",
+  "@totalServices": {
+    "description": "Total services count label"
+  },
+  "totalSpent": "Total Spent",
+  "@totalSpent": {
+    "description": "Total spent label"
+  },
+  
+  "recentServices": "Recent Services",
+  "@recentServices": {
+    "description": "Recent services section title"
+  },
+  "upcomingServices": "Upcoming Services",
+  "@upcomingServices": {
+    "description": "Upcoming services section title"
+  },
+  
+  "language": "Language",
+  "@language": {
+    "description": "Language setting label"
+  },
+  "theme": "Theme",
+  "@theme": {
+    "description": "Theme setting label"
+  },
+  "about": "About",
+  "@about": {
+    "description": "About section label"
+  },
+  
+  "darkMode": "Dark Mode",
+  "@darkMode": {
+    "description": "Dark mode setting label"
+  },
+  "lightMode": "Light Mode",
+  "@lightMode": {
+    "description": "Light mode setting label"
+  },
+  "systemMode": "System Mode",
+  "@systemMode": {
+    "description": "System mode setting label"
+  },
+  
+  "location": "Location",
+  "@location": {
+    "description": "Location field label"
+  },
+  "selectLocation": "Select Location",
+  "@selectLocation": {
+    "description": "Select location button"
+  },
+  "useCurrentLocation": "Use Current Location",
+  "@useCurrentLocation": {
+    "description": "Use current location button"
+  },
+  
+  "photo": "Photo",
+  "@photo": {
+    "description": "Photo field label"
+  },
+  "addPhoto": "Add Photo",
+  "@addPhoto": {
+    "description": "Add photo button"
+  },
+  "changePhoto": "Change Photo",
+  "@changePhoto": {
+    "description": "Change photo button"
+  },
+  "removePhoto": "Remove Photo",
+  "@removePhoto": {
+    "description": "Remove photo button"
+  },
+  "takePhoto": "Take Photo",
+  "@takePhoto": {
+    "description": "Take photo option"
+  },
+  "chooseFromGallery": "Choose from Gallery",
+  "@chooseFromGallery": {
+    "description": "Choose from gallery option"
+  },
+  
+  "km": "km",
+  "@km": {
+    "description": "Kilometers unit"
+  },
+  "miles": "miles",
+  "@miles": {
+    "description": "Miles unit"
+  },
+  
+  "yes": "Yes",
+  "@yes": {
+    "description": "Yes option"
+  },
+  "no": "No",
+  "@no": {
+    "description": "No option"
+  },
+  
+  "close": "Close",
+  "@close": {
+    "description": "Close button"
+  },
+  "done": "Done",
+  "@done": {
+    "description": "Done button"
+  },
+  "back": "Back",
+  "@back": {
+    "description": "Back button"
+  },
+  "next": "Next",
+  "@next": {
+    "description": "Next button"
+  },
+  
+  "or": "or",
+  "@or": {
+    "description": "Or separator"
+  },
+  "and": "and",
+  "@and": {
+    "description": "And separator"
+  },
+  
+  "today": "Today",
+  "@today": {
+    "description": "Today label"
+  },
+  "yesterday": "Yesterday",
+  "@yesterday": {
+    "description": "Yesterday label"
+  },
+  "tomorrow": "Tomorrow",
+  "@tomorrow": {
+    "description": "Tomorrow label"
+  },
+  "retry": "Retry",
+  "@retry": {
+    "description": "Retry button label"
+  },
+  "welcomeBack": "Welcome Back",
+  "@welcomeBack": {
+    "description": "Welcome back greeting"
+  },
+  "yourGarage": "Your Garage",
+  "@yourGarage": {
+    "description": "Your garage title"
+  },
+  "trackVehicleMaintenance": "Track your vehicle maintenance and service history",
+  "@trackVehicleMaintenance": {
+    "description": "Subtitle for home screen"
+  },
+  "switchVehicle": "Switch",
+  "@switchVehicle": {
+    "description": "Switch vehicle button"
+  },
+  "lastOdometer": "Last Odometer",
+  "@lastOdometer": {
+    "description": "Last odometer reading label"
+  },
+  "quickActions": "Quick Actions",
+  "@quickActions": {
+    "description": "Quick actions section title"
+  },
+  "seeAll": "See All",
+  "@seeAll": {
+    "description": "See all link label"
+  },
+  "daysAgo": "{count} days ago",
+  "@daysAgo": {
+    "description": "Days ago relative time",
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "example": "5"
+      }
+    }
+  },
+  "manageVehicleFleet": "Manage your vehicle fleet",
+  "@manageVehicleFleet": {
+    "description": "Subtitle for vehicles screen"
+  },
+  "noVehiclesFound": "No Vehicles Found",
+  "@noVehiclesFound": {
+    "description": "Empty state message when no vehicles found"
+  },
+  "tryAdjustingSearchOrFilters": "Try adjusting your search or filters",
+  "@tryAdjustingSearchOrFilters": {
+    "description": "Empty state suggestion when search has results"
+  },
+  "addFirstVehicleToGetStarted": "Add your first vehicle to get started",
+  "@addFirstVehicleToGetStarted": {
+    "description": "Empty state suggestion when no vehicles exist"
+  },
+  "plate": "Plate",
+  "@plate": {
+    "description": "License plate label"
+  },
+  "type": "Type",
+  "@type": {
+    "description": "Type label"
+  },
+  "odometerLabel": "Odometer",
+  "@odometerLabel": {
+    "description": "Odometer label"
+  },
+  "primaryVehicle": "Primary Vehicle",
+  "@primaryVehicle": {
+    "description": "Primary vehicle badge"
+  },
+  "markAsPrimary": "Mark as Primary",
+  "@markAsPrimary": {
+    "description": "Mark as primary vehicle option"
+  },
+  "vehicleOptions": "Vehicle Options",
+  "@vehicleOptions": {
+    "description": "Vehicle options bottom sheet title"
+  },
+  "all": "All",
+  "@all": {
+    "description": "All filter option"
+  },
+  "sedan": "Sedan",
+  "@sedan": {
+    "description": "Sedan vehicle type"
+  },
+  "addVehicleTitle": "Add Vehicle",
+  "@addVehicleTitle": {
+    "description": "Add vehicle screen title"
+  },
+  "basicInformation": "Basic Information",
+  "@basicInformation": {
+    "description": "Step 1 title"
+  },
+  "vehicleDetails": "Vehicle Details",
+  "@vehicleDetails": {
+    "description": "Step 2 title"
+  },
+  "vehiclePhotos": "Vehicle Photos",
+  "@vehiclePhotos": {
+    "description": "Step 3 title"
+  },
+  "enterBasicInfo": "Enter basic vehicle information",
+  "@enterBasicInfo": {
+    "description": "Step 1 subtitle"
+  },
+  "provideDetailedSpecs": "Provide detailed vehicle specifications",
+  "@provideDetailedSpecs": {
+    "description": "Step 2 subtitle"
+  },
+  "addPhotoOfVehicle": "Add a photo of your vehicle",
+  "@addPhotoOfVehicle": {
+    "description": "Step 3 subtitle"
+  },
+  "vehicleName": "Vehicle Name",
+  "@vehicleName": {
+    "description": "Vehicle name field label"
+  },
+  "vehicleNameRequired": "Vehicle name is required",
+  "@vehicleNameRequired": {
+    "description": "Vehicle name validation error"
+  },
+  "plateNumber": "Plate Number",
+  "@plateNumber": {
+    "description": "Plate number label"
+  },
+  "plateNumberRequired": "Plate number is required",
+  "@plateNumberRequired": {
+    "description": "Plate number validation error"
+  },
+  "brand": "Brand",
+  "@brand": {
+    "description": "Brand field label"
+  },
+  "model": "Model",
+  "@model": {
+    "description": "Model field label"
+  },
+  "year": "Year",
+  "@year": {
+    "description": "Year field label"
+  },
+  "color": "Color",
+  "@color": {
+    "description": "Color field label"
+  },
+  "vin": "VIN (Vehicle Identification Number)",
+  "@vin": {
+    "description": "VIN field label"
+  },
+  "currentOdometer": "Current Odometer (km)",
+  "@currentOdometer": {
+    "description": "Current odometer label"
+  },
+  "purchaseDate": "Purchase Date",
+  "@purchaseDate": {
+    "description": "Purchase date label"
+  },
+  "selectPurchaseDate": "Select purchase date",
+  "@selectPurchaseDate": {
+    "description": "Select purchase date button"
+  },
+  "vehicleType": "Vehicle Type",
+  "@vehicleType": {
+    "description": "Vehicle type label"
+  },
+  "selectVehicleType": "Select vehicle type",
+  "@selectVehicleType": {
+    "description": "Vehicle type dropdown hint"
+  },
+  "fuelType": "Fuel Type",
+  "@fuelType": {
+    "description": "Fuel type label"
+  },
+  "selectFuelType": "Select fuel type",
+  "@selectFuelType": {
+    "description": "Fuel type dropdown hint"
+  },
+  "transmissionType": "Transmission Type",
+  "@transmissionType": {
+    "description": "Transmission type label"
+  },
+  "selectTransmissionType": "Select transmission type",
+  "@selectTransmissionType": {
+    "description": "Transmission type dropdown hint"
+  },
+  "vinHint": "e.g., 1HGCM82633A123456",
+  "@vinHint": {
+    "description": "VIN field hint"
+  },
+  "vinRequired": "VIN is required",
+  "@vinRequired": {
+    "description": "VIN validation error"
+  },
+  "odometerHint": "e.g., 50000",
+  "@odometerHint": {
+    "description": "Odometer field hint"
+  },
+  "odometerRequired": "Please enter a valid odometer reading",
+  "@odometerRequired": {
+    "description": "Odometer validation error"
+  },
+  "colorHint": "e.g., Black",
+  "@colorHint": {
+    "description": "Color field hint"
+  },
+  "yearHint": "e.g., 2020",
+  "@yearHint": {
+    "description": "Year field hint"
+  },
+  "yearInvalid": "Please enter a valid year",
+  "@yearInvalid": {
+    "description": "Year validation error"
+  },
+  "previous": "Previous",
+  "@previous": {
+    "description": "Previous button"
+  },
+  "next": "Next",
+  "@next": {
+    "description": "Next button"
+  },
+  "tapToAddPhoto": "Tap to add photo",
+  "@tapToAddPhoto": {
+    "description": "Tap to add photo hint"
+  },
+  "optional": "Optional",
+  "@optional": {
+    "description": "Optional field indicator"
+  },
+  "saving": "Saving...",
+  "@saving": {
+    "description": "Saving button text"
+  },
+  "primary": "Primary",
+  "@primary": {
+    "description": "Primary badge label"
+  },
+  "deleteVehicle": "Delete Vehicle",
+  "@deleteVehicle": {
+    "description": "Delete vehicle button"
+  },
+  "select": "Select",
+  "@select": {
+    "description": "Select button label"
+  },
+  "saveChanges": "Save Changes",
+  "@saveChanges": {
+    "description": "Save changes button"
+  },
+  "deleteVehicleConfirmation": "Are you sure you want to delete this vehicle? This action cannot be undone and will also delete all associated service records.",
+  "@deleteVehicleConfirmation": {
+    "description": "Delete vehicle confirmation message"
+  },
+  "specifications": "Specifications",
+  "@specifications": {
+    "description": "Specifications section title"
+  },
+  "serviceStatistics": "Service Statistics",
+  "@serviceStatistics": {
+    "description": "Service statistics section title"
+  },
+  "totalServicesLabel": "Total Services",
+  "@totalServicesLabel": {
+    "description": "Total services label in statistics"
+  },
+  "totalCostLabel": "Total Cost",
+  "@totalCostLabel": {
+    "description": "Total cost label in statistics"
+  },
+  "addServiceRecord": "Add Service Record",
+  "@addServiceRecord": {
+    "description": "Add service record button"
+  },
+  "setPrimary": "Set Primary",
+  "@setPrimary": {
+    "description": "Set as primary vehicle button"
+  },
+  "trackVehicleMaintenance": "Track all your vehicle maintenance",
+  "@trackVehicleMaintenance": {
+    "description": "Subtitle for service logs screen"
+  },
+  "totalCost": "Total Cost",
+  "@totalCost": {
+    "description": "Total cost label"
+  },
+  "filters": "Filters",
+  "@filters": {
+    "description": "Filters section title"
+  },
+  "clearAll": "Clear All",
+  "@clearAll": {
+    "description": "Clear all filters button"
+  },
+  "vehicle": "Vehicle",
+  "@vehicle": {
+    "description": "Vehicle label"
+  },
+  "dateRange": "Date Range",
+  "@dateRange": {
+    "description": "Date range filter label"
+  },
+  "allVehicles": "All Vehicles",
+  "@allVehicles": {
+    "description": "All vehicles filter option"
+  },
+  "startDate": "Start Date",
+  "@startDate": {
+    "description": "Start date label"
+  },
+  "endDate": "End Date",
+  "@endDate": {
+    "description": "End date label"
+  },
+  "noServiceRecords": "No Service Records",
+  "@noServiceRecords": {
+    "description": "Empty state message when no services found"
+  },
+  "addVehicleFirstToStartTracking": "Add a vehicle first to start tracking services",
+  "@addVehicleFirstToStartTracking": {
+    "description": "Empty state suggestion when no vehicles exist"
+  },
+  "addFirstServiceRecordToGetStarted": "Add your first service record to get started",
+  "@addFirstServiceRecordToGetStarted": {
+    "description": "Empty state suggestion when no services exist"
+  },
+  "serviceOptions": "Service Options",
+  "@serviceOptions": {
+    "description": "Service options bottom sheet title"
+  },
+  "viewDetails": "View Details",
+  "@viewDetails": {
+    "description": "View details option"
+  },
+  "deleteService": "Delete Service",
+  "@deleteService": {
+    "description": "Delete service button"
+  },
+  "deleteServiceConfirmation": "Are you sure you want to delete \"{serviceType}\" for {vehicleName}? This action cannot be undone.",
+  "@deleteServiceConfirmation": {
+    "description": "Delete service confirmation message",
+    "placeholders": {
+      "serviceType": {
+        "type": "String",
+        "example": "Oil Change"
+      },
+      "vehicleName": {
+        "type": "String",
+        "example": "My Car"
+      }
+    }
+  },
+  "mechanic": "Mechanic",
+  "@mechanic": {
+    "description": "Mechanic field label"
+  },
+  "selectAVehicle": "Select a vehicle",
+  "@selectAVehicle": {
+    "description": "Select a vehicle hint"
+  },
+  "noVehiclesAvailablePleaseAddVehicleFirst": "No vehicles available. Please add a vehicle first.",
+  "@noVehiclesAvailablePleaseAddVehicleFirst": {
+    "description": "No vehicles available message"
+  },
+  "selectServiceType": "Select service type",
+  "@selectServiceType": {
+    "description": "Service type dropdown hint"
+  },
+  "selectServiceDate": "Select service date",
+  "@selectServiceDate": {
+    "description": "Service date dropdown hint"
+  },
+  "describeServicePerformed": "Describe service performed...",
+  "@describeServicePerformed": {
+    "description": "Description field hint"
+  },
+  "costIDR": "Cost (IDR)",
+  "@costIDR": {
+    "description": "Cost field label"
+  },
+  "exampleCost": "e.g., 500000",
+  "@exampleCost": {
+    "description": "Cost field hint"
+  },
+  "mechanicShop": "Mechanic / Shop",
+  "@mechanicShop": {
+    "description": "Mechanic field label"
+  },
+  "exampleMechanic": "e.g., Bengkel Jaya",
+  "@exampleMechanic": {
+    "description": "Mechanic field hint"
+  },
+  "additionalNotesOrObservations": "Additional notes or observations...",
+  "@additionalNotesOrObservations": {
+    "description": "Notes field hint"
+  },
+  "saveServiceRecord": "Save Service Record",
+  "@saveServiceRecord": {
+    "description": "Save service record button"
+  },
+  "pleaseFillInAllRequiredFields": "Please fill in all required fields",
+  "@pleaseFillInAllRequiredFields": {
+    "description": "Validation error message"
+  },
+  "updateServiceRecord": "Update Service Record",
+  "@updateServiceRecord": {
+    "description": "Update service record button"
+  },
+  "databaseViewer": "Database Viewer",
+  "@databaseViewer": {
+    "description": "Database viewer menu item"
+  },
+  "viewAllDatabaseRecords": "View all database records",
+  "@viewAllDatabaseRecords": {
+    "description": "Database viewer subtitle"
+  },
+  "appInformation": "OtoLog - Vehicle Service Log App",
+  "@appInformation": {
+    "description": "App information text"
+  },
+  "january": "January",
+  "@january": {
+    "description": "January month name"
+  },
+  "february": "February",
+  "@february": {
+    "description": "February month name"
+  },
+  "march": "March",
+  "@march": {
+    "description": "March month name"
+  },
+  "april": "April",
+  "@april": {
+    "description": "April month name"
+  },
+  "may": "May",
+  "@may": {
+    "description": "May month name"
+  },
+  "june": "June",
+  "@june": {
+    "description": "June month name"
+  },
+  "july": "July",
+  "@july": {
+    "description": "July month name"
+  },
+  "august": "August",
+  "@august": {
+    "description": "August month name"
+  },
+  "september": "September",
+  "@september": {
+    "description": "September month name"
+  },
+  "october": "October",
+  "@october": {
+    "description": "October month name"
+  },
+  "november": "November",
+  "@november": {
+    "description": "November month name"
+  },
+  "december": "December",
+  "@december": {
+    "description": "December month name"
+  },
+  "applyFilters": "Apply Filters",
+  "@applyFilters": {
+    "description": "Apply filters button"
+  },
+  "noServiceRecordsFor": "No service records for",
+  "@noServiceRecordsFor": {
+    "description": "No service records for specific vehicle message"
+  },
+  "failedToLoadVehicles": "Failed to load vehicles",
+  "@failedToLoadVehicles": {
+    "description": "Failed to load vehicles error message"
+  }
+}

@@ -1,0 +1,945 @@
+{
+  "@@locale": "id",
+  "appTitle": "OtoLog",
+  "@appTitle": {
+    "description": "The title of the application"
+  },
+  
+  "home": "Beranda",
+  "@home": {
+    "description": "Home tab label"
+  },
+  "garage": "Garasi",
+  "@garage": {
+    "description": "Garage tab label"
+  },
+  "serviceLogs": "Riwayat Servis",
+  "@serviceLogs": {
+    "description": "Service Logs tab label"
+  },
+  "settings": "Pengaturan",
+  "@settings": {
+    "description": "Settings tab label"
+  },
+  
+  "add": "Tambah",
+  "@add": {
+    "description": "Add action button"
+  },
+  "edit": "Edit",
+  "@edit": {
+    "description": "Edit action button"
+  },
+  "delete": "Hapus",
+  "@delete": {
+    "description": "Delete action button"
+  },
+  "save": "Simpan",
+  "@save": {
+    "description": "Save action button"
+  },
+  "cancel": "Batal",
+  "@cancel": {
+    "description": "Cancel action button"
+  },
+  "confirm": "Konfirmasi",
+  "@confirm": {
+    "description": "Confirm action button"
+  },
+  
+  "vehicles": "Kendaraan",
+  "@vehicles": {
+    "description": "Vehicles section title"
+  },
+  "addVehicle": "Tambah Kendaraan",
+  "@addVehicle": {
+    "description": "Add vehicle button title"
+  },
+  "editVehicle": "Edit Kendaraan",
+  "@editVehicle": {
+    "description": "Edit vehicle button title"
+  },
+  "vehicleDetails": "Detail Kendaraan",
+  "@vehicleDetails": {
+    "description": "Vehicle details section title"
+  },
+  "vehicleName": "Nama Kendaraan",
+  "@vehicleName": {
+    "description": "Vehicle name field label"
+  },
+  "vehicleType": "Tipe Kendaraan",
+  "@vehicleType": {
+    "description": "Vehicle type field label"
+  },
+  "make": "Merek",
+  "@make": {
+    "description": "Vehicle make field label"
+  },
+  "model": "Model",
+  "@model": {
+    "description": "Vehicle model field label"
+  },
+  "year": "Tahun",
+  "@year": {
+    "description": "Vehicle year field label"
+  },
+  "licensePlate": "Plat Nomor",
+  "@licensePlate": {
+    "description": "License plate field label"
+  },
+  "vin": "VIN",
+  "@vin": {
+    "description": "VIN field label"
+  },
+  "odometer": "Odometer",
+  "@odometer": {
+    "description": "Odometer field label"
+  },
+  "color": "Warna",
+  "@color": {
+    "description": "Vehicle color field label"
+  },
+  "purchaseDate": "Tanggal Pembelian",
+  "@purchaseDate": {
+    "description": "Purchase date field label"
+  },
+  "purchasePrice": "Harga Pembelian",
+  "@purchasePrice": {
+    "description": "Purchase price field label"
+  },
+  "currentValue": "Nilai Saat Ini",
+  "@currentValue": {
+    "description": "Current value field label"
+  },
+  "notes": "Catatan",
+  "@notes": {
+    "description": "Notes field label"
+  },
+  "selectVehicle": "Pilih Kendaraan",
+  "@selectVehicle": {
+    "description": "Select vehicle dropdown label"
+  },
+  "noVehicles": "Belum ada kendaraan yang ditambahkan",
+  "@noVehicles": {
+    "description": "Message when no vehicles exist"
+  },
+  "addFirstVehicle": "Tambahkan kendaraan pertama Anda untuk memulai",
+  "@addFirstVehicle": {
+    "description": "Message encouraging to add first vehicle"
+  },
+  
+  "service": "Servis",
+  "@service": {
+    "description": "Service section title"
+  },
+  "addService": "Tambah Servis",
+  "@addService": {
+    "description": "Add service button title"
+  },
+  "editService": "Edit Servis",
+  "@editService": {
+    "description": "Edit service button title"
+  },
+  "serviceDetails": "Detail Servis",
+  "@serviceDetails": {
+    "description": "Service details section title"
+  },
+  "serviceDate": "Tanggal Servis",
+  "@serviceDate": {
+    "description": "Service date field label"
+  },
+  "serviceType": "Tipe Servis",
+  "@serviceType": {
+    "description": "Service type field label"
+  },
+  "serviceProvider": "Penyedia Servis",
+  "@serviceProvider": {
+    "description": "Service provider field label"
+  },
+  "cost": "Biaya",
+  "@cost": {
+    "description": "Cost field label"
+  },
+  "odometerReading": "Pembacaan Odometer",
+  "@odometerReading": {
+    "description": "Odometer reading field label"
+  },
+  "description": "Deskripsi",
+  "@description": {
+    "description": "Description field label"
+  },
+  "nextServiceDate": "Tanggal Servis Berikutnya",
+  "@nextServiceDate": {
+    "description": "Next service date field label"
+  },
+  "nextServiceOdometer": "Odometer Servis Berikutnya",
+  "@nextServiceOdometer": {
+    "description": "Next service odometer field label"
+  },
+  "noServices": "Belum ada catatan servis",
+  "@noServices": {
+    "description": "Message when no services exist"
+  },
+  "addFirstService": "Tambahkan catatan servis pertama Anda",
+  "@addFirstService": {
+    "description": "Message encouraging to add first service"
+  },
+  
+  "oilChange": "Ganti Oli",
+  "@oilChange": {
+    "description": "Oil change service type"
+  },
+  "tireRotation": "Rotasi Ban",
+  "@tireRotation": {
+    "description": "Tire rotation service type"
+  },
+  "brakeService": "Servis Rem",
+  "@brakeService": {
+    "description": "Brake service type"
+  },
+  "inspection": "Inspeksi",
+  "@inspection": {
+    "description": "Inspection service type"
+  },
+  "maintenance": "Perawatan",
+  "@maintenance": {
+    "description": "General maintenance service type"
+  },
+  "repair": "Perbaikan",
+  "@repair": {
+    "description": "Repair service type"
+  },
+  "other": "Lainnya",
+  "@other": {
+    "description": "Other service type"
+  },
+  
+  "car": "Mobil",
+  "@car": {
+    "description": "Car vehicle type"
+  },
+  "motorcycle": "Motor",
+  "@motorcycle": {
+    "description": "Motorcycle vehicle type"
+  },
+  "truck": "Truk",
+  "@truck": {
+    "description": "Truck vehicle type"
+  },
+  "suv": "SUV",
+  "@suv": {
+    "description": "SUV vehicle type"
+  },
+  "van": "Van",
+  "@van": {
+    "description": "Van vehicle type"
+  },
+  
+  "required": "Wajib",
+  "@required": {
+    "description": "Required field indicator"
+  },
+  "optional": "Opsional",
+  "@optional": {
+    "description": "Optional field indicator"
+  },
+  
+  "search": "Cari",
+  "@search": {
+    "description": "Search field placeholder"
+  },
+  "searchVehicles": "Cari kendaraan...",
+  "@searchVehicles": {
+    "description": "Search vehicles placeholder"
+  },
+  "searchServices": "Cari servis...",
+  "@searchServices": {
+    "description": "Search services placeholder"
+  },
+  
+  "deleteConfirmation": "Konfirmasi Hapus",
+  "@deleteConfirmation": {
+    "description": "Delete confirmation dialog title"
+  },
+  "deleteVehicleMessage": "Apakah Anda yakin ingin menghapus kendaraan ini? Tindakan ini tidak dapat dibatalkan.",
+  "@deleteVehicleMessage": {
+    "description": "Delete vehicle confirmation message"
+  },
+  "deleteServiceMessage": "Apakah Anda yakin ingin menghapus catatan servis ini? Tindakan ini tidak dapat dibatalkan.",
+  "@deleteServiceMessage": {
+    "description": "Delete service confirmation message"
+  },
+  
+  "success": "Berhasil",
+  "@success": {
+    "description": "Success message title"
+  },
+  "vehicleAdded": "Kendaraan berhasil ditambahkan",
+  "@vehicleAdded": {
+    "description": "Vehicle added success message"
+  },
+  "vehicleUpdated": "Kendaraan berhasil diperbarui",
+  "@vehicleUpdated": {
+    "description": "Vehicle updated success message"
+  },
+  "vehicleDeleted": "Kendaraan berhasil dihapus",
+  "@vehicleDeleted": {
+    "description": "Vehicle deleted success message"
+  },
+  "serviceAdded": "Catatan servis berhasil ditambahkan",
+  "@serviceAdded": {
+    "description": "Service added success message"
+  },
+  "serviceUpdated": "Catatan servis berhasil diperbarui",
+  "@serviceUpdated": {
+    "description": "Service updated success message"
+  },
+  "serviceDeleted": "Catatan servis berhasil dihapus",
+  "@serviceDeleted": {
+    "description": "Service deleted success message"
+  },
+  
+  "error": "Error",
+  "@error": {
+    "description": "Error message title"
+  },
+  "somethingWentWrong": "Terjadi kesalahan. Silakan coba lagi.",
+  "@somethingWentWrong": {
+    "description": "Generic error message"
+  },
+  "requiredField": "Kolom ini wajib diisi",
+  "@requiredField": {
+    "description": "Required field validation error"
+  },
+  "invalidFormat": "Format tidak valid",
+  "@invalidFormat": {
+    "description": "Invalid format validation error"
+  },
+  
+  "totalVehicles": "Total Kendaraan",
+  "@totalVehicles": {
+    "description": "Total vehicles count label"
+  },
+  "totalServices": "Total Servis",
+  "@totalServices": {
+    "description": "Total services count label"
+  },
+  "totalSpent": "Total Pengeluaran",
+  "@totalSpent": {
+    "description": "Total spent label"
+  },
+  
+  "recentServices": "Servis Terbaru",
+  "@recentServices": {
+    "description": "Recent services section title"
+  },
+  "upcomingServices": "Servis Mendatang",
+  "@upcomingServices": {
+    "description": "Upcoming services section title"
+  },
+  
+  "language": "Bahasa",
+  "@language": {
+    "description": "Language setting label"
+  },
+  "theme": "Tema",
+  "@theme": {
+    "description": "Theme setting label"
+  },
+  "about": "Tentang",
+  "@about": {
+    "description": "About section label"
+  },
+  
+  "darkMode": "Mode Gelap",
+  "@darkMode": {
+    "description": "Dark mode setting label"
+  },
+  "lightMode": "Mode Terang",
+  "@lightMode": {
+    "description": "Light mode setting label"
+  },
+  "systemMode": "Mode Sistem",
+  "@systemMode": {
+    "description": "System mode setting label"
+  },
+  
+  "location": "Lokasi",
+  "@location": {
+    "description": "Location field label"
+  },
+  "selectLocation": "Pilih Lokasi",
+  "@selectLocation": {
+    "description": "Select location button"
+  },
+  "useCurrentLocation": "Gunakan Lokasi Saat Ini",
+  "@useCurrentLocation": {
+    "description": "Use current location button"
+  },
+  
+  "photo": "Foto",
+  "@photo": {
+    "description": "Photo field label"
+  },
+  "addPhoto": "Tambah Foto",
+  "@addPhoto": {
+    "description": "Add photo button"
+  },
+  "changePhoto": "Ubah Foto",
+  "@changePhoto": {
+    "description": "Change photo button"
+  },
+  "removePhoto": "Hapus Foto",
+  "@removePhoto": {
+    "description": "Remove photo button"
+  },
+  "takePhoto": "Ambil Foto",
+  "@takePhoto": {
+    "description": "Take photo option"
+  },
+  "chooseFromGallery": "Pilih dari Galeri",
+  "@chooseFromGallery": {
+    "description": "Choose from gallery option"
+  },
+  
+  "km": "km",
+  "@km": {
+    "description": "Kilometers unit"
+  },
+  "miles": "mil",
+  "@miles": {
+    "description": "Miles unit"
+  },
+  
+  "yes": "Ya",
+  "@yes": {
+    "description": "Yes option"
+  },
+  "no": "Tidak",
+  "@no": {
+    "description": "No option"
+  },
+  
+  "close": "Tutup",
+  "@close": {
+    "description": "Close button"
+  },
+  "done": "Selesai",
+  "@done": {
+    "description": "Done button"
+  },
+  "back": "Kembali",
+  "@back": {
+    "description": "Back button"
+  },
+  "next": "Lanjut",
+  "@next": {
+    "description": "Next button"
+  },
+  
+  "or": "atau",
+  "@or": {
+    "description": "Or separator"
+  },
+  "and": "dan",
+  "@and": {
+    "description": "And separator"
+  },
+  
+  "today": "Hari Ini",
+  "@today": {
+    "description": "Today label"
+  },
+  "yesterday": "Kemarin",
+  "@yesterday": {
+    "description": "Yesterday label"
+  },
+  "tomorrow": "Besok",
+  "@tomorrow": {
+    "description": "Tomorrow label"
+  },
+  "retry": "Coba Lagi",
+  "@retry": {
+    "description": "Retry button label"
+  },
+  "welcomeBack": "Selamat Datang Kembali",
+  "@welcomeBack": {
+    "description": "Welcome back greeting"
+  },
+  "yourGarage": "Garasi Anda",
+  "@yourGarage": {
+    "description": "Your garage title"
+  },
+  "trackVehicleMaintenance": "Lacak perawatan dan riwayat servis kendaraan Anda",
+  "@trackVehicleMaintenance": {
+    "description": "Subtitle for home screen"
+  },
+  "switchVehicle": "Ganti",
+  "@switchVehicle": {
+    "description": "Switch vehicle button"
+  },
+  "lastOdometer": "Odometer Terakhir",
+  "@lastOdometer": {
+    "description": "Last odometer reading label"
+  },
+  "quickActions": "Aksi Cepat",
+  "@quickActions": {
+    "description": "Quick actions section title"
+  },
+  "seeAll": "Lihat Semua",
+  "@seeAll": {
+    "description": "See all link label"
+  },
+  "daysAgo": "{count} hari yang lalu",
+  "@daysAgo": {
+    "description": "Days ago relative time",
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "example": "5"
+      }
+    }
+  },
+  "manageVehicleFleet": "Kelola armada kendaraan Anda",
+  "@manageVehicleFleet": {
+    "description": "Subtitle for vehicles screen"
+  },
+  "noVehiclesFound": "Tidak Ada Kendaraan Ditemukan",
+  "@noVehiclesFound": {
+    "description": "Empty state message when no vehicles found"
+  },
+  "tryAdjustingSearchOrFilters": "Coba sesuaikan pencarian atau filter Anda",
+  "@tryAdjustingSearchOrFilters": {
+    "description": "Empty state suggestion when search has results"
+  },
+  "addFirstVehicleToGetStarted": "Tambahkan kendaraan pertama Anda untuk memulai",
+  "@addFirstVehicleToGetStarted": {
+    "description": "Empty state suggestion when no vehicles exist"
+  },
+  "plate": "Plat",
+  "@plate": {
+    "description": "License plate label"
+  },
+  "type": "Tipe",
+  "@type": {
+    "description": "Type label"
+  },
+  "odometerLabel": "Odometer",
+  "@odometerLabel": {
+    "description": "Odometer label"
+  },
+  "primaryVehicle": "Kendaraan Utama",
+  "@primaryVehicle": {
+    "description": "Primary vehicle badge"
+  },
+  "markAsPrimary": "Tandai sebagai Utama",
+  "@markAsPrimary": {
+    "description": "Mark as primary vehicle option"
+  },
+  "vehicleOptions": "Opsi Kendaraan",
+  "@vehicleOptions": {
+    "description": "Vehicle options bottom sheet title"
+  },
+  "all": "Semua",
+  "@all": {
+    "description": "All filter option"
+  },
+  "sedan": "Sedan",
+  "@sedan": {
+    "description": "Sedan vehicle type"
+  },
+  "addVehicleTitle": "Tambah Kendaraan",
+  "@addVehicleTitle": {
+    "description": "Add vehicle screen title"
+  },
+  "basicInformation": "Informasi Dasar",
+  "@basicInformation": {
+    "description": "Step 1 title"
+  },
+  "vehicleDetails": "Detail Kendaraan",
+  "@vehicleDetails": {
+    "description": "Step 2 title"
+  },
+  "vehiclePhotos": "Foto Kendaraan",
+  "@vehiclePhotos": {
+    "description": "Step 3 title"
+  },
+  "enterBasicInfo": "Masukkan informasi dasar kendaraan",
+  "@enterBasicInfo": {
+    "description": "Step 1 subtitle"
+  },
+  "provideDetailedSpecs": "Berikan spesifikasi kendaraan yang detail",
+  "@provideDetailedSpecs": {
+    "description": "Step 2 subtitle"
+  },
+  "addPhotoOfVehicle": "Tambahkan foto kendaraan Anda",
+  "@addPhotoOfVehicle": {
+    "description": "Step 3 subtitle"
+  },
+  "vehicleName": "Nama Kendaraan",
+  "@vehicleName": {
+    "description": "Vehicle name field label"
+  },
+  "vehicleNameRequired": "Nama kendaraan wajib diisi",
+  "@vehicleNameRequired": {
+    "description": "Vehicle name validation error"
+  },
+  "plateNumber": "Nomor Plat",
+  "@plateNumber": {
+    "description": "Plate number label"
+  },
+  "plateNumberRequired": "Nomor plat wajib diisi",
+  "@plateNumberRequired": {
+    "description": "Plate number validation error"
+  },
+  "brand": "Merek",
+  "@brand": {
+    "description": "Brand field label"
+  },
+  "model": "Model",
+  "@model": {
+    "description": "Model field label"
+  },
+  "year": "Tahun",
+  "@year": {
+    "description": "Year field label"
+  },
+  "color": "Warna",
+  "@color": {
+    "description": "Color field label"
+  },
+  "vin": "VIN (Nomor Identifikasi Kendaraan)",
+  "@vin": {
+    "description": "VIN field label"
+  },
+  "currentOdometer": "Odometer Saat Ini (km)",
+  "@currentOdometer": {
+    "description": "Current odometer label"
+  },
+  "purchaseDate": "Tanggal Pembelian",
+  "@purchaseDate": {
+    "description": "Purchase date label"
+  },
+  "selectPurchaseDate": "Pilih tanggal pembelian",
+  "@selectPurchaseDate": {
+    "description": "Select purchase date button"
+  },
+  "vehicleType": "Tipe Kendaraan",
+  "@vehicleType": {
+    "description": "Vehicle type label"
+  },
+  "selectVehicleType": "Pilih tipe kendaraan",
+  "@selectVehicleType": {
+    "description": "Vehicle type dropdown hint"
+  },
+  "fuelType": "Tipe Bahan Bakar",
+  "@fuelType": {
+    "description": "Fuel type label"
+  },
+  "selectFuelType": "Pilih tipe bahan bakar",
+  "@selectFuelType": {
+    "description": "Fuel type dropdown hint"
+  },
+  "transmissionType": "Tipe Transmisi",
+  "@transmissionType": {
+    "description": "Transmission type label"
+  },
+  "selectTransmissionType": "Pilih tipe transmisi",
+  "@selectTransmissionType": {
+    "description": "Transmission type dropdown hint"
+  },
+  "vinHint": "cth: 1HGCM82633A123456",
+  "@vinHint": {
+    "description": "VIN field hint"
+  },
+  "vinRequired": "VIN wajib diisi",
+  "@vinRequired": {
+    "description": "VIN validation error"
+  },
+  "odometerHint": "cth: 50000",
+  "@odometerHint": {
+    "description": "Odometer field hint"
+  },
+  "odometerRequired": "Masukkan pembacaan odometer yang valid",
+  "@odometerRequired": {
+    "description": "Odometer validation error"
+  },
+  "colorHint": "cth: Hitam",
+  "@colorHint": {
+    "description": "Color field hint"
+  },
+  "yearHint": "cth: 2020",
+  "@yearHint": {
+    "description": "Year field hint"
+  },
+  "yearInvalid": "Masukkan tahun yang valid",
+  "@yearInvalid": {
+    "description": "Year validation error"
+  },
+  "previous": "Sebelumnya",
+  "@previous": {
+    "description": "Previous button"
+  },
+  "next": "Lanjut",
+  "@next": {
+    "description": "Next button"
+  },
+  "tapToAddPhoto": "Ketuk untuk menambahkan foto",
+  "@tapToAddPhoto": {
+    "description": "Tap to add photo hint"
+  },
+  "optional": "Opsional",
+  "@optional": {
+    "description": "Optional field indicator"
+  },
+  "saving": "Menyimpan...",
+  "@saving": {
+    "description": "Saving button text"
+  },
+  "primary": "Utama",
+  "@primary": {
+    "description": "Primary badge label"
+  },
+  "deleteVehicle": "Hapus Kendaraan",
+  "@deleteVehicle": {
+    "description": "Delete vehicle button"
+  },
+  "select": "Pilih",
+  "@select": {
+    "description": "Select button label"
+  },
+  "saveChanges": "Simpan Perubahan",
+  "@saveChanges": {
+    "description": "Save changes button"
+  },
+  "deleteVehicleConfirmation": "Apakah Anda yakin ingin menghapus kendaraan ini? Tindakan ini tidak dapat dibatalkan dan akan menghapus semua catatan servis terkait.",
+  "@deleteVehicleConfirmation": {
+    "description": "Delete vehicle confirmation message"
+  },
+  "specifications": "Spesifikasi",
+  "@specifications": {
+    "description": "Specifications section title"
+  },
+  "serviceStatistics": "Statistik Servis",
+  "@serviceStatistics": {
+    "description": "Service statistics section title"
+  },
+  "totalServicesLabel": "Total Servis",
+  "@totalServicesLabel": {
+    "description": "Total services label in statistics"
+  },
+  "totalCostLabel": "Total Biaya",
+  "@totalCostLabel": {
+    "description": "Total cost label in statistics"
+  },
+  "addServiceRecord": "Tambah Catatan Servis",
+  "@addServiceRecord": {
+    "description": "Add service record button"
+  },
+  "setPrimary": "Tetapkan sebagai Utama",
+  "@setPrimary": {
+    "description": "Set as primary vehicle button"
+  },
+  "trackVehicleMaintenance": "Lacak semua perawatan kendaraan Anda",
+  "@trackVehicleMaintenance": {
+    "description": "Subtitle for service logs screen"
+  },
+  "totalCost": "Total Biaya",
+  "@totalCost": {
+    "description": "Total cost label"
+  },
+  "filters": "Filter",
+  "@filters": {
+    "description": "Filters section title"
+  },
+  "clearAll": "Hapus Semua",
+  "@clearAll": {
+    "description": "Clear all filters button"
+  },
+  "vehicle": "Kendaraan",
+  "@vehicle": {
+    "description": "Vehicle label"
+  },
+  "dateRange": "Rentang Tanggal",
+  "@dateRange": {
+    "description": "Date range filter label"
+  },
+  "allVehicles": "Semua Kendaraan",
+  "@allVehicles": {
+    "description": "All vehicles filter option"
+  },
+  "startDate": "Tanggal Mulai",
+  "@startDate": {
+    "description": "Start date label"
+  },
+  "endDate": "Tanggal Akhir",
+  "@endDate": {
+    "description": "End date label"
+  },
+  "noServiceRecords": "Tidak Ada Catatan Servis",
+  "@noServiceRecords": {
+    "description": "Empty state message when no services found"
+  },
+  "addVehicleFirstToStartTracking": "Tambahkan kendaraan terlebih dahulu untuk mulai melacak servis",
+  "@addVehicleFirstToStartTracking": {
+    "description": "Empty state suggestion when no vehicles exist"
+  },
+  "addFirstServiceRecordToGetStarted": "Tambahkan catatan servis pertama Anda untuk memulai",
+  "@addFirstServiceRecordToGetStarted": {
+    "description": "Empty state suggestion when no services exist"
+  },
+  "serviceOptions": "Opsi Servis",
+  "@serviceOptions": {
+    "description": "Service options bottom sheet title"
+  },
+  "viewDetails": "Lihat Detail",
+  "@viewDetails": {
+    "description": "View details option"
+  },
+  "deleteService": "Hapus Servis",
+  "@deleteService": {
+    "description": "Delete service button"
+  },
+  "deleteServiceConfirmation": "Apakah Anda yakin ingin menghapus \"{serviceType}\" untuk {vehicleName}? Tindakan ini tidak dapat dibatalkan.",
+  "@deleteServiceConfirmation": {
+    "description": "Delete service confirmation message",
+    "placeholders": {
+      "serviceType": {
+        "type": "String",
+        "example": "Ganti Oli"
+      },
+      "vehicleName": {
+        "type": "String",
+        "example": "Mobil Saya"
+      }
+    }
+  },
+  "mechanic": "Mekanik",
+  "@mechanic": {
+    "description": "Mechanic field label"
+  },
+  "selectAVehicle": "Pilih kendaraan",
+  "@selectAVehicle": {
+    "description": "Select a vehicle hint"
+  },
+  "noVehiclesAvailablePleaseAddVehicleFirst": "Tidak ada kendaraan tersedia. Silakan tambahkan kendaraan terlebih dahulu.",
+  "@noVehiclesAvailablePleaseAddVehicleFirst": {
+    "description": "No vehicles available message"
+  },
+  "selectServiceType": "Pilih tipe servis",
+  "@selectServiceType": {
+    "description": "Service type dropdown hint"
+  },
+  "selectServiceDate": "Pilih tanggal servis",
+  "@selectServiceDate": {
+    "description": "Service date dropdown hint"
+  },
+  "describeServicePerformed": "Deskripsikan servis yang dilakukan...",
+  "@describeServicePerformed": {
+    "description": "Description field hint"
+  },
+  "costIDR": "Biaya (IDR)",
+  "@costIDR": {
+    "description": "Cost field label"
+  },
+  "exampleCost": "cth: 500000",
+  "@exampleCost": {
+    "description": "Cost field hint"
+  },
+  "mechanicShop": "Mekanik / Bengkel",
+  "@mechanicShop": {
+    "description": "Mechanic field label"
+  },
+  "exampleMechanic": "cth: Bengkel Jaya",
+  "@exampleMechanic": {
+    "description": "Mechanic field hint"
+  },
+  "additionalNotesOrObservations": "Catatan atau observasi tambahan...",
+  "@additionalNotesOrObservations": {
+    "description": "Notes field hint"
+  },
+  "saveServiceRecord": "Simpan Catatan Servis",
+  "@saveServiceRecord": {
+    "description": "Save service record button"
+  },
+  "pleaseFillInAllRequiredFields": "Harap isi semua kolom yang wajib",
+  "@pleaseFillInAllRequiredFields": {
+    "description": "Validation error message"
+  },
+  "updateServiceRecord": "Perbarui Catatan Servis",
+  "@updateServiceRecord": {
+    "description": "Update service record button"
+  },
+  "databaseViewer": "Penampil Database",
+  "@databaseViewer": {
+    "description": "Database viewer menu item"
+  },
+  "viewAllDatabaseRecords": "Lihat semua catatan database",
+  "@viewAllDatabaseRecords": {
+    "description": "Database viewer subtitle"
+  },
+  "appInformation": "OtoLog - Aplikasi Catatan Servis Kendaraan",
+  "@appInformation": {
+    "description": "App information text"
+  },
+  "january": "Januari",
+  "@january": {
+    "description": "January month name"
+  },
+  "february": "Februari",
+  "@february": {
+    "description": "February month name"
+  },
+  "march": "Maret",
+  "@march": {
+    "description": "March month name"
+  },
+  "april": "April",
+  "@april": {
+    "description": "April month name"
+  },
+  "may": "Mei",
+  "@may": {
+    "description": "May month name"
+  },
+  "june": "Juni",
+  "@june": {
+    "description": "June month name"
+  },
+  "july": "Juli",
+  "@july": {
+    "description": "July month name"
+  },
+  "august": "Agustus",
+  "@august": {
+    "description": "August month name"
+  },
+  "september": "September",
+  "@september": {
+    "description": "September month name"
+  },
+  "october": "Oktober",
+  "@october": {
+    "description": "October month name"
+  },
+  "november": "November",
+  "@november": {
+    "description": "November month name"
+  },
+  "december": "Desember",
+  "@december": {
+    "description": "December month name"
+  },
+  "applyFilters": "Terapkan Filter",
+  "@applyFilters": {
+    "description": "Apply filters button"
+  },
+  "noServiceRecordsFor": "Tidak ada catatan servis untuk",
+  "@noServiceRecordsFor": {
+    "description": "No service records for specific vehicle message"
+  },
+  "failedToLoadVehicles": "Gagal memuat kendaraan",
+  "@failedToLoadVehicles": {
+    "description": "Failed to load vehicles error message"
+  }
+}
