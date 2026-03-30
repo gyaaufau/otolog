@@ -37,39 +37,46 @@ class MainShell extends StatelessWidget {
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                _buildNavItem(
-                  context: context,
-                  icon: Icons.home_outlined,
-                  activeIcon: Icons.home,
-                  label: context.l10n.home,
-                  index: 0,
-                  isActive: navigationShell.currentIndex == 0,
+                Expanded(
+                  child: _buildNavItem(
+                    context: context,
+                    icon: Icons.home_outlined,
+                    activeIcon: Icons.home,
+                    label: context.l10n.home,
+                    index: 0,
+                    isActive: navigationShell.currentIndex == 0,
+                  ),
                 ),
-                _buildNavItem(
-                  context: context,
-                  icon: Icons.directions_car_outlined,
-                  activeIcon: Icons.directions_car,
-                  label: context.l10n.garage,
-                  index: 1,
-                  isActive: navigationShell.currentIndex == 1,
+                Expanded(
+                  child: _buildNavItem(
+                    context: context,
+                    icon: Icons.directions_car_outlined,
+                    activeIcon: Icons.directions_car,
+                    label: context.l10n.garage,
+                    index: 1,
+                    isActive: navigationShell.currentIndex == 1,
+                  ),
                 ),
-                _buildNavItem(
-                  context: context,
-                  icon: Icons.history_outlined,
-                  activeIcon: Icons.history,
-                  label: context.l10n.serviceLogs,
-                  index: 2,
-                  isActive: navigationShell.currentIndex == 2,
+                Expanded(
+                  child: _buildNavItem(
+                    context: context,
+                    icon: Icons.history_outlined,
+                    activeIcon: Icons.history,
+                    label: context.l10n.serviceLogs,
+                    index: 2,
+                    isActive: navigationShell.currentIndex == 2,
+                  ),
                 ),
-                _buildNavItem(
-                  context: context,
-                  icon: Icons.settings_outlined,
-                  activeIcon: Icons.settings,
-                  label: context.l10n.settings,
-                  index: 3,
-                  isActive: navigationShell.currentIndex == 3,
+                Expanded(
+                  child: _buildNavItem(
+                    context: context,
+                    icon: Icons.settings_outlined,
+                    activeIcon: Icons.settings,
+                    label: context.l10n.settings,
+                    index: 3,
+                    isActive: navigationShell.currentIndex == 3,
+                  ),
                 ),
               ],
             ),
