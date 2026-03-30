@@ -666,4 +666,160 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get failedToLoadVehicles => 'Failed to load vehicles';
+
+  @override
+  String get preferences => 'Preferences';
+
+  @override
+  String get support => 'Support';
+
+  @override
+  String get notifications => 'Notifications';
+
+  @override
+  String get receiveServiceReminders => 'Receive service reminders';
+
+  @override
+  String get exportData => 'Export Data';
+
+  @override
+  String get downloadAllYourData => 'Download all your data';
+
+  @override
+  String get backup => 'Backup';
+
+  @override
+  String get createBackupOfYourData => 'Create a backup of your data';
+
+  @override
+  String get clearData => 'Clear Data';
+
+  @override
+  String get removeAllDataFromApp => 'Remove all data from the app';
+
+  @override
+  String get helpAndFaq => 'Help & FAQ';
+
+  @override
+  String get findAnswersToCommonQuestions => 'Find answers to common questions';
+
+  @override
+  String get rateApp => 'Rate App';
+
+  @override
+  String get rateUsOnAppStore => 'Rate us on the app store';
+
+  @override
+  String get termsOfService => 'Terms of Service';
+
+  @override
+  String get readOurTermsAndConditions => 'Read our terms and conditions';
+
+  @override
+  String get privacyPolicy => 'Privacy Policy';
+
+  @override
+  String get learnHowWeProtectYourData => 'Learn how we protect your data';
+
+  @override
+  String get version => 'Version 1.0.0';
+
+  @override
+  String get copyright => '© 2024 OtoLog. All rights reserved.';
+
+  @override
+  String get selectTheme => 'Select Theme';
+
+  @override
+  String get lightModeDescription => 'Use light theme';
+
+  @override
+  String get darkModeDescription => 'Use dark theme';
+
+  @override
+  String get systemModeDescription => 'Follow system settings';
+
+  @override
+  String get exportDataTitle => 'Export Data';
+
+  @override
+  String get exportDataDescription =>
+      'This will export all your vehicle and service records to a JSON file. The file will be saved to your device\'s downloads folder.';
+
+  @override
+  String get export => 'Export';
+
+  @override
+  String get exportFunctionalityComingSoon =>
+      'Export functionality coming soon!';
+
+  @override
+  String get createBackup => 'Create Backup';
+
+  @override
+  String get createBackupDescription =>
+      'This will create a backup of all your data. You can restore this backup later if needed.';
+
+  @override
+  String get backupFunctionalityComingSoon =>
+      'Backup functionality coming soon!';
+
+  @override
+  String get clearAllData => 'Clear All Data';
+
+  @override
+  String get clearDataWarning =>
+      'Are you sure you want to clear all data? This action cannot be undone and will permanently delete all your vehicles and service records.';
+
+  @override
+  String get clear => 'Clear';
+
+  @override
+  String get clearDataFunctionalityComingSoon =>
+      'Clear data functionality coming soon!';
+
+  @override
+  String get howDoIAddAVehicle => 'How do I add a vehicle?';
+
+  @override
+  String get howDoIAddAVehicleAnswer =>
+      'Go to the Garage tab and tap the \"Add Vehicle\" button. Fill in the required information and save.';
+
+  @override
+  String get howDoIAddAServiceRecord => 'How do I add a service record?';
+
+  @override
+  String get howDoIAddAServiceRecordAnswer =>
+      'Go to the Service Logs tab and tap the \"Add Service\" button. Select a vehicle, fill in the service details, and save.';
+
+  @override
+  String get howDoISwitchBetweenVehicles => 'How do I switch between vehicles?';
+
+  @override
+  String get howDoISwitchBetweenVehiclesAnswer =>
+      'On the Home screen, tap the vehicle card to switch between your vehicles.';
+
+  @override
+  String get rateOtoLog => 'Rate OtoLog';
+
+  @override
+  String get rateOtoLogDescription =>
+      'Enjoying OtoLog? Please consider rating us on the app store. Your feedback helps us improve!';
+
+  @override
+  String get maybeLater => 'Maybe Later';
+
+  @override
+  String get rateNow => 'Rate Now';
+
+  @override
+  String get openingAppStore => 'Opening app store...';
+
+  @override
+  String get termsOfServiceContent =>
+      'By using OtoLog, you agree to these terms:\n\n1. You are responsible for maintaining the confidentiality of your account.\n2. You agree not to use the app for any illegal purposes.\n3. We reserve the right to modify these terms at any time.\n4. Your data is stored locally on your device.\n5. We are not liable for any loss of data.\n\nFor more information, please contact us.';
+
+  @override
+  String get privacyPolicyContent =>
+      'At OtoLog, we take your privacy seriously:\n\n1. All your data is stored locally on your device.\n2. We do not collect or transmit any personal data.\n3. We do not share your data with third parties.\n4. You can export or delete your data at any time.\n5. We use minimal permissions necessary for the app to function.\n\nIf you have any questions about our privacy practices, please contact us.';
 }

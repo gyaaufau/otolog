@@ -941,5 +941,197 @@
   "failedToLoadVehicles": "Failed to load vehicles",
   "@failedToLoadVehicles": {
     "description": "Failed to load vehicles error message"
+  },
+  "preferences": "Preferences",
+  "@preferences": {
+    "description": "Preferences section title"
+  },
+  "support": "Support",
+  "@support": {
+    "description": "Support section title"
+  },
+  "notifications": "Notifications",
+  "@notifications": {
+    "description": "Notifications setting label"
+  },
+  "receiveServiceReminders": "Receive service reminders",
+  "@receiveServiceReminders": {
+    "description": "Notifications setting subtitle"
+  },
+  "exportData": "Export Data",
+  "@exportData": {
+    "description": "Export data setting label"
+  },
+  "downloadAllYourData": "Download all your data",
+  "@downloadAllYourData": {
+    "description": "Export data setting subtitle"
+  },
+  "backup": "Backup",
+  "@backup": {
+    "description": "Backup setting label"
+  },
+  "createBackupOfYourData": "Create a backup of your data",
+  "@createBackupOfYourData": {
+    "description": "Backup setting subtitle"
+  },
+  "clearData": "Clear Data",
+  "@clearData": {
+    "description": "Clear data setting label"
+  },
+  "removeAllDataFromApp": "Remove all data from the app",
+  "@removeAllDataFromApp": {
+    "description": "Clear data setting subtitle"
+  },
+  "helpAndFaq": "Help & FAQ",
+  "@helpAndFaq": {
+    "description": "Help and FAQ setting label"
+  },
+  "findAnswersToCommonQuestions": "Find answers to common questions",
+  "@findAnswersToCommonQuestions": {
+    "description": "Help and FAQ setting subtitle"
+  },
+  "rateApp": "Rate App",
+  "@rateApp": {
+    "description": "Rate app setting label"
+  },
+  "rateUsOnAppStore": "Rate us on the app store",
+  "@rateUsOnAppStore": {
+    "description": "Rate app setting subtitle"
+  },
+  "termsOfService": "Terms of Service",
+  "@termsOfService": {
+    "description": "Terms of Service setting label"
+  },
+  "readOurTermsAndConditions": "Read our terms and conditions",
+  "@readOurTermsAndConditions": {
+    "description": "Terms of Service setting subtitle"
+  },
+  "privacyPolicy": "Privacy Policy",
+  "@privacyPolicy": {
+    "description": "Privacy Policy setting label"
+  },
+  "learnHowWeProtectYourData": "Learn how we protect your data",
+  "@learnHowWeProtectYourData": {
+    "description": "Privacy Policy setting subtitle"
+  },
+  "version": "Version 1.0.0",
+  "@version": {
+    "description": "App version"
+  },
+  "copyright": "© 2024 OtoLog. All rights reserved.",
+  "@copyright": {
+    "description": "Copyright notice"
+  },
+  "selectTheme": "Select Theme",
+  "@selectTheme": {
+    "description": "Theme selector dialog title"
+  },
+  "lightModeDescription": "Use light theme",
+  "@lightModeDescription": {
+    "description": "Light mode description"
+  },
+  "darkModeDescription": "Use dark theme",
+  "@darkModeDescription": {
+    "description": "Dark mode description"
+  },
+  "systemModeDescription": "Follow system settings",
+  "@systemModeDescription": {
+    "description": "System mode description"
+  },
+  "exportDataTitle": "Export Data",
+  "@exportDataTitle": {
+    "description": "Export data dialog title"
+  },
+  "exportDataDescription": "This will export all your vehicle and service records to a JSON file. The file will be saved to your device's downloads folder.",
+  "@exportDataDescription": {
+    "description": "Export data dialog description"
+  },
+  "export": "Export",
+  "@export": {
+    "description": "Export button"
+  },
+  "exportFunctionalityComingSoon": "Export functionality coming soon!",
+  "@exportFunctionalityComingSoon": {
+    "description": "Export functionality not available message"
+  },
+  "createBackup": "Create Backup",
+  "@createBackup": {
+    "description": "Create backup dialog title"
+  },
+  "createBackupDescription": "This will create a backup of all your data. You can restore this backup later if needed.",
+  "@createBackupDescription": {
+    "description": "Create backup dialog description"
+  },
+  "backupFunctionalityComingSoon": "Backup functionality coming soon!",
+  "@backupFunctionalityComingSoon": {
+    "description": "Backup functionality not available message"
+  },
+  "clearAllData": "Clear All Data",
+  "@clearAllData": {
+    "description": "Clear data dialog title"
+  },
+  "clearDataWarning": "Are you sure you want to clear all data? This action cannot be undone and will permanently delete all your vehicles and service records.",
+  "@clearDataWarning": {
+    "description": "Clear data warning message"
+  },
+  "clear": "Clear",
+  "@clear": {
+    "description": "Clear button"
+  },
+  "clearDataFunctionalityComingSoon": "Clear data functionality coming soon!",
+  "@clearDataFunctionalityComingSoon": {
+    "description": "Clear data functionality not available message"
+  },
+  "howDoIAddAVehicle": "How do I add a vehicle?",
+  "@howDoIAddAVehicle": {
+    "description": "Help FAQ question 1"
+  },
+  "howDoIAddAVehicleAnswer": "Go to the Garage tab and tap the \"Add Vehicle\" button. Fill in the required information and save.",
+  "@howDoIAddAVehicleAnswer": {
+    "description": "Help FAQ answer 1"
+  },
+  "howDoIAddAServiceRecord": "How do I add a service record?",
+  "@howDoIAddAServiceRecord": {
+    "description": "Help FAQ question 2"
+  },
+  "howDoIAddAServiceRecordAnswer": "Go to the Service Logs tab and tap the \"Add Service\" button. Select a vehicle, fill in the service details, and save.",
+  "@howDoIAddAServiceRecordAnswer": {
+    "description": "Help FAQ answer 2"
+  },
+  "howDoISwitchBetweenVehicles": "How do I switch between vehicles?",
+  "@howDoISwitchBetweenVehicles": {
+    "description": "Help FAQ question 3"
+  },
+  "howDoISwitchBetweenVehiclesAnswer": "On the Home screen, tap the vehicle card to switch between your vehicles.",
+  "@howDoISwitchBetweenVehiclesAnswer": {
+    "description": "Help FAQ answer 3"
+  },
+  "rateOtoLog": "Rate OtoLog",
+  "@rateOtoLog": {
+    "description": "Rate app dialog title"
+  },
+  "rateOtoLogDescription": "Enjoying OtoLog? Please consider rating us on the app store. Your feedback helps us improve!",
+  "@rateOtoLogDescription": {
+    "description": "Rate app dialog description"
+  },
+  "maybeLater": "Maybe Later",
+  "@maybeLater": {
+    "description": "Maybe later button"
+  },
+  "rateNow": "Rate Now",
+  "@rateNow": {
+    "description": "Rate now button"
+  },
+  "openingAppStore": "Opening app store...",
+  "@openingAppStore": {
+    "description": "Opening app store message"
+  },
+  "termsOfServiceContent": "By using OtoLog, you agree to these terms:\n\n1. You are responsible for maintaining the confidentiality of your account.\n2. You agree not to use the app for any illegal purposes.\n3. We reserve the right to modify these terms at any time.\n4. Your data is stored locally on your device.\n5. We are not liable for any loss of data.\n\nFor more information, please contact us.",
+  "@termsOfServiceContent": {
+    "description": "Terms of Service content"
+  },
+  "privacyPolicyContent": "At OtoLog, we take your privacy seriously:\n\n1. All your data is stored locally on your device.\n2. We do not collect or transmit any personal data.\n3. We do not share your data with third parties.\n4. You can export or delete your data at any time.\n5. We use minimal permissions necessary for the app to function.\n\nIf you have any questions about our privacy practices, please contact us.",
+  "@privacyPolicyContent": {
+    "description": "Privacy Policy content"
   }
 }

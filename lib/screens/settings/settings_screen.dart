@@ -29,7 +29,7 @@ class SettingsScreen extends StatelessWidget {
             const SizedBox(height: 8),
 
             // Preferences Section
-            _buildSectionHeader(context, 'Preferences'),
+            _buildSectionHeader(context, l10n.preferences),
             _buildPreferencesSection(context),
 
             const SizedBox(height: 24),
@@ -41,13 +41,13 @@ class SettingsScreen extends StatelessWidget {
             // const SizedBox(height: 24),
 
             // Support Section
-            _buildSectionHeader(context, 'Support'),
+            _buildSectionHeader(context, l10n.support),
             _buildSupportSection(context),
 
             const SizedBox(height: 24),
 
             // About Section
-            _buildSectionHeader(context, 'About'),
+            _buildSectionHeader(context, l10n.about),
             _buildAboutSection(context),
 
             const SizedBox(height: 32),
@@ -301,6 +301,8 @@ class SettingsScreen extends StatelessWidget {
   }
 
   Widget _buildSupportSection(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16),
       decoration: BoxDecoration(
@@ -320,23 +322,15 @@ class SettingsScreen extends StatelessWidget {
             context,
             icon: Icons.help_outline,
             iconColor: AppColors.primary,
-            title: 'Help & FAQ',
-            subtitle: 'Find answers to common questions',
+            title: l10n.helpAndFaq,
+            subtitle: l10n.findAnswersToCommonQuestions,
             onTap: () => _showHelpDialog(context),
-          ),
-          _buildSettingItem(
-            context,
-            icon: Icons.feedback_outlined,
-            iconColor: AppColors.tertiary,
-            title: 'Send Feedback',
-            subtitle: 'Help us improve the app',
-            onTap: () => _showFeedbackDialog(context),
           ),
           _buildSettingItem(
             context,
             icon: Icons.star_outline,
             iconColor: Colors.amber,
-            title: 'Rate App',
+            title: l10n.rateApp,
             subtitle: 'Rate us on the app store',
             onTap: () => _showRateAppDialog(context),
           ),
@@ -375,16 +369,16 @@ class SettingsScreen extends StatelessWidget {
             context,
             icon: Icons.description_outlined,
             iconColor: AppColors.secondary[500]!,
-            title: 'Terms of Service',
-            subtitle: 'Read our terms and conditions',
+            title: l10n.termsOfService,
+            subtitle: l10n.readOurTermsAndConditions,
             onTap: () => _showTermsDialog(context),
           ),
           _buildSettingItem(
             context,
             icon: Icons.privacy_tip_outlined,
             iconColor: AppColors.secondary[500]!,
-            title: 'Privacy Policy',
-            subtitle: 'Learn how we protect your data',
+            title: l10n.privacyPolicy,
+            subtitle: l10n.learnHowWeProtectYourData,
             onTap: () => _showPrivacyDialog(context),
           ),
           _buildSettingItem(
@@ -747,91 +741,45 @@ class SettingsScreen extends StatelessWidget {
   }
 
   void _showHelpDialog(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     showDialog(
       context: context,
       builder:
           (context) => AlertDialog(
-            title: const Text('Help & FAQ'),
-            content: const SingleChildScrollView(
+            title: Text(l10n.helpAndFaq),
+            content: SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    'How do I add a vehicle?',
+                    l10n.howDoIAddAVehicle,
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                   SizedBox(height: 8),
-                  Text(
-                    'Go to the Garage tab and tap the "Add Vehicle" button. Fill in the required information and save.',
-                  ),
+                  Text(l10n.howDoIAddAVehicleAnswer),
                   SizedBox(height: 16),
                   Text(
-                    'How do I add a service record?',
+                    l10n.howDoIAddAServiceRecord,
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                   SizedBox(height: 8),
-                  Text(
-                    'Go to the Service Logs tab and tap the "Add Service" button. Select a vehicle, fill in the service details, and save.',
-                  ),
+                  Text(l10n.howDoIAddAServiceRecordAnswer),
                   SizedBox(height: 16),
                   Text(
-                    'How do I switch between vehicles?',
+                    l10n.howDoISwitchBetweenVehicles,
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                   SizedBox(height: 8),
-                  Text(
-                    'On the Home screen, tap the vehicle card to switch between your vehicles.',
-                  ),
+                  Text(l10n.howDoISwitchBetweenVehiclesAnswer),
                 ],
               ),
             ),
             actions: [
               TextButton(
                 onPressed: () => Navigator.pop(context),
-                child: const Text('Close'),
-              ),
-            ],
-          ),
-    );
-  }
-
-  void _showFeedbackDialog(BuildContext context) {
-    final TextEditingController feedbackController = TextEditingController();
-
-    showDialog(
-      context: context,
-      builder:
-          (context) => AlertDialog(
-            title: const Text('Send Feedback'),
-            content: TextField(
-              controller: feedbackController,
-              maxLines: 5,
-              decoration: const InputDecoration(
-                hintText: 'Tell us what you think...',
-                border: OutlineInputBorder(),
-              ),
-            ),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: const Text('Cancel'),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                  // TODO: Implement feedback submission
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Thank you for your feedback!'),
-                    ),
-                  );
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.tertiary,
-                  foregroundColor: Colors.white,
-                ),
-                child: const Text('Send'),
+                child: Text(l10n.close),
               ),
             ],
           ),
@@ -839,6 +787,8 @@ class SettingsScreen extends StatelessWidget {
   }
 
   void _showRateAppDialog(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     showDialog(
       context: context,
       builder:
@@ -847,30 +797,28 @@ class SettingsScreen extends StatelessWidget {
               children: [
                 Icon(Icons.star, color: Colors.amber),
                 const SizedBox(width: 12),
-                const Text('Rate OtoLog'),
+                Text(l10n.rateOtoLog),
               ],
             ),
-            content: const Text(
-              'Enjoying OtoLog? Please consider rating us on the app store. Your feedback helps us improve!',
-            ),
+            content: Text(l10n.rateOtoLogDescription),
             actions: [
               TextButton(
                 onPressed: () => Navigator.pop(context),
-                child: const Text('Maybe Later'),
+                child: Text(l10n.maybeLater),
               ),
               ElevatedButton(
                 onPressed: () {
                   Navigator.pop(context);
                   // TODO: Implement app store link
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Opening app store...')),
-                  );
+                  ScaffoldMessenger.of(
+                    context,
+                  ).showSnackBar(SnackBar(content: Text(l10n.openingAppStore)));
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.amber,
                   foregroundColor: Colors.white,
                 ),
-                child: const Text('Rate Now'),
+                child: Text(l10n.rateNow),
               ),
             ],
           ),
@@ -933,26 +881,20 @@ class SettingsScreen extends StatelessWidget {
   }
 
   void _showTermsDialog(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     showDialog(
       context: context,
       builder:
           (context) => AlertDialog(
-            title: const Text('Terms of Service'),
-            content: const SingleChildScrollView(
-              child: Text(
-                'By using OtoLog, you agree to these terms:\n\n'
-                '1. You are responsible for maintaining the confidentiality of your account.\n'
-                '2. You agree not to use the app for any illegal purposes.\n'
-                '3. We reserve the right to modify these terms at any time.\n'
-                '4. Your data is stored locally on your device.\n'
-                '5. We are not liable for any loss of data.\n\n'
-                'For more information, please contact us.',
-              ),
+            title: Text(l10n.termsOfService),
+            content: SingleChildScrollView(
+              child: Text(l10n.termsOfServiceContent),
             ),
             actions: [
               TextButton(
                 onPressed: () => Navigator.pop(context),
-                child: const Text('Close'),
+                child: Text(l10n.close),
               ),
             ],
           ),
@@ -960,26 +902,20 @@ class SettingsScreen extends StatelessWidget {
   }
 
   void _showPrivacyDialog(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     showDialog(
       context: context,
       builder:
           (context) => AlertDialog(
-            title: const Text('Privacy Policy'),
-            content: const SingleChildScrollView(
-              child: Text(
-                'At OtoLog, we take your privacy seriously:\n\n'
-                '1. All your data is stored locally on your device.\n'
-                '2. We do not collect or transmit any personal data.\n'
-                '3. We do not share your data with third parties.\n'
-                '4. You can export or delete your data at any time.\n'
-                '5. We use minimal permissions necessary for the app to function.\n\n'
-                'If you have any questions about our privacy practices, please contact us.',
-              ),
+            title: Text(l10n.privacyPolicy),
+            content: SingleChildScrollView(
+              child: Text(l10n.privacyPolicyContent),
             ),
             actions: [
               TextButton(
                 onPressed: () => Navigator.pop(context),
-                child: const Text('Close'),
+                child: Text(l10n.close),
               ),
             ],
           ),

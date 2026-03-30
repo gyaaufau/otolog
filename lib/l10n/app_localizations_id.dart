@@ -669,4 +669,164 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get failedToLoadVehicles => 'Gagal memuat kendaraan';
+
+  @override
+  String get preferences => 'Preferensi';
+
+  @override
+  String get support => 'Dukungan';
+
+  @override
+  String get notifications => 'Notifikasi';
+
+  @override
+  String get receiveServiceReminders => 'Terima pengingat servis';
+
+  @override
+  String get exportData => 'Ekspor Data';
+
+  @override
+  String get downloadAllYourData => 'Unduh semua data Anda';
+
+  @override
+  String get backup => 'Cadangkan';
+
+  @override
+  String get createBackupOfYourData => 'Buat cadangan data Anda';
+
+  @override
+  String get clearData => 'Hapus Data';
+
+  @override
+  String get removeAllDataFromApp => 'Hapus semua data dari aplikasi';
+
+  @override
+  String get helpAndFaq => 'Bantuan & FAQ';
+
+  @override
+  String get findAnswersToCommonQuestions =>
+      'Temukan jawaban untuk pertanyaan umum';
+
+  @override
+  String get rateApp => 'Beri Nilai Aplikasi';
+
+  @override
+  String get rateUsOnAppStore => 'Beri nilai kami di toko aplikasi';
+
+  @override
+  String get termsOfService => 'Ketentuan Layanan';
+
+  @override
+  String get readOurTermsAndConditions => 'Baca ketentuan dan syarat kami';
+
+  @override
+  String get privacyPolicy => 'Kebijakan Privasi';
+
+  @override
+  String get learnHowWeProtectYourData =>
+      'Pelajari bagaimana kami melindungi data Anda';
+
+  @override
+  String get version => 'Versi 1.0.0';
+
+  @override
+  String get copyright => '© 2024 OtoLog. Hak Cipta Dilindungi.';
+
+  @override
+  String get selectTheme => 'Pilih Tema';
+
+  @override
+  String get lightModeDescription => 'Gunakan tema terang';
+
+  @override
+  String get darkModeDescription => 'Gunakan tema gelap';
+
+  @override
+  String get systemModeDescription => 'Ikuti pengaturan sistem';
+
+  @override
+  String get exportDataTitle => 'Ekspor Data';
+
+  @override
+  String get exportDataDescription =>
+      'Ini akan mengekspor semua catatan kendaraan dan servis Anda ke file JSON. File akan disimpan ke folder unduhan perangkat Anda.';
+
+  @override
+  String get export => 'Ekspor';
+
+  @override
+  String get exportFunctionalityComingSoon =>
+      'Fungsi ekspor akan segera hadir!';
+
+  @override
+  String get createBackup => 'Buat Cadangan';
+
+  @override
+  String get createBackupDescription =>
+      'Ini akan membuat cadangan semua data Anda. Anda dapat memulihkan cadangan ini nanti jika diperlukan.';
+
+  @override
+  String get backupFunctionalityComingSoon =>
+      'Fungsi cadangan akan segera hadir!';
+
+  @override
+  String get clearAllData => 'Hapus Semua Data';
+
+  @override
+  String get clearDataWarning =>
+      'Apakah Anda yakin ingin menghapus semua data? Tindakan ini tidak dapat dibatalkan dan akan menghapus permanen semua kendaraan dan catatan servis Anda.';
+
+  @override
+  String get clear => 'Hapus';
+
+  @override
+  String get clearDataFunctionalityComingSoon =>
+      'Fungsi hapus data akan segera hadir!';
+
+  @override
+  String get howDoIAddAVehicle => 'Bagaimana cara menambahkan kendaraan?';
+
+  @override
+  String get howDoIAddAVehicleAnswer =>
+      'Pergi ke tab Garasi dan ketuk tombol \"Tambah Kendaraan\". Isi informasi yang diperlukan dan simpan.';
+
+  @override
+  String get howDoIAddAServiceRecord =>
+      'Bagaimana cara menambahkan catatan servis?';
+
+  @override
+  String get howDoIAddAServiceRecordAnswer =>
+      'Pergi ke tab Riwayat Servis dan ketuk tombol \"Tambah Servis\". Pilih kendaraan, isi detail servis, dan simpan.';
+
+  @override
+  String get howDoISwitchBetweenVehicles =>
+      'Bagaimana cara berpindah antar kendaraan?';
+
+  @override
+  String get howDoISwitchBetweenVehiclesAnswer =>
+      'Di layar Beranda, ketuk kartu kendaraan untuk berpindah antar kendaraan Anda.';
+
+  @override
+  String get rateOtoLog => 'Beri Nilai OtoLog';
+
+  @override
+  String get rateOtoLogDescription =>
+      'Menikmati OtoLog? Pertimbangkan untuk memberi nilai kami di toko aplikasi. Masukan Anda membantu kami meningkatkan!';
+
+  @override
+  String get maybeLater => 'Nanti Saja';
+
+  @override
+  String get rateNow => 'Beri Nilai Sekarang';
+
+  @override
+  String get openingAppStore => 'Membuka toko aplikasi...';
+
+  @override
+  String get termsOfServiceContent =>
+      'Dengan menggunakan OtoLog, Anda menyetujui ketentuan ini:\n\n1. Anda bertanggung jawab untuk menjaga kerahasiaan akun Anda.\n2. Anda setuju untuk tidak menggunakan aplikasi untuk tujuan ilegal.\n3. Kami berhak mengubah ketentuan ini kapan saja.\n4. Data Anda disimpan secara lokal di perangkat Anda.\n5. Kami tidak bertanggung jawab atas kehilangan data.\n\nUntuk informasi lebih lanjut, silakan hubungi kami.';
+
+  @override
+  String get privacyPolicyContent =>
+      'Di OtoLog, kami menganggap privasi Anda dengan serius:\n\n1. Semua data Anda disimpan secara lokal di perangkat Anda.\n2. Kami tidak mengumpulkan atau mengirimkan data pribadi apa pun.\n3. Kami tidak berbagi data Anda dengan pihak ketiga.\n4. Anda dapat mengekspor atau menghapus data Anda kapan saja.\n5. Kami menggunakan izin minimal yang diperlukan agar aplikasi berfungsi.\n\nJika Anda memiliki pertanyaan tentang praktik privasi kami, silakan hubungi kami.';
 }

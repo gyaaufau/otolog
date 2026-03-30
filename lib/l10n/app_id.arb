@@ -941,5 +941,197 @@
   "failedToLoadVehicles": "Gagal memuat kendaraan",
   "@failedToLoadVehicles": {
     "description": "Failed to load vehicles error message"
+  },
+  "preferences": "Preferensi",
+  "@preferences": {
+    "description": "Preferences section title"
+  },
+  "support": "Dukungan",
+  "@support": {
+    "description": "Support section title"
+  },
+  "notifications": "Notifikasi",
+  "@notifications": {
+    "description": "Notifications setting label"
+  },
+  "receiveServiceReminders": "Terima pengingat servis",
+  "@receiveServiceReminders": {
+    "description": "Notifications setting subtitle"
+  },
+  "exportData": "Ekspor Data",
+  "@exportData": {
+    "description": "Export data setting label"
+  },
+  "downloadAllYourData": "Unduh semua data Anda",
+  "@downloadAllYourData": {
+    "description": "Export data setting subtitle"
+  },
+  "backup": "Cadangkan",
+  "@backup": {
+    "description": "Backup setting label"
+  },
+  "createBackupOfYourData": "Buat cadangan data Anda",
+  "@createBackupOfYourData": {
+    "description": "Backup setting subtitle"
+  },
+  "clearData": "Hapus Data",
+  "@clearData": {
+    "description": "Clear data setting label"
+  },
+  "removeAllDataFromApp": "Hapus semua data dari aplikasi",
+  "@removeAllDataFromApp": {
+    "description": "Clear data setting subtitle"
+  },
+  "helpAndFaq": "Bantuan & FAQ",
+  "@helpAndFaq": {
+    "description": "Help and FAQ setting label"
+  },
+  "findAnswersToCommonQuestions": "Temukan jawaban untuk pertanyaan umum",
+  "@findAnswersToCommonQuestions": {
+    "description": "Help and FAQ setting subtitle"
+  },
+  "rateApp": "Beri Nilai Aplikasi",
+  "@rateApp": {
+    "description": "Rate app setting label"
+  },
+  "rateUsOnAppStore": "Beri nilai kami di toko aplikasi",
+  "@rateUsOnAppStore": {
+    "description": "Rate app setting subtitle"
+  },
+  "termsOfService": "Ketentuan Layanan",
+  "@termsOfService": {
+    "description": "Terms of Service setting label"
+  },
+  "readOurTermsAndConditions": "Baca ketentuan dan syarat kami",
+  "@readOurTermsAndConditions": {
+    "description": "Terms of Service setting subtitle"
+  },
+  "privacyPolicy": "Kebijakan Privasi",
+  "@privacyPolicy": {
+    "description": "Privacy Policy setting label"
+  },
+  "learnHowWeProtectYourData": "Pelajari bagaimana kami melindungi data Anda",
+  "@learnHowWeProtectYourData": {
+    "description": "Privacy Policy setting subtitle"
+  },
+  "version": "Versi 1.0.0",
+  "@version": {
+    "description": "App version"
+  },
+  "copyright": "© 2024 OtoLog. Hak Cipta Dilindungi.",
+  "@copyright": {
+    "description": "Copyright notice"
+  },
+  "selectTheme": "Pilih Tema",
+  "@selectTheme": {
+    "description": "Theme selector dialog title"
+  },
+  "lightModeDescription": "Gunakan tema terang",
+  "@lightModeDescription": {
+    "description": "Light mode description"
+  },
+  "darkModeDescription": "Gunakan tema gelap",
+  "@darkModeDescription": {
+    "description": "Dark mode description"
+  },
+  "systemModeDescription": "Ikuti pengaturan sistem",
+  "@systemModeDescription": {
+    "description": "System mode description"
+  },
+  "exportDataTitle": "Ekspor Data",
+  "@exportDataTitle": {
+    "description": "Export data dialog title"
+  },
+  "exportDataDescription": "Ini akan mengekspor semua catatan kendaraan dan servis Anda ke file JSON. File akan disimpan ke folder unduhan perangkat Anda.",
+  "@exportDataDescription": {
+    "description": "Export data dialog description"
+  },
+  "export": "Ekspor",
+  "@export": {
+    "description": "Export button"
+  },
+  "exportFunctionalityComingSoon": "Fungsi ekspor akan segera hadir!",
+  "@exportFunctionalityComingSoon": {
+    "description": "Export functionality not available message"
+  },
+  "createBackup": "Buat Cadangan",
+  "@createBackup": {
+    "description": "Create backup dialog title"
+  },
+  "createBackupDescription": "Ini akan membuat cadangan semua data Anda. Anda dapat memulihkan cadangan ini nanti jika diperlukan.",
+  "@createBackupDescription": {
+    "description": "Create backup dialog description"
+  },
+  "backupFunctionalityComingSoon": "Fungsi cadangan akan segera hadir!",
+  "@backupFunctionalityComingSoon": {
+    "description": "Backup functionality not available message"
+  },
+  "clearAllData": "Hapus Semua Data",
+  "@clearAllData": {
+    "description": "Clear data dialog title"
+  },
+  "clearDataWarning": "Apakah Anda yakin ingin menghapus semua data? Tindakan ini tidak dapat dibatalkan dan akan menghapus permanen semua kendaraan dan catatan servis Anda.",
+  "@clearDataWarning": {
+    "description": "Clear data warning message"
+  },
+  "clear": "Hapus",
+  "@clear": {
+    "description": "Clear button"
+  },
+  "clearDataFunctionalityComingSoon": "Fungsi hapus data akan segera hadir!",
+  "@clearDataFunctionalityComingSoon": {
+    "description": "Clear data functionality not available message"
+  },
+  "howDoIAddAVehicle": "Bagaimana cara menambahkan kendaraan?",
+  "@howDoIAddAVehicle": {
+    "description": "Help FAQ question 1"
+  },
+  "howDoIAddAVehicleAnswer": "Pergi ke tab Garasi dan ketuk tombol \"Tambah Kendaraan\". Isi informasi yang diperlukan dan simpan.",
+  "@howDoIAddAVehicleAnswer": {
+    "description": "Help FAQ answer 1"
+  },
+  "howDoIAddAServiceRecord": "Bagaimana cara menambahkan catatan servis?",
+  "@howDoIAddAServiceRecord": {
+    "description": "Help FAQ question 2"
+  },
+  "howDoIAddAServiceRecordAnswer": "Pergi ke tab Riwayat Servis dan ketuk tombol \"Tambah Servis\". Pilih kendaraan, isi detail servis, dan simpan.",
+  "@howDoIAddAServiceRecordAnswer": {
+    "description": "Help FAQ answer 2"
+  },
+  "howDoISwitchBetweenVehicles": "Bagaimana cara berpindah antar kendaraan?",
+  "@howDoISwitchBetweenVehicles": {
+    "description": "Help FAQ question 3"
+  },
+  "howDoISwitchBetweenVehiclesAnswer": "Di layar Beranda, ketuk kartu kendaraan untuk berpindah antar kendaraan Anda.",
+  "@howDoISwitchBetweenVehiclesAnswer": {
+    "description": "Help FAQ answer 3"
+  },
+  "rateOtoLog": "Beri Nilai OtoLog",
+  "@rateOtoLog": {
+    "description": "Rate app dialog title"
+  },
+  "rateOtoLogDescription": "Menikmati OtoLog? Pertimbangkan untuk memberi nilai kami di toko aplikasi. Masukan Anda membantu kami meningkatkan!",
+  "@rateOtoLogDescription": {
+    "description": "Rate app dialog description"
+  },
+  "maybeLater": "Nanti Saja",
+  "@maybeLater": {
+    "description": "Maybe later button"
+  },
+  "rateNow": "Beri Nilai Sekarang",
+  "@rateNow": {
+    "description": "Rate now button"
+  },
+  "openingAppStore": "Membuka toko aplikasi...",
+  "@openingAppStore": {
+    "description": "Opening app store message"
+  },
+  "termsOfServiceContent": "Dengan menggunakan OtoLog, Anda menyetujui ketentuan ini:\n\n1. Anda bertanggung jawab untuk menjaga kerahasiaan akun Anda.\n2. Anda setuju untuk tidak menggunakan aplikasi untuk tujuan ilegal.\n3. Kami berhak mengubah ketentuan ini kapan saja.\n4. Data Anda disimpan secara lokal di perangkat Anda.\n5. Kami tidak bertanggung jawab atas kehilangan data.\n\nUntuk informasi lebih lanjut, silakan hubungi kami.",
+  "@termsOfServiceContent": {
+    "description": "Terms of Service content"
+  },
+  "privacyPolicyContent": "Di OtoLog, kami menganggap privasi Anda dengan serius:\n\n1. Semua data Anda disimpan secara lokal di perangkat Anda.\n2. Kami tidak mengumpulkan atau mengirimkan data pribadi apa pun.\n3. Kami tidak berbagi data Anda dengan pihak ketiga.\n4. Anda dapat mengekspor atau menghapus data Anda kapan saja.\n5. Kami menggunakan izin minimal yang diperlukan agar aplikasi berfungsi.\n\nJika Anda memiliki pertanyaan tentang praktik privasi kami, silakan hubungi kami.",
+  "@privacyPolicyContent": {
+    "description": "Privacy Policy content"
   }
 }

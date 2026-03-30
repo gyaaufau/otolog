@@ -1387,6 +1387,294 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Failed to load vehicles'**
   String get failedToLoadVehicles;
+
+  /// Preferences section title
+  ///
+  /// In en, this message translates to:
+  /// **'Preferences'**
+  String get preferences;
+
+  /// Support section title
+  ///
+  /// In en, this message translates to:
+  /// **'Support'**
+  String get support;
+
+  /// Notifications setting label
+  ///
+  /// In en, this message translates to:
+  /// **'Notifications'**
+  String get notifications;
+
+  /// Notifications setting subtitle
+  ///
+  /// In en, this message translates to:
+  /// **'Receive service reminders'**
+  String get receiveServiceReminders;
+
+  /// Export data setting label
+  ///
+  /// In en, this message translates to:
+  /// **'Export Data'**
+  String get exportData;
+
+  /// Export data setting subtitle
+  ///
+  /// In en, this message translates to:
+  /// **'Download all your data'**
+  String get downloadAllYourData;
+
+  /// Backup setting label
+  ///
+  /// In en, this message translates to:
+  /// **'Backup'**
+  String get backup;
+
+  /// Backup setting subtitle
+  ///
+  /// In en, this message translates to:
+  /// **'Create a backup of your data'**
+  String get createBackupOfYourData;
+
+  /// Clear data setting label
+  ///
+  /// In en, this message translates to:
+  /// **'Clear Data'**
+  String get clearData;
+
+  /// Clear data setting subtitle
+  ///
+  /// In en, this message translates to:
+  /// **'Remove all data from the app'**
+  String get removeAllDataFromApp;
+
+  /// Help and FAQ setting label
+  ///
+  /// In en, this message translates to:
+  /// **'Help & FAQ'**
+  String get helpAndFaq;
+
+  /// Help and FAQ setting subtitle
+  ///
+  /// In en, this message translates to:
+  /// **'Find answers to common questions'**
+  String get findAnswersToCommonQuestions;
+
+  /// Rate app setting label
+  ///
+  /// In en, this message translates to:
+  /// **'Rate App'**
+  String get rateApp;
+
+  /// Rate app setting subtitle
+  ///
+  /// In en, this message translates to:
+  /// **'Rate us on the app store'**
+  String get rateUsOnAppStore;
+
+  /// Terms of Service setting label
+  ///
+  /// In en, this message translates to:
+  /// **'Terms of Service'**
+  String get termsOfService;
+
+  /// Terms of Service setting subtitle
+  ///
+  /// In en, this message translates to:
+  /// **'Read our terms and conditions'**
+  String get readOurTermsAndConditions;
+
+  /// Privacy Policy setting label
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy Policy'**
+  String get privacyPolicy;
+
+  /// Privacy Policy setting subtitle
+  ///
+  /// In en, this message translates to:
+  /// **'Learn how we protect your data'**
+  String get learnHowWeProtectYourData;
+
+  /// App version
+  ///
+  /// In en, this message translates to:
+  /// **'Version 1.0.0'**
+  String get version;
+
+  /// Copyright notice
+  ///
+  /// In en, this message translates to:
+  /// **'© 2024 OtoLog. All rights reserved.'**
+  String get copyright;
+
+  /// Theme selector dialog title
+  ///
+  /// In en, this message translates to:
+  /// **'Select Theme'**
+  String get selectTheme;
+
+  /// Light mode description
+  ///
+  /// In en, this message translates to:
+  /// **'Use light theme'**
+  String get lightModeDescription;
+
+  /// Dark mode description
+  ///
+  /// In en, this message translates to:
+  /// **'Use dark theme'**
+  String get darkModeDescription;
+
+  /// System mode description
+  ///
+  /// In en, this message translates to:
+  /// **'Follow system settings'**
+  String get systemModeDescription;
+
+  /// Export data dialog title
+  ///
+  /// In en, this message translates to:
+  /// **'Export Data'**
+  String get exportDataTitle;
+
+  /// Export data dialog description
+  ///
+  /// In en, this message translates to:
+  /// **'This will export all your vehicle and service records to a JSON file. The file will be saved to your device\'s downloads folder.'**
+  String get exportDataDescription;
+
+  /// Export button
+  ///
+  /// In en, this message translates to:
+  /// **'Export'**
+  String get export;
+
+  /// Export functionality not available message
+  ///
+  /// In en, this message translates to:
+  /// **'Export functionality coming soon!'**
+  String get exportFunctionalityComingSoon;
+
+  /// Create backup dialog title
+  ///
+  /// In en, this message translates to:
+  /// **'Create Backup'**
+  String get createBackup;
+
+  /// Create backup dialog description
+  ///
+  /// In en, this message translates to:
+  /// **'This will create a backup of all your data. You can restore this backup later if needed.'**
+  String get createBackupDescription;
+
+  /// Backup functionality not available message
+  ///
+  /// In en, this message translates to:
+  /// **'Backup functionality coming soon!'**
+  String get backupFunctionalityComingSoon;
+
+  /// Clear data dialog title
+  ///
+  /// In en, this message translates to:
+  /// **'Clear All Data'**
+  String get clearAllData;
+
+  /// Clear data warning message
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to clear all data? This action cannot be undone and will permanently delete all your vehicles and service records.'**
+  String get clearDataWarning;
+
+  /// Clear button
+  ///
+  /// In en, this message translates to:
+  /// **'Clear'**
+  String get clear;
+
+  /// Clear data functionality not available message
+  ///
+  /// In en, this message translates to:
+  /// **'Clear data functionality coming soon!'**
+  String get clearDataFunctionalityComingSoon;
+
+  /// Help FAQ question 1
+  ///
+  /// In en, this message translates to:
+  /// **'How do I add a vehicle?'**
+  String get howDoIAddAVehicle;
+
+  /// Help FAQ answer 1
+  ///
+  /// In en, this message translates to:
+  /// **'Go to the Garage tab and tap the \"Add Vehicle\" button. Fill in the required information and save.'**
+  String get howDoIAddAVehicleAnswer;
+
+  /// Help FAQ question 2
+  ///
+  /// In en, this message translates to:
+  /// **'How do I add a service record?'**
+  String get howDoIAddAServiceRecord;
+
+  /// Help FAQ answer 2
+  ///
+  /// In en, this message translates to:
+  /// **'Go to the Service Logs tab and tap the \"Add Service\" button. Select a vehicle, fill in the service details, and save.'**
+  String get howDoIAddAServiceRecordAnswer;
+
+  /// Help FAQ question 3
+  ///
+  /// In en, this message translates to:
+  /// **'How do I switch between vehicles?'**
+  String get howDoISwitchBetweenVehicles;
+
+  /// Help FAQ answer 3
+  ///
+  /// In en, this message translates to:
+  /// **'On the Home screen, tap the vehicle card to switch between your vehicles.'**
+  String get howDoISwitchBetweenVehiclesAnswer;
+
+  /// Rate app dialog title
+  ///
+  /// In en, this message translates to:
+  /// **'Rate OtoLog'**
+  String get rateOtoLog;
+
+  /// Rate app dialog description
+  ///
+  /// In en, this message translates to:
+  /// **'Enjoying OtoLog? Please consider rating us on the app store. Your feedback helps us improve!'**
+  String get rateOtoLogDescription;
+
+  /// Maybe later button
+  ///
+  /// In en, this message translates to:
+  /// **'Maybe Later'**
+  String get maybeLater;
+
+  /// Rate now button
+  ///
+  /// In en, this message translates to:
+  /// **'Rate Now'**
+  String get rateNow;
+
+  /// Opening app store message
+  ///
+  /// In en, this message translates to:
+  /// **'Opening app store...'**
+  String get openingAppStore;
+
+  /// Terms of Service content
+  ///
+  /// In en, this message translates to:
+  /// **'By using OtoLog, you agree to these terms:\n\n1. You are responsible for maintaining the confidentiality of your account.\n2. You agree not to use the app for any illegal purposes.\n3. We reserve the right to modify these terms at any time.\n4. Your data is stored locally on your device.\n5. We are not liable for any loss of data.\n\nFor more information, please contact us.'**
+  String get termsOfServiceContent;
+
+  /// Privacy Policy content
+  ///
+  /// In en, this message translates to:
+  /// **'At OtoLog, we take your privacy seriously:\n\n1. All your data is stored locally on your device.\n2. We do not collect or transmit any personal data.\n3. We do not share your data with third parties.\n4. You can export or delete your data at any time.\n5. We use minimal permissions necessary for the app to function.\n\nIf you have any questions about our privacy practices, please contact us.'**
+  String get privacyPolicyContent;
 }
 
 class _AppLocalizationsDelegate
