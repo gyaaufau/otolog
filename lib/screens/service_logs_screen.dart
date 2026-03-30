@@ -18,7 +18,7 @@ class ServiceLogsScreen extends StatefulWidget {
 
 class _ServiceLogsScreenState extends State<ServiceLogsScreen> {
   final TextEditingController _searchController = TextEditingController();
-  dynamic? _selectedVehicle;
+  int? _selectedVehicleId;
   DateTime? _startDate;
   DateTime? _endDate;
   String _searchQuery = '';
@@ -228,9 +228,9 @@ class _ServiceLogsScreenState extends State<ServiceLogsScreen> {
     var filtered = services;
 
     // Filter by vehicle
-    if (_selectedVehicle != null) {
+    if (_selectedVehicleId != null) {
       filtered =
-          filtered.where((s) => s.vehicleId == _selectedVehicle!.id).toList();
+          filtered.where((s) => s.vehicleId == _selectedVehicleId).toList();
     }
 
     // Filter by search query
@@ -270,7 +270,7 @@ class _ServiceLogsScreenState extends State<ServiceLogsScreen> {
   }
 
   bool _hasActiveFilters() {
-    return _selectedVehicle != null ||
+    return _selectedVehicleId != null ||
         _startDate != null ||
         _endDate != null ||
         _searchQuery.isNotEmpty;
@@ -332,30 +332,46 @@ class _ServiceLogsScreenState extends State<ServiceLogsScreen> {
   }
 
   Widget _buildActiveFiltersChips() {
-    return Wrap(
-      spacing: 8,
-      runSpacing: 8,
-      children: [
-        if (_selectedVehicle != null)
-          _buildFilterChip(
-            label: _selectedVehicle!.name,
-            onRemove: () {
-              setState(() {
-                _selectedVehicle = null;
-              });
-            },
-          ),
-        if (_startDate != null || _endDate != null)
-          _buildFilterChip(
-            label: _formatDateRange(),
-            onRemove: () {
-              setState(() {
-                _startDate = null;
-                _endDate = null;
-              });
-            },
-          ),
-      ],
+    return BlocBuilder<VehicleCubit, VehicleState>(
+      builder: (context, state) {
+        final vehicles = state is VehicleLoaded ? state.vehicles : [];
+        dynamic? selectedVehicle;
+        if (_selectedVehicleId != null) {
+          try {
+            selectedVehicle = vehicles.firstWhere(
+              (v) => v.id == _selectedVehicleId,
+            );
+          } catch (e) {
+            selectedVehicle = null;
+          }
+        }
+
+        return Wrap(
+          spacing: 8,
+          runSpacing: 8,
+          children: [
+            if (selectedVehicle != null)
+              _buildFilterChip(
+                label: selectedVehicle.name,
+                onRemove: () {
+                  setState(() {
+                    _selectedVehicleId = null;
+                  });
+                },
+              ),
+            if (_startDate != null || _endDate != null)
+              _buildFilterChip(
+                label: _formatDateRange(),
+                onRemove: () {
+                  setState(() {
+                    _startDate = null;
+                    _endDate = null;
+                  });
+                },
+              ),
+          ],
+        );
+      },
     );
   }
 
@@ -553,8 +569,8 @@ class _ServiceLogsScreenState extends State<ServiceLogsScreen> {
         border: Border.all(color: AppColors.neutral[200]!),
       ),
       child: DropdownButtonHideUnderline(
-        child: DropdownButton<dynamic>(
-          value: _selectedVehicle,
+        child: DropdownButton<int>(
+          value: _selectedVehicleId,
           hint: Text(
             l10n.allVehicles,
             style: TextStyle(
@@ -566,7 +582,7 @@ class _ServiceLogsScreenState extends State<ServiceLogsScreen> {
           icon: Icon(Icons.keyboard_arrow_down, color: AppColors.neutral[500]),
           isExpanded: true,
           items: [
-            DropdownMenuItem<dynamic>(
+            DropdownMenuItem<int>(
               value: null,
               child: Text(
                 l10n.allVehicles,
@@ -578,8 +594,8 @@ class _ServiceLogsScreenState extends State<ServiceLogsScreen> {
               ),
             ),
             ...vehicles.map((vehicle) {
-              return DropdownMenuItem<dynamic>(
-                value: vehicle,
+              return DropdownMenuItem<int>(
+                value: vehicle.id,
                 child: Text(
                   vehicle.name,
                   style: TextStyle(
@@ -594,7 +610,7 @@ class _ServiceLogsScreenState extends State<ServiceLogsScreen> {
           ],
           onChanged: (value) {
             setState(() {
-              _selectedVehicle = value;
+              _selectedVehicleId = value;
             });
           },
         ),
@@ -752,7 +768,7 @@ class _ServiceLogsScreenState extends State<ServiceLogsScreen> {
 
   void _clearAllFilters() {
     setState(() {
-      _selectedVehicle = null;
+      _selectedVehicleId = null;
       _startDate = null;
       _endDate = null;
       _searchQuery = '';
@@ -801,8 +817,14 @@ class _ServiceLogsScreenState extends State<ServiceLogsScreen> {
               Text(
                 vehicles.isEmpty
                     ? l10n.addVehicleFirstToStartTracking
-                    : _selectedVehicle != null
-                    ? '${l10n.noServiceRecordsFor} ${_selectedVehicle!.name}'
+                    : _selectedVehicleId != null
+                    ? '${l10n.noServiceRecordsFor} ${(() {
+                      try {
+                        return vehicles.firstWhere((v) => v.id == _selectedVehicleId).name;
+                      } catch (e) {
+                        return '';
+                      }
+                    })()}'
                     : l10n.addFirstServiceRecordToGetStarted,
                 textAlign: TextAlign.center,
                 style: TextStyle(
