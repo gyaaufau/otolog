@@ -224,36 +224,23 @@ class _AddVehicleScreenState extends State<AddVehicleScreen> {
       padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 24),
       child: Column(
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: List.generate(_totalSteps, (index) {
-              final isCompleted = index < _currentStep;
-              final isCurrent = index == _currentStep;
-              return Expanded(
-                child: Row(
-                  children: [
-                    _buildStepDot(index, isCompleted, isCurrent),
-                    if (index < _totalSteps - 1)
-                      Expanded(
-                        child: Container(
-                          height: 2,
-                          margin: const EdgeInsets.symmetric(horizontal: 8),
-                          decoration: BoxDecoration(
-                            color:
-                                isCompleted
-                                    ? AppColors.primary[500]!
-                                    : AppColors.neutral[200]!,
-                          ),
-                        ),
-                      ),
-                  ],
-                ),
-              );
-            }),
+          SizedBox(
+            width: double.infinity,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                _buildStepDot(0, 0 < _currentStep, 0 == _currentStep),
+                _buildConnectingLine(0 < _currentStep),
+                _buildStepDot(1, 1 < _currentStep, 1 == _currentStep),
+                _buildConnectingLine(1 < _currentStep),
+                _buildStepDot(2, 2 < _currentStep, 2 == _currentStep),
+              ],
+            ),
           ),
           const SizedBox(height: 16),
           Text(
             _getStepTitle(_currentStep),
+            textAlign: TextAlign.center,
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.w700,
@@ -264,6 +251,7 @@ class _AddVehicleScreenState extends State<AddVehicleScreen> {
           const SizedBox(height: 4),
           Text(
             _getStepSubtitle(_currentStep),
+            textAlign: TextAlign.center,
             style: TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w400,
@@ -271,6 +259,17 @@ class _AddVehicleScreenState extends State<AddVehicleScreen> {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildConnectingLine(bool isCompleted) {
+    return Container(
+      width: 32,
+      height: 2,
+      margin: const EdgeInsets.symmetric(horizontal: 8),
+      decoration: BoxDecoration(
+        color: isCompleted ? AppColors.primary[500]! : AppColors.neutral[200]!,
       ),
     );
   }
@@ -292,10 +291,12 @@ class _AddVehicleScreenState extends State<AddVehicleScreen> {
                 ? Icon(Icons.check_rounded, color: Colors.white, size: 18)
                 : Text(
                   '${index + 1}',
+                  textAlign: TextAlign.center,
                   style: TextStyle(
                     color: isCurrent ? Colors.white : AppColors.neutral[500],
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
+                    height: 1.0,
                   ),
                 ),
       ),
