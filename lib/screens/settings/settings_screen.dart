@@ -17,42 +17,69 @@ class SettingsScreen extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: AppColors.neutral[50],
-      appBar: AppBar(
-        title: Text(l10n.settings),
-        elevation: 0,
-        backgroundColor: AppColors.primary,
-        foregroundColor: Colors.white,
-      ),
-      body: SingleChildScrollView(
+      body: SafeArea(
         child: Column(
           children: [
-            const SizedBox(height: 8),
+            _buildHeader(context),
+            Expanded(
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    const SizedBox(height: 8),
 
-            // Preferences Section
-            _buildSectionHeader(context, l10n.preferences),
-            _buildPreferencesSection(context),
+                    // Preferences Section
+                    _buildSectionHeader(context, l10n.preferences),
+                    _buildPreferencesSection(context),
 
-            const SizedBox(height: 24),
+                    const SizedBox(height: 24),
 
-            // Data Management Section (Commented out)
-            // _buildSectionHeader(context, 'Data Management'),
-            // _buildDataManagementSection(context),
+                    // Data Management Section (Commented out)
+                    // _buildSectionHeader(context, 'Data Management'),
+                    // _buildDataManagementSection(context),
 
-            // const SizedBox(height: 24),
+                    // const SizedBox(height: 24),
 
-            // Support Section
-            _buildSectionHeader(context, l10n.support),
-            _buildSupportSection(context),
+                    // Support Section
+                    _buildSectionHeader(context, l10n.support),
+                    _buildSupportSection(context),
 
-            const SizedBox(height: 24),
+                    const SizedBox(height: 24),
 
-            // About Section
-            _buildSectionHeader(context, l10n.about),
-            _buildAboutSection(context),
+                    // About Section
+                    _buildSectionHeader(context, l10n.about),
+                    _buildAboutSection(context),
 
-            const SizedBox(height: 32),
+                    const SizedBox(height: 32),
+                  ],
+                ),
+              ),
+            ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildHeader(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+      color: AppColors.neutral[50],
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            l10n.settings,
+            textAlign: TextAlign.left,
+            style: TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.w700,
+              color: AppColors.neutral[900],
+              letterSpacing: -0.5,
+              height: 1.2,
+            ),
+          ),
+        ],
       ),
     );
   }

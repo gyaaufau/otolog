@@ -81,28 +81,17 @@ class _ServiceLogsScreenState extends State<ServiceLogsScreen> {
       padding: EdgeInsets.symmetric(horizontal: 24, vertical: 8),
       color: AppColors.neutral[50],
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Text(
             l10n.serviceLogs,
-            textAlign: TextAlign.left,
+            textAlign: TextAlign.center,
             style: TextStyle(
               fontSize: 24,
               fontWeight: FontWeight.w700,
               color: AppColors.neutral[900],
               letterSpacing: -0.5,
               height: 1.2,
-            ),
-          ),
-          const SizedBox(height: 4),
-          Text(
-            l10n.trackVehicleMaintenance,
-            textAlign: TextAlign.left,
-            style: TextStyle(
-              fontSize: 14,
-              color: AppColors.neutral[600],
-              height: 1.4,
-              letterSpacing: 0.2,
             ),
           ),
         ],
