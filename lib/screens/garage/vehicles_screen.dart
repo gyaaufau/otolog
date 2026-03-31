@@ -38,6 +38,7 @@ class _VehiclesScreenState extends State<VehiclesScreen> {
       backgroundColor: AppColors.neutral[50],
       body: SafeArea(
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _buildHeader(),
             _buildSearchAndFilter(),
@@ -75,26 +76,29 @@ class _VehiclesScreenState extends State<VehiclesScreen> {
   Widget _buildHeader() {
     final l10n = context.l10n;
     return Container(
-      padding: const EdgeInsets.fromLTRB(24, 20, 24, 8),
+      padding: EdgeInsets.symmetric(horizontal: 24, vertical: 8),
       color: AppColors.neutral[50],
+      // color: Colors.red,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             l10n.vehicles,
+            textAlign: TextAlign.left,
             style: TextStyle(
-              fontSize: 36,
+              fontSize: 24,
               fontWeight: FontWeight.w700,
               color: AppColors.neutral[900],
-              letterSpacing: -1.0,
-              height: 1.1,
+              letterSpacing: -0.5,
+              height: 1.2,
             ),
           ),
-          const SizedBox(height: 6),
+          const SizedBox(height: 4),
           Text(
             l10n.manageVehicleFleet,
+            textAlign: TextAlign.left,
             style: TextStyle(
-              fontSize: 15,
+              fontSize: 14,
               color: AppColors.neutral[600],
               height: 1.4,
               letterSpacing: 0.2,
