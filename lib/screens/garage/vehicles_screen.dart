@@ -23,7 +23,16 @@ class _VehiclesScreenState extends State<VehiclesScreen> {
   @override
   void initState() {
     super.initState();
+    print('🚗 VehiclesScreen: initState - Loading all vehicles');
     context.read<VehicleCubit>().loadVehicles();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    print('🚗 VehiclesScreen: didChangeDependencies - Restoring all vehicles');
+    // Restore all vehicles when returning from detail screen
+    context.read<VehicleCubit>().restoreAllVehicles();
   }
 
   @override
@@ -43,27 +52,49 @@ class _VehiclesScreenState extends State<VehiclesScreen> {
             _buildHeader(),
             _buildSearchAndFilter(),
             Expanded(
-              child: BlocBuilder<VehicleCubit, VehicleState>(
-                builder: (context, state) {
-                  if (state is VehicleLoading) {
-                    return Center(
-                      child: CircularProgressIndicator(
-                        valueColor: AlwaysStoppedAnimation(AppColors.primary),
-                        strokeWidth: 2,
-                      ),
-                    );
-                  }
-
-                  if (state is VehicleError) {
-                    return _buildErrorState(state.message);
-                  }
-
+              child: BlocListener<VehicleCubit, VehicleState>(
+                listener: (context, state) {
+                  print(
+                    '🚗 VehiclesScreen: State changed - ${state.runtimeType}',
+                  );
                   if (state is VehicleLoaded) {
-                    return _buildVehiclesList(state);
+                    print(
+                      '🚗 VehiclesScreen: Vehicle count = ${state.vehicles.length}',
+                    );
+                    // If we're on vehicles screen and only have 1 vehicle, restore all
+                    final currentRoute = GoRouterState.of(context).uri.path;
+                    print('🚗 VehiclesScreen: Current route = $currentRoute');
+                    if (currentRoute == AppRoutes.vehicles &&
+                        state.vehicles.length == 1) {
+                      print(
+                        '🚗 VehiclesScreen: Detected single vehicle on vehicles screen - Restoring all vehicles',
+                      );
+                      context.read<VehicleCubit>().restoreAllVehicles();
+                    }
                   }
-
-                  return const SizedBox.shrink();
                 },
+                child: BlocBuilder<VehicleCubit, VehicleState>(
+                  builder: (context, state) {
+                    if (state is VehicleLoading) {
+                      return Center(
+                        child: CircularProgressIndicator(
+                          valueColor: AlwaysStoppedAnimation(AppColors.primary),
+                          strokeWidth: 2,
+                        ),
+                      );
+                    }
+
+                    if (state is VehicleError) {
+                      return _buildErrorState(state.message);
+                    }
+
+                    if (state is VehicleLoaded) {
+                      return _buildVehiclesList(state);
+                    }
+
+                    return const SizedBox.shrink();
+                  },
+                ),
               ),
             ),
           ],
