@@ -109,6 +109,28 @@ class AppDatabase extends _$AppDatabase {
     print('DEBUG: Set vehicle $vehicleId isPrimary to true');
   }
 
+  Future<void> togglePrimary(int vehicleId) async {
+    print('DEBUG: togglePrimary called with vehicleId: $vehicleId');
+    // Get the current vehicle to check if it's primary
+    final vehicle = await getVehicle(vehicleId);
+    if (vehicle == null) {
+      print('DEBUG: Vehicle not found');
+      return;
+    }
+
+    if (vehicle.isPrimary == true) {
+      // If currently primary, set all vehicles' isPrimary to false
+      await (update(vehicles)..where(
+        (tbl) => tbl.id.isBiggerThanValue(0),
+      )).write(const VehiclesCompanion(isPrimary: Value(false)));
+      print('DEBUG: Set all vehicles isPrimary to false (toggled off)');
+    } else {
+      // If not primary, set this vehicle as primary
+      await markAsPrimary(vehicleId);
+      print('DEBUG: Set vehicle $vehicleId isPrimary to true (toggled on)');
+    }
+  }
+
   Future<int> deleteVehicle(int id) {
     return (delete(vehicles)..where((tbl) => tbl.id.equals(id))).go();
   }

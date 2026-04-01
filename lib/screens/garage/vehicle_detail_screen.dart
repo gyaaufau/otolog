@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -130,6 +131,8 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _buildVehicleHeader(vehicle),
+          SizedBox(height: 24.h),
+          _buildPrimaryToggleSection(vehicle),
           SizedBox(height: 24.h),
           _buildVehicleSpecifications(vehicle),
           SizedBox(height: 24.h),
@@ -835,113 +838,117 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
           ),
         ),
         const SizedBox(height: 12),
-        Row(
-          children: [
-            Expanded(
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: AppColors.neutral[200]!, width: 1),
-                  boxShadow: [
-                    BoxShadow(
-                      color: AppColors.neutral[900]!.withOpacity(0.04),
-                      blurRadius: 20,
-                      offset: const Offset(0, 4),
-                    ),
-                  ],
-                ),
-                child: ElevatedButton(
-                  onPressed: () {
-                    if (_vehicleId != null) {
-                      context.push(
-                        AppRoutes.editVehicle.replaceFirst(
-                          ':vehicleId',
-                          _vehicleId.toString(),
-                        ),
-                      );
-                    }
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.transparent,
-                    foregroundColor: AppColors.neutral[900],
-                    shadowColor: Colors.transparent,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    elevation: 0,
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Icon(Icons.edit_outlined, size: 20),
-                      const SizedBox(width: 8),
-                      Text(
-                        context.l10n.edit,
-                        style: const TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w600,
-                          letterSpacing: 0.2,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+        Container(
+          width: double.infinity,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: AppColors.neutral[200]!, width: 1),
+            boxShadow: [
+              BoxShadow(
+                color: AppColors.neutral[900]!.withOpacity(0.04),
+                blurRadius: 20,
+                offset: const Offset(0, 4),
               ),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Container(
-                decoration: BoxDecoration(
-                  color: AppColors.tertiary[50],
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: AppColors.tertiary[200]!, width: 1),
-                ),
-                child: ElevatedButton(
-                  onPressed: () {
-                    if (!(vehicle.isPrimary ?? false) && _vehicleId != null) {
-                      context.read<VehicleCubit>().markAsPrimary(_vehicleId!);
-                    }
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.transparent,
-                    foregroundColor: AppColors.tertiary[600],
-                    shadowColor: Colors.transparent,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    elevation: 0,
-                    padding: const EdgeInsets.symmetric(vertical: 16),
+            ],
+          ),
+          child: ElevatedButton(
+            onPressed: () {
+              if (_vehicleId != null) {
+                context.push(
+                  AppRoutes.editVehicle.replaceFirst(
+                    ':vehicleId',
+                    _vehicleId.toString(),
                   ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        vehicle.isPrimary ?? false
-                            ? Icons.star
-                            : Icons.star_outline,
-                        size: 20,
-                      ),
-                      const SizedBox(width: 8),
-                      Text(
-                        vehicle.isPrimary ?? false
-                            ? context.l10n.primary
-                            : context.l10n.setPrimary,
-                        style: const TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w600,
-                          letterSpacing: 0.2,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+                );
+              }
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.transparent,
+              foregroundColor: AppColors.neutral[900],
+              shadowColor: Colors.transparent,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
               ),
+              elevation: 0,
+              padding: const EdgeInsets.symmetric(vertical: 16),
             ),
-          ],
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Icon(Icons.edit_outlined, size: 20),
+                const SizedBox(width: 8),
+                Text(
+                  context.l10n.edit,
+                  style: const TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w600,
+                    letterSpacing: 0.2,
+                  ),
+                ),
+              ],
+            ),
+          ),
         ),
       ],
+    );
+  }
+
+  Widget _buildPrimaryToggleSection(dynamic vehicle) {
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.neutral[900]!.withOpacity(0.04),
+            blurRadius: 20,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  context.l10n.primary,
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    color: AppColors.neutral[900],
+                    letterSpacing: -0.3,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  'Set this vehicle as your primary vehicle',
+                  style: TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w500,
+                    color: AppColors.neutral[500],
+                    letterSpacing: 0.1,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(width: 16),
+          CupertinoSwitch(
+            value: vehicle.isPrimary ?? false,
+            activeColor: AppColors.primary,
+            onChanged: (value) {
+              if (_vehicleId != null) {
+                context.read<VehicleCubit>().togglePrimary(_vehicleId!);
+              }
+            },
+          ),
+        ],
+      ),
     );
   }
 

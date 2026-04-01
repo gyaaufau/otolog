@@ -278,6 +278,37 @@ class VehicleCubit extends Cubit<VehicleState> {
     }
   }
 
+  // Toggle vehicle as primary
+  Future<void> togglePrimary(int vehicleId) async {
+    emit(const VehicleLoading());
+    _logState(
+      'togglePrimary($vehicleId) - Loading started',
+      const VehicleLoading(),
+    );
+    try {
+      await _driftService.togglePrimary(vehicleId);
+      final vehicles = await _driftService.getAllVehicles();
+      final serviceRecords = await _driftService.getAllServiceRecords();
+
+      // Update cache
+      _cachedAllVehicles = vehicles;
+      _cachedAllServiceRecords = serviceRecords;
+
+      final newState = VehicleLoaded(
+        vehicles: vehicles,
+        serviceRecords: serviceRecords,
+      );
+      emit(newState);
+      _logState('togglePrimary($vehicleId) - Success', newState);
+    } catch (e) {
+      final errorState = VehicleError(
+        'Failed to toggle primary vehicle: ${e.toString()}',
+      );
+      emit(errorState);
+      _logState('togglePrimary($vehicleId) - Error', errorState);
+    }
+  }
+
   // Search vehicles
   Future<void> searchVehicles(String query) async {
     emit(const VehicleLoading());

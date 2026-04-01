@@ -42,6 +42,10 @@ class DriftService {
     await database.markAsPrimary(vehicleId);
   }
 
+  Future<void> togglePrimary(int vehicleId) async {
+    await database.togglePrimary(vehicleId);
+  }
+
   // Service Record Operations
   Future<int> addServiceRecord(ServiceRecordsCompanion record) async {
     return await database.addServiceRecord(record);
