@@ -4,7 +4,6 @@
   "@appTitle": {
     "description": "The title of the application"
   },
-  
   "home": "Home",
   "@home": {
     "description": "Home tab label"
@@ -21,7 +20,6 @@
   "@settings": {
     "description": "Settings tab label"
   },
-  
   "add": "Add",
   "@add": {
     "description": "Add action button"
@@ -46,7 +44,6 @@
   "@confirm": {
     "description": "Confirm action button"
   },
-  
   "vehicles": "Vehicles",
   "@vehicles": {
     "description": "Vehicles section title"
@@ -127,7 +124,6 @@
   "@addFirstVehicle": {
     "description": "Message encouraging to add first vehicle"
   },
-  
   "service": "Service",
   "@service": {
     "description": "Service section title"
@@ -184,7 +180,6 @@
   "@addFirstService": {
     "description": "Message encouraging to add first service"
   },
-  
   "oilChange": "Oil Change",
   "@oilChange": {
     "description": "Oil change service type"
@@ -213,7 +208,6 @@
   "@other": {
     "description": "Other service type"
   },
-  
   "car": "Car",
   "@car": {
     "description": "Car vehicle type"
@@ -234,7 +228,6 @@
   "@van": {
     "description": "Van vehicle type"
   },
-  
   "required": "Required",
   "@required": {
     "description": "Required field indicator"
@@ -243,7 +236,6 @@
   "@optional": {
     "description": "Optional field indicator"
   },
-  
   "search": "Search",
   "@search": {
     "description": "Search field placeholder"
@@ -256,7 +248,6 @@
   "@searchServices": {
     "description": "Search services placeholder"
   },
-  
   "deleteConfirmation": "Delete Confirmation",
   "@deleteConfirmation": {
     "description": "Delete confirmation dialog title"
@@ -269,7 +260,6 @@
   "@deleteServiceMessage": {
     "description": "Delete service confirmation message"
   },
-  
   "success": "Success",
   "@success": {
     "description": "Success message title"
@@ -298,7 +288,6 @@
   "@serviceDeleted": {
     "description": "Service deleted success message"
   },
-  
   "error": "Error",
   "@error": {
     "description": "Error message title"
@@ -315,7 +304,6 @@
   "@invalidFormat": {
     "description": "Invalid format validation error"
   },
-  
   "totalVehicles": "Total Vehicles",
   "@totalVehicles": {
     "description": "Total vehicles count label"
@@ -328,7 +316,6 @@
   "@totalSpent": {
     "description": "Total spent label"
   },
-  
   "recentServices": "Recent Services",
   "@recentServices": {
     "description": "Recent services section title"
@@ -337,7 +324,6 @@
   "@upcomingServices": {
     "description": "Upcoming services section title"
   },
-  
   "language": "Language",
   "@language": {
     "description": "Language setting label"
@@ -350,7 +336,6 @@
   "@about": {
     "description": "About section label"
   },
-  
   "darkMode": "Dark Mode",
   "@darkMode": {
     "description": "Dark mode setting label"
@@ -363,7 +348,6 @@
   "@systemMode": {
     "description": "System mode setting label"
   },
-  
   "location": "Location",
   "@location": {
     "description": "Location field label"
@@ -376,7 +360,6 @@
   "@useCurrentLocation": {
     "description": "Use current location button"
   },
-  
   "photo": "Photo",
   "@photo": {
     "description": "Photo field label"
@@ -401,7 +384,6 @@
   "@chooseFromGallery": {
     "description": "Choose from gallery option"
   },
-  
   "km": "km",
   "@km": {
     "description": "Kilometers unit"
@@ -410,7 +392,6 @@
   "@miles": {
     "description": "Miles unit"
   },
-  
   "yes": "Yes",
   "@yes": {
     "description": "Yes option"
@@ -419,7 +400,6 @@
   "@no": {
     "description": "No option"
   },
-  
   "close": "Close",
   "@close": {
     "description": "Close button"
@@ -436,7 +416,6 @@
   "@next": {
     "description": "Next button"
   },
-  
   "or": "or",
   "@or": {
     "description": "Or separator"
@@ -445,7 +424,6 @@
   "@and": {
     "description": "And separator"
   },
-  
   "today": "Today",
   "@today": {
     "description": "Today label"

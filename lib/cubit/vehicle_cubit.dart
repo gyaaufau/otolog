@@ -189,6 +189,7 @@ class VehicleCubit extends Cubit<VehicleState> {
 
   // Update vehicle
   Future<void> updateVehicle(Vehicle vehicle) async {
+    print('🔧 DEBUG: updateVehicle called for vehicle ID: ${vehicle.id}');
     emit(const VehicleLoading());
     _logState(
       'updateVehicle(${vehicle.id}) - Loading started',
@@ -196,20 +197,43 @@ class VehicleCubit extends Cubit<VehicleState> {
     );
     try {
       await _driftService.updateVehicle(vehicle);
-      final vehicles = await _driftService.getAllVehicles();
-      final serviceRecords = await _driftService.getAllServiceRecords();
+      print('✅ DEBUG: Vehicle updated in database');
 
-      // Update cache
+      // Reload the specific vehicle that was updated
+      final updatedVehicle = await _driftService.getVehicle(vehicle.id);
+      if (updatedVehicle == null) {
+        throw Exception('Vehicle not found after update');
+      }
+
+      final serviceRecords = await _driftService.getServiceRecordsByVehicle(
+        vehicle.id,
+      );
+      final totalCost = await _driftService.getTotalCostByVehicle(vehicle.id);
+      final serviceCount = await _driftService.getServiceCountByVehicle(
+        vehicle.id,
+      );
+
+      // Update cache with the updated vehicle
+      final vehicles = await _driftService.getAllVehicles();
       _cachedAllVehicles = vehicles;
-      _cachedAllServiceRecords = serviceRecords;
+      _cachedAllServiceRecords = await _driftService.getAllServiceRecords();
 
       final newState = VehicleLoaded(
-        vehicles: vehicles,
+        vehicles: [updatedVehicle],
         serviceRecords: serviceRecords,
+        totalCost: totalCost,
+        serviceCount: serviceCount,
       );
       emit(newState);
       _logState('updateVehicle(${vehicle.id}) - Success', newState);
+      print('📋 DEBUG: VehicleLoaded state emitted with single vehicle');
+
+      // Emit success state for UI feedback
+      print('🎉 DEBUG: About to emit VehicleOperationSuccess');
+      emit(const VehicleOperationSuccess('Vehicle updated successfully'));
+      print('✅ DEBUG: VehicleOperationSuccess emitted');
     } catch (e) {
+      print('❌ DEBUG: Error in updateVehicle: ${e.toString()}');
       final errorState = VehicleError(
         'Failed to update vehicle: ${e.toString()}',
       );

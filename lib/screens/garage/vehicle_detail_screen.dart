@@ -91,7 +91,14 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
           ),
         ),
       ),
-      body: BlocBuilder<VehicleCubit, VehicleState>(
+      body: BlocConsumer<VehicleCubit, VehicleState>(
+        listener: (context, state) {
+          // Reload vehicle data when returning from edit screen
+          if (state is VehicleOperationSuccess && _vehicleId != null) {
+            print('🔄 Reloading vehicle data after edit');
+            context.read<VehicleCubit>().loadVehicleWithServices(_vehicleId!);
+          }
+        },
         builder: (context, state) {
           if (state is VehicleLoading) {
             return Center(
