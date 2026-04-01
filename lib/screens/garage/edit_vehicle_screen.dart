@@ -66,6 +66,7 @@ class _EditVehicleScreenState extends State<EditVehicleScreen> {
 
   int? _vehicleId;
   bool _hasLoadedVehicle = false;
+  bool _isSaving = false;
 
   @override
   void initState() {
@@ -891,55 +892,50 @@ class _EditVehicleScreenState extends State<EditVehicleScreen> {
   }
 
   Widget _buildSaveButton() {
-    return BlocBuilder<VehicleCubit, VehicleState>(
-      builder: (context, state) {
-        final isLoading = state is VehicleLoading;
-        return Container(
-          decoration: BoxDecoration(
-            color: AppColors.primary,
+    return Container(
+      decoration: BoxDecoration(
+        color: AppColors.primary,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.primary.withOpacity(0.2),
+            blurRadius: 12,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: ElevatedButton(
+        onPressed: _isSaving ? null : _saveVehicle,
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.transparent,
+          foregroundColor: Colors.white,
+          disabledBackgroundColor: Colors.transparent,
+          shadowColor: Colors.transparent,
+          shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
-            boxShadow: [
-              BoxShadow(
-                color: AppColors.primary.withOpacity(0.2),
-                blurRadius: 12,
-                offset: const Offset(0, 4),
-              ),
-            ],
           ),
-          child: ElevatedButton(
-            onPressed: isLoading ? null : _saveVehicle,
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.transparent,
-              foregroundColor: Colors.white,
-              disabledBackgroundColor: Colors.transparent,
-              shadowColor: Colors.transparent,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-              elevation: 0,
-              padding: const EdgeInsets.symmetric(vertical: 16),
-            ),
-            child:
-                isLoading
-                    ? const SizedBox(
-                      height: 24,
-                      width: 24,
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2.5,
-                        valueColor: AlwaysStoppedAnimation(Colors.white),
-                      ),
-                    )
-                    : const Text(
-                      'Save Changes',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                        letterSpacing: 0.3,
-                      ),
-                    ),
-          ),
-        );
-      },
+          elevation: 0,
+          padding: const EdgeInsets.symmetric(vertical: 16),
+        ),
+        child:
+            _isSaving
+                ? const SizedBox(
+                  height: 24,
+                  width: 24,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2.5,
+                    valueColor: AlwaysStoppedAnimation(Colors.white),
+                  ),
+                )
+                : const Text(
+                  'Save Changes',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    letterSpacing: 0.3,
+                  ),
+                ),
+      ),
     );
   }
 
@@ -970,12 +966,17 @@ class _EditVehicleScreenState extends State<EditVehicleScreen> {
     }
   }
 
-  void _saveVehicle() {
+  void _saveVehicle() async {
     print('🔧 DEBUG: _saveVehicle called');
     if (!_formKey.currentState!.validate() || _vehicle == null) {
       print('❌ DEBUG: Validation failed or vehicle is null');
       return;
     }
+
+    // Set saving state to prevent multiple submissions
+    setState(() {
+      _isSaving = true;
+    });
 
     final updatedVehicle = Vehicle(
       id: _vehicle!.id,
@@ -1018,7 +1019,18 @@ class _EditVehicleScreenState extends State<EditVehicleScreen> {
     print(
       '✅ DEBUG: Calling updateVehicle for vehicle ID: ${updatedVehicle.id}',
     );
-    context.read<VehicleCubit>().updateVehicle(updatedVehicle);
+    await context.read<VehicleCubit>().updateVehicle(updatedVehicle);
+
+    // Reset saving state after a short delay to allow navigation to complete
+    if (mounted) {
+      Future.delayed(const Duration(milliseconds: 100), () {
+        if (mounted) {
+          setState(() {
+            _isSaving = false;
+          });
+        }
+      });
+    }
   }
 
   // void _showDeleteDialog() {

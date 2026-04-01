@@ -190,43 +190,17 @@ class VehicleCubit extends Cubit<VehicleState> {
   // Update vehicle
   Future<void> updateVehicle(Vehicle vehicle) async {
     print('🔧 DEBUG: updateVehicle called for vehicle ID: ${vehicle.id}');
-    emit(const VehicleLoading());
-    _logState(
-      'updateVehicle(${vehicle.id}) - Loading started',
-      const VehicleLoading(),
-    );
+    // Don't emit VehicleLoading to avoid refreshing the edit screen
+    // since we're about to navigate away anyway
+    _logState('updateVehicle(${vehicle.id}) - Started', state);
     try {
       await _driftService.updateVehicle(vehicle);
       print('✅ DEBUG: Vehicle updated in database');
-
-      // Reload the specific vehicle that was updated
-      final updatedVehicle = await _driftService.getVehicle(vehicle.id);
-      if (updatedVehicle == null) {
-        throw Exception('Vehicle not found after update');
-      }
-
-      final serviceRecords = await _driftService.getServiceRecordsByVehicle(
-        vehicle.id,
-      );
-      final totalCost = await _driftService.getTotalCostByVehicle(vehicle.id);
-      final serviceCount = await _driftService.getServiceCountByVehicle(
-        vehicle.id,
-      );
 
       // Update cache with the updated vehicle
       final vehicles = await _driftService.getAllVehicles();
       _cachedAllVehicles = vehicles;
       _cachedAllServiceRecords = await _driftService.getAllServiceRecords();
-
-      final newState = VehicleLoaded(
-        vehicles: [updatedVehicle],
-        serviceRecords: serviceRecords,
-        totalCost: totalCost,
-        serviceCount: serviceCount,
-      );
-      emit(newState);
-      _logState('updateVehicle(${vehicle.id}) - Success', newState);
-      print('📋 DEBUG: VehicleLoaded state emitted with single vehicle');
 
       // Emit success state for UI feedback
       print('🎉 DEBUG: About to emit VehicleOperationSuccess');
