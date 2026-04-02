@@ -4,8 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:otolog/l10n/app_localizations.dart';
 import 'package:otolog/shared/localization/l10n_helper.dart';
-import '../../cubit/vehicle_cubit.dart';
-import '../../cubit/vehicle_state.dart';
+import '../../cubit/vehicle_list_cubit.dart';
+import '../../cubit/vehicle_list_state.dart';
 import '../../resources/colors.dart';
 import '../../router.dart';
 import '../../widgets/search_bar_widget.dart';
@@ -24,7 +24,7 @@ class _VehiclesScreenState extends State<VehiclesScreen> {
   void initState() {
     super.initState();
     print('🚗 VehiclesScreen: initState - Loading all vehicles');
-    context.read<VehicleCubit>().loadVehicles();
+    context.read<VehicleListCubit>().loadVehicles();
   }
 
   @override
@@ -32,7 +32,7 @@ class _VehiclesScreenState extends State<VehiclesScreen> {
     super.didChangeDependencies();
     print('🚗 VehiclesScreen: didChangeDependencies - Restoring all vehicles');
     // Restore all vehicles when returning from detail screen
-    context.read<VehicleCubit>().restoreAllVehicles();
+    context.read<VehicleListCubit>().refresh();
   }
 
   @override
@@ -51,30 +51,20 @@ class _VehiclesScreenState extends State<VehiclesScreen> {
             _buildHeader(),
             _buildSearchAndFilter(),
             Expanded(
-              child: BlocListener<VehicleCubit, VehicleState>(
+              child: BlocListener<VehicleListCubit, VehicleListState>(
                 listener: (context, state) {
                   print(
                     '🚗 VehiclesScreen: State changed - ${state.runtimeType}',
                   );
-                  if (state is VehicleLoaded) {
+                  if (state is VehicleListLoaded) {
                     print(
                       '🚗 VehiclesScreen: Vehicle count = ${state.vehicles.length}',
                     );
-                    // If we're on vehicles screen and only have 1 vehicle, restore all
-                    final currentRoute = GoRouterState.of(context).uri.path;
-                    print('🚗 VehiclesScreen: Current route = $currentRoute');
-                    if (currentRoute == AppRoutes.vehicles &&
-                        state.vehicles.length == 1) {
-                      print(
-                        '🚗 VehiclesScreen: Detected single vehicle on vehicles screen - Restoring all vehicles',
-                      );
-                      context.read<VehicleCubit>().restoreAllVehicles();
-                    }
                   }
                 },
-                child: BlocBuilder<VehicleCubit, VehicleState>(
+                child: BlocBuilder<VehicleListCubit, VehicleListState>(
                   builder: (context, state) {
-                    if (state is VehicleLoading) {
+                    if (state is VehicleListLoading) {
                       return Center(
                         child: CircularProgressIndicator(
                           valueColor: AlwaysStoppedAnimation(AppColors.primary),
@@ -83,11 +73,11 @@ class _VehiclesScreenState extends State<VehiclesScreen> {
                       );
                     }
 
-                    if (state is VehicleError) {
+                    if (state is VehicleListError) {
                       return _buildErrorState(state.message);
                     }
 
-                    if (state is VehicleLoaded) {
+                    if (state is VehicleListLoaded) {
                       return _buildVehiclesList(state);
                     }
 
@@ -139,10 +129,10 @@ class _VehiclesScreenState extends State<VehiclesScreen> {
             controller: _searchController,
             hintText: l10n.searchVehicles,
             onChanged: (value) {
-              context.read<VehicleCubit>().searchVehicles(value);
+              context.read<VehicleListCubit>().searchVehicles(value);
             },
             onClear: () {
-              context.read<VehicleCubit>().searchVehicles('');
+              context.read<VehicleListCubit>().searchVehicles('');
             },
           ),
           const SizedBox(height: 16),
@@ -171,16 +161,17 @@ class _VehiclesScreenState extends State<VehiclesScreen> {
   }
 
   Widget _buildFilterChip(String label, String? value) {
-    return BlocBuilder<VehicleCubit, VehicleState>(
+    return BlocBuilder<VehicleListCubit, VehicleListState>(
       builder: (context, state) {
-        final isSelected = state is VehicleLoaded && state.filterType == value;
+        final isSelected =
+            state is VehicleListLoaded && state.filterType == value;
         return GestureDetector(
           onTap: () {
             final currentFilter =
-                state is VehicleLoaded ? state.filterType : null;
+                state is VehicleListLoaded ? state.filterType : null;
             final newFilter = isSelected ? null : value;
             if (currentFilter != newFilter) {
-              context.read<VehicleCubit>().filterVehiclesByType(newFilter);
+              context.read<VehicleListCubit>().filterVehiclesByType(newFilter);
             }
           },
           child: Container(
@@ -214,7 +205,7 @@ class _VehiclesScreenState extends State<VehiclesScreen> {
     );
   }
 
-  Widget _buildVehiclesList(VehicleLoaded state) {
+  Widget _buildVehiclesList(VehicleListLoaded state) {
     final l10n = context.l10n;
     if (state.vehicles.isEmpty) {
       return Center(
@@ -266,7 +257,7 @@ class _VehiclesScreenState extends State<VehiclesScreen> {
 
     return RefreshIndicator(
       onRefresh: () async {
-        await context.read<VehicleCubit>().loadVehicles();
+        await context.read<VehicleListCubit>().refresh();
       },
       color: AppColors.primary,
       backgroundColor: AppColors.neutral[50],
@@ -586,7 +577,7 @@ class _VehiclesScreenState extends State<VehiclesScreen> {
               ),
               child: ElevatedButton(
                 onPressed: () {
-                  context.read<VehicleCubit>().loadVehicles();
+                  context.read<VehicleListCubit>().refresh();
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.transparent,
@@ -660,7 +651,9 @@ class _VehiclesScreenState extends State<VehiclesScreen> {
                     onTap: () {
                       Navigator.pop(context);
                       if ((vehicle.isPrimary ?? false) != true) {
-                        context.read<VehicleCubit>().markAsPrimary(vehicle.id);
+                        context.read<VehicleListCubit>().markAsPrimary(
+                          vehicle.id,
+                        );
                       }
                     },
                   ),
@@ -799,7 +792,7 @@ class _VehiclesScreenState extends State<VehiclesScreen> {
               ElevatedButton(
                 onPressed: () {
                   Navigator.pop(context);
-                  context.read<VehicleCubit>().deleteVehicle(vehicle.id);
+                  context.read<VehicleListCubit>().deleteVehicle(vehicle.id);
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.tertiary[600],

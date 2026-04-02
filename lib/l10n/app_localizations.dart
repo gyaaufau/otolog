@@ -1106,6 +1106,12 @@ abstract class AppLocalizations {
   /// **'Set Primary'**
   String get setPrimary;
 
+  /// Description for primary vehicle toggle
+  ///
+  /// In en, this message translates to:
+  /// **'Set this vehicle as your primary vehicle'**
+  String get setPrimaryVehicleDescription;
+
   /// Total cost label
   ///
   /// In en, this message translates to:

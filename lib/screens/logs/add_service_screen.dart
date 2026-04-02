@@ -4,8 +4,8 @@ import 'package:go_router/go_router.dart';
 import 'package:drift/drift.dart' as drift;
 import '../../l10n/app_localizations.dart';
 import '../../shared/localization/l10n_helper.dart';
-import '../../cubit/vehicle_cubit.dart';
-import '../../cubit/vehicle_state.dart';
+import '../../cubit/vehicle_detail_cubit.dart';
+import '../../cubit/vehicle_detail_state.dart';
 import '../../cubit/service_vehicle_selector_cubit.dart';
 import '../../cubit/service_vehicle_selector_state.dart';
 import '../../database/database.dart';
@@ -65,7 +65,7 @@ class _AddServiceScreenState extends State<AddServiceScreen> {
           _vehicleId = vehicleId;
         });
         print('📱 [AddServiceScreen] Local _vehicleId set to: $_vehicleId');
-        context.read<VehicleCubit>().loadVehicleWithServices(vehicleId);
+        context.read<VehicleDetailCubit>().loadVehicleWithServices(vehicleId);
       }
     } else {
       print('📱 [AddServiceScreen] Local _vehicleId already set: $_vehicleId');
@@ -848,9 +848,9 @@ class _AddServiceScreenState extends State<AddServiceScreen> {
   }
 
   Widget _buildSaveButton() {
-    return BlocBuilder<VehicleCubit, VehicleState>(
+    return BlocBuilder<VehicleDetailCubit, VehicleDetailState>(
       builder: (context, state) {
-        final isLoading = state is VehicleLoading;
+        final isLoading = state is VehicleDetailLoading;
         return Container(
           width: double.infinity,
           decoration: BoxDecoration(
@@ -946,7 +946,7 @@ class _AddServiceScreenState extends State<AddServiceScreen> {
         '📱 [AddServiceScreen]   Service record created with vehicleId: ${_vehicleId}',
       );
       print('📱 [AddServiceScreen]   Calling addServiceRecord on VehicleCubit');
-      context.read<VehicleCubit>().addServiceRecord(service);
+      context.read<VehicleDetailCubit>().addServiceRecord(service);
       print('📱 [AddServiceScreen]   Navigating back');
       context.pop();
     } else {

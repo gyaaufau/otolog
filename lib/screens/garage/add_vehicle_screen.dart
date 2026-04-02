@@ -5,8 +5,8 @@ import 'package:go_router/go_router.dart';
 import 'package:otolog/l10n/app_localizations.dart';
 import 'package:otolog/shared/localization/l10n_helper.dart';
 import 'package:drift/drift.dart' as drift;
-import '../../cubit/vehicle_cubit.dart';
-import '../../cubit/vehicle_state.dart';
+import '../../cubit/vehicle_list_cubit.dart';
+import '../../cubit/vehicle_list_state.dart';
 import '../../database/database.dart';
 import '../../resources/colors.dart';
 import '../../router.dart';
@@ -126,9 +126,9 @@ class _AddVehicleScreenState extends State<AddVehicleScreen> {
           ),
         ),
       ),
-      body: BlocListener<VehicleCubit, VehicleState>(
+      body: BlocListener<VehicleListCubit, VehicleListState>(
         listener: (context, state) {
-          if (state is VehicleOperationSuccess) {
+          if (state is VehicleListOperationSuccess) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Row(
@@ -160,7 +160,7 @@ class _AddVehicleScreenState extends State<AddVehicleScreen> {
               ),
             );
             context.pop();
-          } else if (state is VehicleError) {
+          } else if (state is VehicleListError) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Row(
@@ -546,9 +546,9 @@ class _AddVehicleScreenState extends State<AddVehicleScreen> {
                           ),
                         ),
                       )
-                      : BlocBuilder<VehicleCubit, VehicleState>(
+                      : BlocBuilder<VehicleListCubit, VehicleListState>(
                         builder: (context, state) {
-                          final isLoading = state is VehicleLoading;
+                          final isLoading = state is VehicleListLoading;
                           return Container(
                             decoration: BoxDecoration(
                               color: AppColors.primary[500]!,
@@ -1264,6 +1264,6 @@ class _AddVehicleScreenState extends State<AddVehicleScreen> {
               : drift.Value(_selectedImage!.path),
     );
 
-    context.read<VehicleCubit>().addVehicle(vehicle);
+    context.read<VehicleListCubit>().addVehicle(vehicle);
   }
 }

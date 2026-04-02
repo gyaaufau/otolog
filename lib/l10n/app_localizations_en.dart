@@ -520,6 +520,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get setPrimary => 'Set Primary';
 
   @override
+  String get setPrimaryVehicleDescription =>
+      'Set this vehicle as your primary vehicle';
+
+  @override
   String get totalCost => 'Total Cost';
 
   @override

@@ -8,6 +8,8 @@ import 'package:otolog/l10n/app_localizations.dart';
 import 'package:otolog/shared/localization/l10n_helper.dart';
 import 'shared/core/service_locator.dart';
 import 'cubit/vehicle_cubit.dart';
+import 'cubit/vehicle_list_cubit.dart';
+import 'cubit/vehicle_detail_cubit.dart';
 import 'router.dart';
 import 'resources/theme.dart';
 import 'resources/colors.dart';
@@ -34,6 +36,8 @@ class MyApp extends StatelessWidget {
         return MultiBlocProvider(
           providers: [
             BlocProvider(create: (context) => sl<VehicleCubit>()),
+            BlocProvider(create: (context) => sl<VehicleListCubit>()),
+            BlocProvider(create: (context) => sl<VehicleDetailCubit>()),
             BlocProvider(
               create: (context) => sl<ServiceVehicleSelectorCubit>(),
             ),

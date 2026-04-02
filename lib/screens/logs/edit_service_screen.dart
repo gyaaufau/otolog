@@ -4,8 +4,8 @@ import 'package:go_router/go_router.dart';
 import 'package:drift/drift.dart' as drift;
 import '../../l10n/app_localizations.dart';
 import '../../shared/localization/l10n_helper.dart';
-import '../../cubit/vehicle_cubit.dart';
-import '../../cubit/vehicle_state.dart';
+import '../../cubit/vehicle_detail_cubit.dart';
+import '../../cubit/vehicle_detail_state.dart';
 import '../../cubit/service_vehicle_selector_cubit.dart';
 import '../../cubit/service_vehicle_selector_state.dart';
 import '../../database/database.dart';
@@ -74,7 +74,7 @@ class _EditServiceScreenState extends State<EditServiceScreen> {
         print(
           '📱 [EditServiceScreen] Local IDs set to: $_vehicleId, $_serviceId',
         );
-        context.read<VehicleCubit>().loadVehicleWithServices(vehicleId);
+        context.read<VehicleDetailCubit>().loadVehicleWithServices(vehicleId);
       }
     } else {
       print(
@@ -148,10 +148,10 @@ class _EditServiceScreenState extends State<EditServiceScreen> {
           ),
         ),
       ),
-      body: BlocBuilder<VehicleCubit, VehicleState>(
+      body: BlocBuilder<VehicleDetailCubit, VehicleDetailState>(
         builder: (context, state) {
           // Load existing service data if not loaded yet
-          if (state is VehicleLoaded &&
+          if (state is VehicleDetailLoaded &&
               _existingService == null &&
               _serviceId != null) {
             final service = state.serviceRecords?.firstWhere(
@@ -892,9 +892,9 @@ class _EditServiceScreenState extends State<EditServiceScreen> {
   }
 
   Widget _buildSaveButton() {
-    return BlocBuilder<VehicleCubit, VehicleState>(
+    return BlocBuilder<VehicleDetailCubit, VehicleDetailState>(
       builder: (context, state) {
-        final isLoading = state is VehicleLoading;
+        final isLoading = state is VehicleDetailLoading;
         return Container(
           width: double.infinity,
           decoration: BoxDecoration(
@@ -999,7 +999,7 @@ class _EditServiceScreenState extends State<EditServiceScreen> {
       print(
         '📱 [EditServiceScreen]   Calling updateServiceRecord on VehicleCubit',
       );
-      context.read<VehicleCubit>().updateServiceRecord(updatedService);
+      context.read<VehicleDetailCubit>().updateServiceRecord(updatedService);
       print('📱 [EditServiceScreen]   Navigating back');
       context.pop();
     } else {

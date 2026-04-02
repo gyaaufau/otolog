@@ -3,6 +3,8 @@ import '../../repositories/drift_service.dart';
 import '../../repositories/language_repository.dart';
 import '../../database/database.dart';
 import '../../cubit/vehicle_cubit.dart';
+import '../../cubit/vehicle_list_cubit.dart';
+import '../../cubit/vehicle_detail_cubit.dart';
 import '../../cubit/service_vehicle_selector_cubit.dart';
 import '../../cubit/language_cubit.dart';
 
@@ -21,6 +23,12 @@ Future<void> initServiceLocator() async {
 
   // Register cubits
   sl.registerFactory<VehicleCubit>(() => VehicleCubit(sl<DriftService>()));
+  sl.registerFactory<VehicleListCubit>(
+    () => VehicleListCubit(sl<DriftService>()),
+  );
+  sl.registerFactory<VehicleDetailCubit>(
+    () => VehicleDetailCubit(sl<DriftService>()),
+  );
   sl.registerFactory<ServiceVehicleSelectorCubit>(
     () => ServiceVehicleSelectorCubit(sl<DriftService>()),
   );

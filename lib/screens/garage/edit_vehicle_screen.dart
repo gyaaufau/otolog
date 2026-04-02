@@ -4,8 +4,10 @@ import 'package:go_router/go_router.dart';
 import 'package:otolog/l10n/app_localizations.dart';
 import 'package:otolog/shared/localization/l10n_helper.dart';
 import 'package:drift/drift.dart' as drift;
-import '../../cubit/vehicle_cubit.dart';
-import '../../cubit/vehicle_state.dart';
+import '../../cubit/vehicle_detail_cubit.dart';
+import '../../cubit/vehicle_detail_state.dart';
+import '../../cubit/vehicle_list_cubit.dart';
+import '../../cubit/vehicle_list_state.dart';
 import '../../database/database.dart';
 import '../../resources/colors.dart';
 import '../../router.dart';
@@ -105,7 +107,7 @@ class _EditVehicleScreenState extends State<EditVehicleScreen> {
     if (vehicleId != null) {
       _vehicleId = vehicleId;
       _hasLoadedVehicle = true;
-      context.read<VehicleCubit>().loadVehicleWithServices(vehicleId);
+      context.read<VehicleDetailCubit>().loadVehicleWithServices(vehicleId);
     }
   }
 
@@ -159,10 +161,10 @@ class _EditVehicleScreenState extends State<EditVehicleScreen> {
           ),
         ),
       ),
-      body: BlocConsumer<VehicleCubit, VehicleState>(
+      body: BlocConsumer<VehicleDetailCubit, VehicleDetailState>(
         listener: (context, state) {
           print('🔔 DEBUG: Listener called with state: ${state.runtimeType}');
-          if (state is VehicleOperationSuccess) {
+          if (state is VehicleDetailOperationSuccess) {
             print(
               '✅ DEBUG: VehicleOperationSuccess detected - Message: ${state.message}',
             );
@@ -219,8 +221,10 @@ class _EditVehicleScreenState extends State<EditVehicleScreen> {
                 print('❌ DEBUG: Widget not mounted, skipping navigation');
               }
             });
-          } else if (state is VehicleError) {
-            print('❌ DEBUG: VehicleError detected - Message: ${state.message}');
+          } else if (state is VehicleDetailError) {
+            print(
+              '❌ DEBUG: VehicleDetailError detected - Message: ${state.message}',
+            );
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Row(
@@ -250,7 +254,7 @@ class _EditVehicleScreenState extends State<EditVehicleScreen> {
           }
         },
         builder: (context, state) {
-          if (state is VehicleLoading) {
+          if (state is VehicleDetailLoading) {
             return const Center(
               child: CircularProgressIndicator(
                 valueColor: AlwaysStoppedAnimation(AppColors.primary),
@@ -258,8 +262,8 @@ class _EditVehicleScreenState extends State<EditVehicleScreen> {
             );
           }
 
-          if (state is VehicleLoaded && state.vehicles.isNotEmpty) {
-            final vehicle = state.vehicles.first;
+          if (state is VehicleDetailLoaded) {
+            final vehicle = state.vehicle;
             if (_vehicle == null || _vehicle!.id != vehicle.id) {
               _populateFields(vehicle);
             }
@@ -1019,7 +1023,7 @@ class _EditVehicleScreenState extends State<EditVehicleScreen> {
     print(
       '✅ DEBUG: Calling updateVehicle for vehicle ID: ${updatedVehicle.id}',
     );
-    await context.read<VehicleCubit>().updateVehicle(updatedVehicle);
+    await context.read<VehicleListCubit>().updateVehicle(updatedVehicle);
 
     // Reset saving state after a short delay to allow navigation to complete
     if (mounted) {

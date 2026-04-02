@@ -6,8 +6,10 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:otolog/l10n/app_localizations.dart';
 import 'package:otolog/shared/localization/l10n_helper.dart';
-import '../../cubit/vehicle_cubit.dart';
-import '../../cubit/vehicle_state.dart';
+import '../../cubit/vehicle_detail_cubit.dart';
+import '../../cubit/vehicle_detail_state.dart';
+import '../../cubit/vehicle_list_cubit.dart';
+import '../../cubit/vehicle_list_state.dart';
 import '../../resources/colors.dart';
 import '../../router.dart';
 
@@ -20,6 +22,7 @@ class VehicleDetailScreen extends StatefulWidget {
 
 class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
   int? _vehicleId;
+  bool? _localIsPrimary;
 
   @override
   void didChangeDependencies() {
@@ -32,7 +35,7 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
         setState(() {
           _vehicleId = vehicleId;
         });
-        context.read<VehicleCubit>().loadVehicleWithServices(vehicleId);
+        context.read<VehicleDetailCubit>().loadVehicleWithServices(vehicleId);
       }
     }
   }
@@ -92,39 +95,62 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
           ),
         ),
       ),
-      body: BlocConsumer<VehicleCubit, VehicleState>(
+      // Listen to VehicleListCubit for toggle primary updates
+      body: BlocListener<VehicleListCubit, VehicleListState>(
         listener: (context, state) {
-          // Reload vehicle data when returning from edit screen
-          if (state is VehicleOperationSuccess && _vehicleId != null) {
-            print('🔄 Reloading vehicle data after edit');
-            context.read<VehicleCubit>().loadVehicleWithServices(_vehicleId!);
-          }
-        },
-        builder: (context, state) {
-          if (state is VehicleLoading) {
-            return Center(
-              child: CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation(AppColors.primary),
-                strokeWidth: 2,
-              ),
+          // Sync local state with actual state after toggle completes
+          if (state is VehicleListLoaded && _vehicleId != null) {
+            final updatedVehicle = state.vehicles.firstWhere(
+              (v) => v.id == _vehicleId,
+              orElse: () => state.vehicles.first,
             );
+            setState(() {
+              _localIsPrimary = updatedVehicle.isPrimary;
+            });
           }
-          if (state is VehicleError) {
-            return _buildErrorState(state.message);
-          }
-
-          if (state is VehicleLoaded && state.vehicles.isNotEmpty) {
-            final vehicle = state.vehicles.first;
-            return _buildVehicleDetail(vehicle, state);
-          }
-
-          return const SizedBox.shrink();
         },
+        child: BlocConsumer<VehicleDetailCubit, VehicleDetailState>(
+          listener: (context, state) {
+            // Sync local state when vehicle data loads
+            if (state is VehicleDetailLoaded) {
+              setState(() {
+                _localIsPrimary = state.vehicle.isPrimary;
+              });
+            }
+            // Reload vehicle data when returning from edit screen
+            if (state is VehicleDetailOperationSuccess && _vehicleId != null) {
+              print('🔄 Reloading vehicle data after edit');
+              context.read<VehicleDetailCubit>().loadVehicleWithServices(
+                _vehicleId!,
+              );
+            }
+          },
+          builder: (context, state) {
+            if (state is VehicleDetailLoading) {
+              return Center(
+                child: CircularProgressIndicator(
+                  valueColor: AlwaysStoppedAnimation(AppColors.primary),
+                  strokeWidth: 2,
+                ),
+              );
+            }
+            if (state is VehicleDetailError) {
+              return _buildErrorState(state.message);
+            }
+
+            if (state is VehicleDetailLoaded) {
+              return _buildVehicleDetail(state);
+            }
+
+            return const SizedBox.shrink();
+          },
+        ),
       ),
     );
   }
 
-  Widget _buildVehicleDetail(dynamic vehicle, VehicleLoaded state) {
+  Widget _buildVehicleDetail(VehicleDetailLoaded state) {
+    final vehicle = state.vehicle;
     return SingleChildScrollView(
       padding: const EdgeInsets.all(24),
       child: Column(
@@ -142,9 +168,8 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
           SizedBox(height: 24.h),
           _buildServiceStatistics(state),
           SizedBox(height: 24.h),
-          if (state.serviceRecords != null &&
-              state.serviceRecords!.isNotEmpty) ...[
-            _buildRecentServices(state.serviceRecords!),
+          if (state.serviceRecords.isNotEmpty) ...[
+            _buildRecentServices(state.serviceRecords),
             SizedBox(height: 24.h),
           ],
           _buildActionButtons(vehicle),
@@ -213,7 +238,7 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
                             ),
                           ),
                         ),
-                        if (vehicle.isPrimary ?? false) ...[
+                        if (_localIsPrimary ?? vehicle.isPrimary ?? false) ...[
                           const SizedBox(width: 8),
                           Container(
                             padding: const EdgeInsets.symmetric(
@@ -563,9 +588,9 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
     );
   }
 
-  Widget _buildServiceStatistics(VehicleLoaded state) {
-    final totalCost = state.totalCost ?? 0.0;
-    final serviceCount = state.serviceCount ?? 0;
+  Widget _buildServiceStatistics(VehicleDetailLoaded state) {
+    final totalCost = state.totalCost;
+    final serviceCount = state.serviceCount;
 
     return Container(
       padding: const EdgeInsets.all(20),
@@ -890,6 +915,55 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
             ),
           ),
         ),
+        const SizedBox(height: 12),
+        Container(
+          width: double.infinity,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(
+              color: AppColors.error.withOpacity(0.3),
+              width: 1,
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: AppColors.neutral[900]!.withOpacity(0.04),
+                blurRadius: 20,
+                offset: const Offset(0, 4),
+              ),
+            ],
+          ),
+          child: ElevatedButton(
+            onPressed: () {
+              _showDeleteConfirmationDialog();
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.transparent,
+              foregroundColor: AppColors.error,
+              shadowColor: Colors.transparent,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+              elevation: 0,
+              padding: const EdgeInsets.symmetric(vertical: 16),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Icon(Icons.delete_outline, size: 20),
+                const SizedBox(width: 8),
+                Text(
+                  context.l10n.delete,
+                  style: const TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w600,
+                    letterSpacing: 0.2,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
       ],
     );
   }
@@ -926,7 +1000,7 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  'Set this vehicle as your primary vehicle',
+                  context.l10n.setPrimaryVehicleDescription,
                   style: TextStyle(
                     fontSize: 13,
                     fontWeight: FontWeight.w500,
@@ -939,11 +1013,16 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
           ),
           const SizedBox(width: 16),
           CupertinoSwitch(
-            value: vehicle.isPrimary ?? false,
+            value: _localIsPrimary ?? vehicle.isPrimary ?? false,
             activeColor: AppColors.primary,
             onChanged: (value) {
               if (_vehicleId != null) {
-                context.read<VehicleCubit>().togglePrimary(_vehicleId!);
+                // Update local state immediately for smooth UI
+                setState(() {
+                  _localIsPrimary = value;
+                });
+                // Call cubit method to update database
+                context.read<VehicleListCubit>().togglePrimary(_vehicleId!);
               }
             },
           ),
@@ -1001,11 +1080,6 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
   void _showDeleteConfirmationDialog() {
     if (_vehicleId == null) return;
 
-    final state = context.read<VehicleCubit>().state;
-    if (state is! VehicleLoaded || state.vehicles.isEmpty) return;
-
-    final vehicle = state.vehicles.first;
-
     showDialog(
       context: context,
       builder:
@@ -1048,7 +1122,7 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
               ElevatedButton(
                 onPressed: () {
                   Navigator.pop(context);
-                  context.read<VehicleCubit>().deleteVehicle(_vehicleId!);
+                  context.read<VehicleListCubit>().deleteVehicle(_vehicleId!);
                   context.pop();
                 },
                 style: ElevatedButton.styleFrom(

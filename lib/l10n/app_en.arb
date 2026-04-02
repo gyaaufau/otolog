@@ -718,6 +718,10 @@
   "@setPrimary": {
     "description": "Set as primary vehicle button"
   },
+  "setPrimaryVehicleDescription": "Set this vehicle as your primary vehicle",
+  "@setPrimaryVehicleDescription": {
+    "description": "Description for primary vehicle toggle"
+  },
   "trackVehicleMaintenance": "Track all your vehicle maintenance",
   "@trackVehicleMaintenance": {
     "description": "Subtitle for service logs screen"

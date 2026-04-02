@@ -3,8 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:otolog/l10n/app_localizations.dart';
 import 'package:otolog/shared/localization/l10n_helper.dart';
-import '../cubit/vehicle_cubit.dart';
-import '../cubit/vehicle_state.dart';
+import '../cubit/vehicle_list_cubit.dart';
+import '../cubit/vehicle_list_state.dart';
 import '../resources/colors.dart';
 import '../widgets/search_bar_widget.dart';
 import '../router.dart';
@@ -33,7 +33,7 @@ class _ServiceLogsScreenState extends State<ServiceLogsScreen> {
     // Load vehicles when screen is built
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) {
-        context.read<VehicleCubit>().loadVehicles();
+        context.read<VehicleListCubit>().loadVehicles();
       }
     });
 
@@ -45,9 +45,9 @@ class _ServiceLogsScreenState extends State<ServiceLogsScreen> {
             _buildHeader(),
             _buildSearchAndFilter(),
             Expanded(
-              child: BlocBuilder<VehicleCubit, VehicleState>(
+              child: BlocBuilder<VehicleListCubit, VehicleListState>(
                 builder: (context, state) {
-                  if (state is VehicleLoading) {
+                  if (state is VehicleListLoading) {
                     return Center(
                       child: CircularProgressIndicator(
                         valueColor: AlwaysStoppedAnimation(AppColors.primary),
@@ -56,11 +56,11 @@ class _ServiceLogsScreenState extends State<ServiceLogsScreen> {
                     );
                   }
 
-                  if (state is VehicleError) {
+                  if (state is VehicleListError) {
                     return _buildErrorState(state.message);
                   }
 
-                  if (state is VehicleLoaded) {
+                  if (state is VehicleListLoaded) {
                     return _buildServiceLogsList(state);
                   }
 
@@ -101,11 +101,11 @@ class _ServiceLogsScreenState extends State<ServiceLogsScreen> {
 
   Widget _buildSearchAndFilter() {
     final l10n = context.l10n;
-    return BlocBuilder<VehicleCubit, VehicleState>(
+    return BlocBuilder<VehicleListCubit, VehicleListState>(
       builder: (context, state) {
-        final vehicles = state is VehicleLoaded ? state.vehicles : [];
+        final vehicles = state is VehicleListLoaded ? state.vehicles : [];
         final allServices =
-            state is VehicleLoaded ? (state.serviceRecords ?? []) : [];
+            state is VehicleListLoaded ? (state.serviceRecords ?? []) : [];
 
         // Apply all filters
         final filteredServices = _applyFilters(allServices);
@@ -323,9 +323,9 @@ class _ServiceLogsScreenState extends State<ServiceLogsScreen> {
   }
 
   Widget _buildActiveFiltersChips() {
-    return BlocBuilder<VehicleCubit, VehicleState>(
+    return BlocBuilder<VehicleListCubit, VehicleListState>(
       builder: (context, state) {
-        final vehicles = state is VehicleLoaded ? state.vehicles : [];
+        final vehicles = state is VehicleListLoaded ? state.vehicles : [];
         dynamic? selectedVehicle;
         if (_selectedVehicleId != null) {
           try {
@@ -420,9 +420,9 @@ class _ServiceLogsScreenState extends State<ServiceLogsScreen> {
 
   Widget _buildFilterBottomSheetContent() {
     final l10n = context.l10n;
-    return BlocBuilder<VehicleCubit, VehicleState>(
+    return BlocBuilder<VehicleListCubit, VehicleListState>(
       builder: (context, state) {
-        final vehicles = state is VehicleLoaded ? state.vehicles : [];
+        final vehicles = state is VehicleListLoaded ? state.vehicles : [];
 
         return Container(
           decoration: BoxDecoration(
@@ -767,7 +767,7 @@ class _ServiceLogsScreenState extends State<ServiceLogsScreen> {
     });
   }
 
-  Widget _buildServiceLogsList(VehicleLoaded state) {
+  Widget _buildServiceLogsList(VehicleListLoaded state) {
     final allServices = state.serviceRecords ?? [];
     final vehicles = state.vehicles;
 
@@ -837,7 +837,7 @@ class _ServiceLogsScreenState extends State<ServiceLogsScreen> {
 
     return RefreshIndicator(
       onRefresh: () async {
-        await context.read<VehicleCubit>().loadVehicles();
+        await context.read<VehicleListCubit>().loadVehicles();
       },
       color: AppColors.primary,
       backgroundColor: AppColors.neutral[50],
@@ -1162,9 +1162,9 @@ class _ServiceLogsScreenState extends State<ServiceLogsScreen> {
   }
 
   Widget _buildAddServiceButton() {
-    return BlocBuilder<VehicleCubit, VehicleState>(
+    return BlocBuilder<VehicleListCubit, VehicleListState>(
       builder: (context, state) {
-        final vehicles = state is VehicleLoaded ? state.vehicles : [];
+        final vehicles = state is VehicleListLoaded ? state.vehicles : [];
 
         if (vehicles.isEmpty) {
           return const SizedBox.shrink();
@@ -1257,7 +1257,7 @@ class _ServiceLogsScreenState extends State<ServiceLogsScreen> {
               ),
               child: ElevatedButton(
                 onPressed: () {
-                  context.read<VehicleCubit>().loadVehicles();
+                  context.read<VehicleListCubit>().loadVehicles();
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.transparent,
@@ -1475,7 +1475,7 @@ class _ServiceLogsScreenState extends State<ServiceLogsScreen> {
               ElevatedButton(
                 onPressed: () {
                   Navigator.pop(context);
-                  context.read<VehicleCubit>().deleteServiceRecord(
+                  context.read<VehicleListCubit>().deleteServiceRecord(
                     service.id,
                     service.vehicleId,
                   );

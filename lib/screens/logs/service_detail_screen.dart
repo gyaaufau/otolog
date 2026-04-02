@@ -3,8 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import '../../l10n/app_localizations.dart';
 import '../../shared/localization/l10n_helper.dart';
-import '../../cubit/vehicle_cubit.dart';
-import '../../cubit/vehicle_state.dart';
+import '../../cubit/vehicle_detail_cubit.dart';
+import '../../cubit/vehicle_detail_state.dart';
 import '../../resources/colors.dart';
 import '../../router.dart';
 
@@ -35,7 +35,7 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
           _vehicleId = vehicleId;
           _serviceId = serviceId;
         });
-        context.read<VehicleCubit>().loadVehicleWithServices(vehicleId);
+        context.read<VehicleDetailCubit>().loadVehicleWithServices(vehicleId);
       }
     }
   }
@@ -94,9 +94,9 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
           ),
         ),
       ),
-      body: BlocBuilder<VehicleCubit, VehicleState>(
+      body: BlocBuilder<VehicleDetailCubit, VehicleDetailState>(
         builder: (context, state) {
-          if (state is VehicleLoading) {
+          if (state is VehicleDetailLoading) {
             return Center(
               child: CircularProgressIndicator(
                 valueColor: AlwaysStoppedAnimation(AppColors.primary),
@@ -105,19 +105,16 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
             );
           }
 
-          if (state is VehicleError) {
+          if (state is VehicleDetailError) {
             return _buildErrorState(state.message);
           }
 
-          if (state is VehicleLoaded) {
-            final service = state.serviceRecords?.firstWhere(
+          if (state is VehicleDetailLoaded) {
+            final service = state.serviceRecords.firstWhere(
               (s) => s.id == _serviceId,
-              orElse: () => state.serviceRecords!.first,
+              orElse: () => state.serviceRecords.first,
             );
-            final vehicle = state.vehicles.firstWhere(
-              (v) => v.id == service!.vehicleId,
-              orElse: () => state.vehicles.first,
-            );
+            final vehicle = state.vehicle;
 
             return _buildServiceDetail(service!, vehicle);
           }
@@ -565,7 +562,7 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
               ElevatedButton(
                 onPressed: () {
                   Navigator.pop(context);
-                  context.read<VehicleCubit>().deleteServiceRecord(
+                  context.read<VehicleDetailCubit>().deleteServiceRecord(
                     service.id,
                     service.vehicleId,
                   );

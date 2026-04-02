@@ -522,6 +522,10 @@ class AppLocalizationsId extends AppLocalizations {
   String get setPrimary => 'Tetapkan sebagai Utama';
 
   @override
+  String get setPrimaryVehicleDescription =>
+      'Tetapkan kendaraan ini sebagai kendaraan utama Anda';
+
+  @override
   String get totalCost => 'Total Biaya';
 
   @override
