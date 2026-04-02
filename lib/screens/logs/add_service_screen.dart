@@ -6,6 +6,7 @@ import '../../l10n/app_localizations.dart';
 import '../../shared/localization/l10n_helper.dart';
 import '../../cubit/vehicle_detail_cubit.dart';
 import '../../cubit/vehicle_detail_state.dart';
+import '../../cubit/vehicle_list_cubit.dart';
 import '../../cubit/service_vehicle_selector_cubit.dart';
 import '../../cubit/service_vehicle_selector_state.dart';
 import '../../database/database.dart';
@@ -806,14 +807,28 @@ class _AddServiceScreenState extends State<AddServiceScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          l10n.notes,
-          style: TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.w600,
-            color: AppColors.neutral[700],
-            letterSpacing: 0.15,
-          ),
+        Row(
+          children: [
+            Text(
+              l10n.notes,
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
+                color: AppColors.neutral[700],
+                letterSpacing: 0.15,
+              ),
+            ),
+            const SizedBox(width: 4),
+            Text(
+              '(${l10n.optional})',
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w400,
+                color: AppColors.neutral[500],
+                letterSpacing: 0.15,
+              ),
+            ),
+          ],
         ),
         const SizedBox(height: 8),
         TextFormField(
@@ -945,8 +960,12 @@ class _AddServiceScreenState extends State<AddServiceScreen> {
       print(
         '📱 [AddServiceScreen]   Service record created with vehicleId: ${_vehicleId}',
       );
-      print('📱 [AddServiceScreen]   Calling addServiceRecord on VehicleCubit');
+      print(
+        '📱 [AddServiceScreen]   Calling addServiceRecord on VehicleDetailCubit',
+      );
       context.read<VehicleDetailCubit>().addServiceRecord(service);
+      print('📱 [AddServiceScreen]   Refreshing VehicleListCubit');
+      context.read<VehicleListCubit>().loadVehicles();
       print('📱 [AddServiceScreen]   Navigating back');
       context.pop();
     } else {

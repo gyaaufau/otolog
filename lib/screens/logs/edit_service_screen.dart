@@ -6,6 +6,7 @@ import '../../l10n/app_localizations.dart';
 import '../../shared/localization/l10n_helper.dart';
 import '../../cubit/vehicle_detail_cubit.dart';
 import '../../cubit/vehicle_detail_state.dart';
+import '../../cubit/vehicle_list_cubit.dart';
 import '../../cubit/service_vehicle_selector_cubit.dart';
 import '../../cubit/service_vehicle_selector_state.dart';
 import '../../database/database.dart';
@@ -850,14 +851,28 @@ class _EditServiceScreenState extends State<EditServiceScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          context.l10n.notes,
-          style: TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.w600,
-            color: AppColors.neutral[700],
-            letterSpacing: 0.15,
-          ),
+        Row(
+          children: [
+            Text(
+              context.l10n.notes,
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
+                color: AppColors.neutral[700],
+                letterSpacing: 0.15,
+              ),
+            ),
+            const SizedBox(width: 4),
+            Text(
+              '(${context.l10n.optional})',
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w400,
+                color: AppColors.neutral[500],
+                letterSpacing: 0.15,
+              ),
+            ),
+          ],
         ),
         const SizedBox(height: 8),
         TextFormField(
@@ -997,9 +1012,11 @@ class _EditServiceScreenState extends State<EditServiceScreen> {
         '📱 [EditServiceScreen]   Service record updated with vehicleId: ${_vehicleId}',
       );
       print(
-        '📱 [EditServiceScreen]   Calling updateServiceRecord on VehicleCubit',
+        '📱 [EditServiceScreen]   Calling updateServiceRecord on VehicleDetailCubit',
       );
       context.read<VehicleDetailCubit>().updateServiceRecord(updatedService);
+      print('📱 [EditServiceScreen]   Refreshing VehicleListCubit');
+      context.read<VehicleListCubit>().loadVehicles();
       print('📱 [EditServiceScreen]   Navigating back');
       context.pop();
     } else {

@@ -776,56 +776,64 @@ class _ServiceLogsScreenState extends State<ServiceLogsScreen> {
 
     if (filteredServices.isEmpty) {
       final l10n = context.l10n;
-      return Center(
-        child: Padding(
-          padding: const EdgeInsets.all(24.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Container(
-                padding: const EdgeInsets.all(24),
-                decoration: BoxDecoration(
-                  color: AppColors.neutral[100],
-                  shape: BoxShape.circle,
+      return RefreshIndicator(
+        onRefresh: () async {
+          await context.read<VehicleListCubit>().loadVehicles();
+        },
+        color: AppColors.primary,
+        backgroundColor: AppColors.neutral[50],
+        child: SingleChildScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          child: Padding(
+            padding: const EdgeInsets.all(24.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(24),
+                  decoration: BoxDecoration(
+                    color: AppColors.neutral[100],
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(
+                    Icons.build_outlined,
+                    size: 56,
+                    color: AppColors.neutral[400],
+                  ),
                 ),
-                child: Icon(
-                  Icons.build_outlined,
-                  size: 56,
-                  color: AppColors.neutral[400],
+                const SizedBox(height: 24),
+                Text(
+                  l10n.noServiceRecords,
+                  style: TextStyle(
+                    fontSize: 22,
+                    fontWeight: FontWeight.w700,
+                    color: AppColors.neutral[900],
+                    letterSpacing: -0.5,
+                  ),
                 ),
-              ),
-              const SizedBox(height: 24),
-              Text(
-                l10n.noServiceRecords,
-                style: TextStyle(
-                  fontSize: 22,
-                  fontWeight: FontWeight.w700,
-                  color: AppColors.neutral[900],
-                  letterSpacing: -0.5,
+                const SizedBox(height: 10),
+                Text(
+                  vehicles.isEmpty
+                      ? l10n.addVehicleFirstToStartTracking
+                      : _selectedVehicleId != null
+                      ? '${l10n.noServiceRecordsFor} ${(() {
+                        try {
+                          return vehicles.firstWhere((v) => v.id == _selectedVehicleId).name;
+                        } catch (e) {
+                          return '';
+                        }
+                      })()}'
+                      : l10n.addFirstServiceRecordToGetStarted,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 15,
+                    color: AppColors.neutral[600],
+                    height: 1.5,
+                    letterSpacing: 0.2,
+                  ),
                 ),
-              ),
-              const SizedBox(height: 10),
-              Text(
-                vehicles.isEmpty
-                    ? l10n.addVehicleFirstToStartTracking
-                    : _selectedVehicleId != null
-                    ? '${l10n.noServiceRecordsFor} ${(() {
-                      try {
-                        return vehicles.firstWhere((v) => v.id == _selectedVehicleId).name;
-                      } catch (e) {
-                        return '';
-                      }
-                    })()}'
-                    : l10n.addFirstServiceRecordToGetStarted,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 15,
-                  color: AppColors.neutral[600],
-                  height: 1.5,
-                  letterSpacing: 0.2,
-                ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       );
