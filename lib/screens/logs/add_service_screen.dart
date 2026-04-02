@@ -32,22 +32,22 @@ class _AddServiceScreenState extends State<AddServiceScreen> {
   String? _selectedServiceType;
   int? _vehicleId;
 
-  final List<String> _serviceTypes = [
-    'Oil Change',
-    'Tire Rotation',
-    'Brake Service',
-    'Battery Replacement',
-    'Engine Tune-up',
-    'Air Filter Replacement',
-    'Transmission Service',
-    'Coolant Flush',
-    'Spark Plug Replacement',
-    'Wheel Alignment',
-    'Suspension Service',
-    'Exhaust System Repair',
-    'AC Service',
-    'Inspection',
-    'Other',
+  List<String> get _serviceTypes => [
+    context.l10n.oilChange,
+    context.l10n.tireRotation,
+    context.l10n.brakeService,
+    context.l10n.batteryReplacement,
+    context.l10n.engineTuneUp,
+    context.l10n.airFilterReplacement,
+    context.l10n.transmissionService,
+    context.l10n.coolantFlush,
+    context.l10n.sparkPlugReplacement,
+    context.l10n.wheelAlignment,
+    context.l10n.suspensionService,
+    context.l10n.exhaustSystemRepair,
+    context.l10n.acService,
+    context.l10n.inspection,
+    context.l10n.other,
   ];
 
   @override

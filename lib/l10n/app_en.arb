@@ -208,6 +208,46 @@
   "@other": {
     "description": "Other service type"
   },
+  "batteryReplacement": "Battery Replacement",
+  "@batteryReplacement": {
+    "description": "Battery replacement service type"
+  },
+  "engineTuneUp": "Engine Tune-up",
+  "@engineTuneUp": {
+    "description": "Engine tune-up service type"
+  },
+  "airFilterReplacement": "Air Filter Replacement",
+  "@airFilterReplacement": {
+    "description": "Air filter replacement service type"
+  },
+  "transmissionService": "Transmission Service",
+  "@transmissionService": {
+    "description": "Transmission service type"
+  },
+  "coolantFlush": "Coolant Flush",
+  "@coolantFlush": {
+    "description": "Coolant flush service type"
+  },
+  "sparkPlugReplacement": "Spark Plug Replacement",
+  "@sparkPlugReplacement": {
+    "description": "Spark plug replacement service type"
+  },
+  "wheelAlignment": "Wheel Alignment",
+  "@wheelAlignment": {
+    "description": "Wheel alignment service type"
+  },
+  "suspensionService": "Suspension Service",
+  "@suspensionService": {
+    "description": "Suspension service type"
+  },
+  "exhaustSystemRepair": "Exhaust System Repair",
+  "@exhaustSystemRepair": {
+    "description": "Exhaust system repair service type"
+  },
+  "acService": "AC Service",
+  "@acService": {
+    "description": "AC service type"
+  },
   "car": "Car",
   "@car": {
     "description": "Car vehicle type"

@@ -410,6 +410,66 @@ abstract class AppLocalizations {
   /// **'Other'**
   String get other;
 
+  /// Battery replacement service type
+  ///
+  /// In en, this message translates to:
+  /// **'Battery Replacement'**
+  String get batteryReplacement;
+
+  /// Engine tune-up service type
+  ///
+  /// In en, this message translates to:
+  /// **'Engine Tune-up'**
+  String get engineTuneUp;
+
+  /// Air filter replacement service type
+  ///
+  /// In en, this message translates to:
+  /// **'Air Filter Replacement'**
+  String get airFilterReplacement;
+
+  /// Transmission service type
+  ///
+  /// In en, this message translates to:
+  /// **'Transmission Service'**
+  String get transmissionService;
+
+  /// Coolant flush service type
+  ///
+  /// In en, this message translates to:
+  /// **'Coolant Flush'**
+  String get coolantFlush;
+
+  /// Spark plug replacement service type
+  ///
+  /// In en, this message translates to:
+  /// **'Spark Plug Replacement'**
+  String get sparkPlugReplacement;
+
+  /// Wheel alignment service type
+  ///
+  /// In en, this message translates to:
+  /// **'Wheel Alignment'**
+  String get wheelAlignment;
+
+  /// Suspension service type
+  ///
+  /// In en, this message translates to:
+  /// **'Suspension Service'**
+  String get suspensionService;
+
+  /// Exhaust system repair service type
+  ///
+  /// In en, this message translates to:
+  /// **'Exhaust System Repair'**
+  String get exhaustSystemRepair;
+
+  /// AC service type
+  ///
+  /// In en, this message translates to:
+  /// **'AC Service'**
+  String get acService;
+
   /// Car vehicle type
   ///
   /// In en, this message translates to:

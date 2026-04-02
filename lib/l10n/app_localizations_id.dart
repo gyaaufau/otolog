@@ -166,6 +166,36 @@ class AppLocalizationsId extends AppLocalizations {
   String get other => 'Lainnya';
 
   @override
+  String get batteryReplacement => 'Ganti Baterai';
+
+  @override
+  String get engineTuneUp => 'Tune-up Mesin';
+
+  @override
+  String get airFilterReplacement => 'Ganti Filter Udara';
+
+  @override
+  String get transmissionService => 'Servis Transmisi';
+
+  @override
+  String get coolantFlush => 'Pembilasan Coolant';
+
+  @override
+  String get sparkPlugReplacement => 'Ganti Busi';
+
+  @override
+  String get wheelAlignment => 'Spooring Roda';
+
+  @override
+  String get suspensionService => 'Servis Suspensi';
+
+  @override
+  String get exhaustSystemRepair => 'Perbaikan Sistem Knalpot';
+
+  @override
+  String get acService => 'Servis AC';
+
+  @override
   String get car => 'Mobil';
 
   @override

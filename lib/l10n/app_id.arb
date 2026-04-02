@@ -208,6 +208,46 @@
   "@other": {
     "description": "Other service type"
   },
+  "batteryReplacement": "Ganti Baterai",
+  "@batteryReplacement": {
+    "description": "Battery replacement service type"
+  },
+  "engineTuneUp": "Tune-up Mesin",
+  "@engineTuneUp": {
+    "description": "Engine tune-up service type"
+  },
+  "airFilterReplacement": "Ganti Filter Udara",
+  "@airFilterReplacement": {
+    "description": "Air filter replacement service type"
+  },
+  "transmissionService": "Servis Transmisi",
+  "@transmissionService": {
+    "description": "Transmission service type"
+  },
+  "coolantFlush": "Pembilasan Coolant",
+  "@coolantFlush": {
+    "description": "Coolant flush service type"
+  },
+  "sparkPlugReplacement": "Ganti Busi",
+  "@sparkPlugReplacement": {
+    "description": "Spark plug replacement service type"
+  },
+  "wheelAlignment": "Spooring Roda",
+  "@wheelAlignment": {
+    "description": "Wheel alignment service type"
+  },
+  "suspensionService": "Servis Suspensi",
+  "@suspensionService": {
+    "description": "Suspension service type"
+  },
+  "exhaustSystemRepair": "Perbaikan Sistem Knalpot",
+  "@exhaustSystemRepair": {
+    "description": "Exhaust system repair service type"
+  },
+  "acService": "Servis AC",
+  "@acService": {
+    "description": "AC service type"
+  },
   "car": "Mobil",
   "@car": {
     "description": "Car vehicle type"

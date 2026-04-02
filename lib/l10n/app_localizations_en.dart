@@ -165,6 +165,36 @@ class AppLocalizationsEn extends AppLocalizations {
   String get other => 'Other';
 
   @override
+  String get batteryReplacement => 'Battery Replacement';
+
+  @override
+  String get engineTuneUp => 'Engine Tune-up';
+
+  @override
+  String get airFilterReplacement => 'Air Filter Replacement';
+
+  @override
+  String get transmissionService => 'Transmission Service';
+
+  @override
+  String get coolantFlush => 'Coolant Flush';
+
+  @override
+  String get sparkPlugReplacement => 'Spark Plug Replacement';
+
+  @override
+  String get wheelAlignment => 'Wheel Alignment';
+
+  @override
+  String get suspensionService => 'Suspension Service';
+
+  @override
+  String get exhaustSystemRepair => 'Exhaust System Repair';
+
+  @override
+  String get acService => 'AC Service';
+
+  @override
   String get car => 'Car';
 
   @override
