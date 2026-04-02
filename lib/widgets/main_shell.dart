@@ -97,32 +97,41 @@ class MainShell extends StatelessWidget {
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTap: () => _goBranch(index),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(
-            isActive ? activeIcon : icon,
-            color:
-                isActive
-                    ? Theme.of(context).colorScheme.primary
-                    : Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
-            size: 24.sp,
-          ),
-          SizedBox(height: 4.h),
-          Text(
-            label,
-            style: TextStyle(
+      child: SizedBox(
+        height: 56.h,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              isActive ? activeIcon : icon,
               color:
                   isActive
                       ? Theme.of(context).colorScheme.primary
                       : Theme.of(
                         context,
                       ).colorScheme.onSurface.withOpacity(0.6),
-              fontSize: 12.sp,
-              fontWeight: isActive ? FontWeight.w600 : FontWeight.normal,
+              size: 24.sp,
             ),
-          ),
-        ],
+            SizedBox(height: 4.h),
+            Text(
+              label,
+              textAlign: TextAlign.center,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                color:
+                    isActive
+                        ? Theme.of(context).colorScheme.primary
+                        : Theme.of(
+                          context,
+                        ).colorScheme.onSurface.withOpacity(0.6),
+                fontSize: 11.sp,
+                fontWeight: isActive ? FontWeight.w600 : FontWeight.normal,
+                height: 1.2,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
