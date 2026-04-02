@@ -909,11 +909,11 @@ class _ServiceLogsScreenState extends State<ServiceLogsScreen> {
           }
           if (vehicle == null) return const SizedBox.shrink();
           return Padding(
-            padding: const EdgeInsets.only(bottom: 16),
+            padding: const EdgeInsets.only(bottom: 8),
             child: _buildServiceCard(service, vehicle),
           );
         }),
-        const SizedBox(height: 8),
+        const SizedBox(height: 4),
       ],
     );
   }
@@ -998,8 +998,8 @@ class _ServiceLogsScreenState extends State<ServiceLogsScreen> {
                 .replaceFirst(':serviceId', service.id.toString()),
           ),
       child: Container(
-        margin: const EdgeInsets.only(bottom: 16),
-        padding: const EdgeInsets.all(20),
+        margin: const EdgeInsets.only(bottom: 12),
+        padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(12),
@@ -1080,9 +1080,9 @@ class _ServiceLogsScreenState extends State<ServiceLogsScreen> {
                 ),
               ],
             ),
-            const SizedBox(height: 18),
+            const SizedBox(height: 12),
             Container(height: 1, color: AppColors.neutral[100]),
-            const SizedBox(height: 18),
+            const SizedBox(height: 12),
             Row(
               children: [
                 if (service.cost != null) ...[
