@@ -394,14 +394,6 @@ class SettingsScreen extends StatelessWidget {
           ),
           _buildSettingItem(
             context,
-            icon: Icons.description_outlined,
-            iconColor: AppColors.secondary[500]!,
-            title: l10n.termsOfService,
-            subtitle: l10n.readOurTermsAndConditions,
-            onTap: () => _showTermsDialog(context),
-          ),
-          _buildSettingItem(
-            context,
             icon: Icons.privacy_tip_outlined,
             iconColor: AppColors.secondary[500]!,
             title: l10n.privacyPolicy,
@@ -896,27 +888,6 @@ class SettingsScreen extends StatelessWidget {
                   style: TextStyle(fontSize: 13, color: AppColors.neutral[500]),
                 ),
               ],
-            ),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: Text(l10n.close),
-              ),
-            ],
-          ),
-    );
-  }
-
-  void _showTermsDialog(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
-
-    showDialog(
-      context: context,
-      builder:
-          (context) => AlertDialog(
-            title: Text(l10n.termsOfService),
-            content: SingleChildScrollView(
-              child: Text(l10n.termsOfServiceContent),
             ),
             actions: [
               TextButton(

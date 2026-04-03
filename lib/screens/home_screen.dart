@@ -689,7 +689,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
               GestureDetector(
-                onTap: () => context.push(AppRoutes.serviceLogs),
+                onTap: () => context.go(AppRoutes.serviceLogs),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [

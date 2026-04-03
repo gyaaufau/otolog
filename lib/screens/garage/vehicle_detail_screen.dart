@@ -703,7 +703,7 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
               if (services.length > 3)
                 GestureDetector(
                   onTap: () {
-                    context.push(AppRoutes.serviceLogs);
+                    context.go(AppRoutes.serviceLogs);
                   },
                   child: Text(
                     context.l10n.seeAll,
