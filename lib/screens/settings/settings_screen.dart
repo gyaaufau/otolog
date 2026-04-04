@@ -4,7 +4,9 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:otolog/cubit/language_cubit.dart';
+import 'package:otolog/cubit/unit_cubit.dart';
 import 'package:otolog/l10n/app_localizations.dart';
+import 'package:otolog/shared/constants/unit.dart';
 import 'package:otolog/shared/localization/l10n_helper.dart';
 import '../../router.dart';
 
@@ -118,6 +120,8 @@ class SettingsScreen extends StatelessWidget {
         children: [
           // Language Selector
           _buildLanguageSelector(context),
+          // Unit Selector
+          _buildUnitSelector(context),
         ],
       ),
     );
@@ -185,6 +189,68 @@ class SettingsScreen extends StatelessWidget {
     );
   }
 
+  Widget _buildUnitSelector(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
+    return BlocBuilder<UnitCubit, UnitState>(
+      builder: (context, state) {
+        return InkWell(
+          onTap: () => _showUnitDialog(context, state.unit),
+          borderRadius: BorderRadius.circular(12),
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Row(
+              children: [
+                Container(
+                  width: 40,
+                  height: 40,
+                  decoration: BoxDecoration(
+                    color: AppColors.secondary[500]!.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Icon(
+                    Icons.straighten,
+                    color: AppColors.secondary[500],
+                    size: 22,
+                  ),
+                ),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        l10n.distanceUnit,
+                        style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w500,
+                          color: AppColors.neutral[900],
+                        ),
+                      ),
+                      const SizedBox(height: 2),
+                      Text(
+                        _getUnitDisplayName(state.unit),
+                        style: TextStyle(
+                          fontSize: 13,
+                          color: AppColors.neutral[600],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Icon(
+                  Icons.chevron_right,
+                  color: AppColors.neutral[400],
+                  size: 20,
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   void _showLanguageDialog(BuildContext context, Locale currentLocale) {
     showModalBottomSheet(
       context: context,
@@ -196,8 +262,21 @@ class SettingsScreen extends StatelessWidget {
     );
   }
 
+  void _showUnitDialog(BuildContext context, DistanceUnit currentUnit) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+      builder: (context) => _UnitSelectionBottomSheet(currentUnit: currentUnit),
+    );
+  }
+
   String _getLanguageDisplayName(Locale locale) {
     return AppLocales.getLocaleDisplayName(locale);
+  }
+
+  String _getUnitDisplayName(DistanceUnit unit) {
+    return unit.fullName;
   }
 
   Widget _buildThemeSelector(BuildContext context) {
@@ -1018,6 +1097,116 @@ class _LanguageSelectionBottomSheet extends StatelessWidget {
             ),
             if (isSelected)
               Icon(Icons.check_rounded, color: AppColors.primary, size: 20),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// Bottom sheet for unit selection
+class _UnitSelectionBottomSheet extends StatelessWidget {
+  final DistanceUnit currentUnit;
+
+  const _UnitSelectionBottomSheet({required this.currentUnit});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: const BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      child: SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // Header
+            Padding(
+              padding: const EdgeInsets.all(20),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    context.l10n.distanceUnit,
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.neutral[900],
+                    ),
+                  ),
+                  GestureDetector(
+                    onTap: () => Navigator.pop(context),
+                    child: Icon(
+                      Icons.close_rounded,
+                      color: AppColors.neutral[500],
+                      size: 24,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+            // Unit options
+            ...DistanceUnit.values.map((unit) {
+              final isSelected = unit == currentUnit;
+              final displayName = unit.fullName;
+
+              return _buildUnitOption(
+                context,
+                displayName: displayName,
+                isSelected: isSelected,
+                onTap: () {
+                  context.read<UnitCubit>().changeUnit(unit);
+                  Navigator.pop(context);
+                },
+              );
+            }).toList(),
+
+            const SizedBox(height: 16),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildUnitOption(
+    BuildContext context, {
+    required String displayName,
+    required bool isSelected,
+    required VoidCallback onTap,
+  }) {
+    return InkWell(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+        decoration: BoxDecoration(
+          color:
+              isSelected
+                  ? AppColors.secondary[500]!.withOpacity(0.08)
+                  : Colors.transparent,
+        ),
+        child: Row(
+          children: [
+            Expanded(
+              child: Text(
+                displayName,
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                  color:
+                      isSelected
+                          ? AppColors.secondary[500]
+                          : AppColors.neutral[900],
+                ),
+              ),
+            ),
+            if (isSelected)
+              Icon(
+                Icons.check_rounded,
+                color: AppColors.secondary[500],
+                size: 20,
+              ),
           ],
         ),
       ),

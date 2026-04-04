@@ -746,6 +746,12 @@ abstract class AppLocalizations {
   /// **'miles'**
   String get miles;
 
+  /// Distance unit setting label
+  ///
+  /// In en, this message translates to:
+  /// **'Distance Unit'**
+  String get distanceUnit;
+
   /// Yes option
   ///
   /// In en, this message translates to:

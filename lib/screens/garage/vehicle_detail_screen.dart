@@ -4,7 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:otolog/cubit/unit_cubit.dart';
 import 'package:otolog/l10n/app_localizations.dart';
+import 'package:otolog/shared/commons/utils/unit_converter.dart';
+import 'package:otolog/shared/constants/unit.dart';
 import 'package:otolog/shared/localization/l10n_helper.dart';
 import '../../cubit/vehicle_detail_cubit.dart';
 import '../../cubit/vehicle_detail_state.dart';
@@ -316,9 +319,7 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
               Expanded(
                 child: _buildSummaryItem(
                   context.l10n.odometer,
-                  vehicle.odometer != null
-                      ? '${vehicle.odometer!.toString()} ${context.l10n.km}'
-                      : 'N/A',
+                  _formatOdometer(vehicle.odometer),
                   Icons.speed_outlined,
                 ),
               ),
@@ -1196,6 +1197,14 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
 
   String _formatCurrency(double cost) {
     return 'Rp ${cost.toStringAsFixed(0).replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]}.')}';
+  }
+
+  String _formatOdometer(int? odometer) {
+    final unitState = context.watch<UnitCubit>().state;
+    if (odometer == null) {
+      return 'N/A';
+    }
+    return UnitConverter.formatDistance(odometer!, unitState.unit);
   }
 }
 

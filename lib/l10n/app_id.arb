@@ -432,6 +432,10 @@
   "@miles": {
     "description": "Miles unit"
   },
+  "distanceUnit": "Satuan Jarak",
+  "@distanceUnit": {
+    "description": "Distance unit setting label"
+  },
   "yes": "Ya",
   "@yes": {
     "description": "Yes option"

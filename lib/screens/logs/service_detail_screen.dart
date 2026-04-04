@@ -63,26 +63,6 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
             letterSpacing: -0.3,
           ),
         ),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.edit_outlined, color: AppColors.neutral[700]),
-            onPressed: () {
-              if (_vehicleId != null && _serviceId != null) {
-                context.push(
-                  AppRoutes.editService
-                      .replaceFirst(':vehicleId', _vehicleId.toString())
-                      .replaceFirst(':serviceId', _serviceId.toString()),
-                );
-              }
-            },
-          ),
-          IconButton(
-            icon: Icon(Icons.delete_outline, color: AppColors.error),
-            onPressed: () {
-              // Show delete confirmation
-            },
-          ),
-        ],
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(1),
           child: Container(

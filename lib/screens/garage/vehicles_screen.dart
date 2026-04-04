@@ -2,7 +2,10 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:otolog/cubit/unit_cubit.dart';
 import 'package:otolog/l10n/app_localizations.dart';
+import 'package:otolog/shared/commons/utils/unit_converter.dart';
+import 'package:otolog/shared/constants/unit.dart';
 import 'package:otolog/shared/localization/l10n_helper.dart';
 import '../../cubit/vehicle_list_cubit.dart';
 import '../../cubit/vehicle_list_state.dart';
@@ -428,9 +431,7 @@ class _VehiclesScreenState extends State<VehiclesScreen> {
                 const SizedBox(width: 28),
                 _buildInfoItem(
                   Icons.speed_outlined,
-                  vehicle.odometer != null
-                      ? '${vehicle.odometer!.toString()} ${context.l10n.km}'
-                      : '0 ${context.l10n.km}',
+                  _formatOdometer(vehicle.odometer),
                   context.l10n.odometerLabel,
                 ),
               ],
@@ -494,6 +495,14 @@ class _VehiclesScreenState extends State<VehiclesScreen> {
     }
 
     return Icon(iconData, size: 36, color: AppColors.primary);
+  }
+
+  String _formatOdometer(int? odometer) {
+    final unitState = context.watch<UnitCubit>().state;
+    if (odometer == null) {
+      return '0 ${unitState.unit.displayName}';
+    }
+    return UnitConverter.formatDistance(odometer!, unitState.unit);
   }
 
   Widget _buildAddVehicleButton() {

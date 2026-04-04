@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:otolog/cubit/language_cubit.dart';
+import 'package:otolog/cubit/unit_cubit.dart';
 import 'package:otolog/cubit/service_vehicle_selector_cubit.dart';
 import 'package:otolog/l10n/app_localizations.dart';
 import 'package:otolog/shared/localization/l10n_helper.dart';
@@ -42,6 +43,7 @@ class MyApp extends StatelessWidget {
               create: (context) => sl<ServiceVehicleSelectorCubit>(),
             ),
             BlocProvider(create: (context) => sl<LanguageCubit>()),
+            BlocProvider(create: (context) => sl<UnitCubit>()),
           ],
           child: BlocBuilder<LanguageCubit, LanguageState>(
             builder: (context, state) {

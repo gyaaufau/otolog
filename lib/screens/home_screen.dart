@@ -2,7 +2,10 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:otolog/cubit/unit_cubit.dart';
 import 'package:otolog/l10n/app_localizations.dart';
+import 'package:otolog/shared/commons/utils/unit_converter.dart';
+import 'package:otolog/shared/constants/unit.dart';
 import 'package:otolog/shared/localization/l10n_helper.dart';
 import '../cubit/vehicle_cubit.dart';
 import '../cubit/vehicle_state.dart';
@@ -520,7 +523,11 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _buildStatistics(VehicleLoaded state) {
     final l10n = context.l10n;
     final odometerValue = state.odometer ?? 0;
-    final formattedOdometer = _formatOdometer(odometerValue);
+    final unitState = context.watch<UnitCubit>().state;
+    final formattedOdometer = UnitConverter.formatDistance(
+      odometerValue,
+      unitState.unit,
+    );
     return Container(
       margin: const EdgeInsets.fromLTRB(24, 16, 24, 0),
       padding: const EdgeInsets.all(20),
@@ -722,82 +729,91 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildServiceCard(dynamic service) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.04),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Row(
-        children: [
-          Container(
-            width: 48,
-            height: 48,
-            decoration: BoxDecoration(
-              color: AppColors.primary.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(10),
+    return GestureDetector(
+      onTap: () {
+        context.push(
+          AppRoutes.serviceDetail
+              .replaceFirst(':vehicleId', service.vehicleId.toString())
+              .replaceFirst(':serviceId', service.id.toString()),
+        );
+      },
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 12),
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(12),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.04),
+              blurRadius: 8,
+              offset: const Offset(0, 2),
             ),
-            child: Icon(
-              _getServiceIcon(service.serviceType),
-              size: 24,
-              color: AppColors.primary,
+          ],
+        ),
+        child: Row(
+          children: [
+            Container(
+              width: 48,
+              height: 48,
+              decoration: BoxDecoration(
+                color: AppColors.primary.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Icon(
+                _getServiceIcon(service.serviceType),
+                size: 24,
+                color: AppColors.primary,
+              ),
             ),
-          ),
-          const SizedBox(width: 14),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            const SizedBox(width: 14),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    service.serviceType,
+                    style: TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.neutral[900],
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  if (service.description != null &&
+                      service.description!.isNotEmpty)
+                    Text(
+                      service.description!,
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: AppColors.neutral[600],
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                ],
+              ),
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 Text(
-                  service.serviceType,
+                  '\$${service.cost?.toStringAsFixed(0) ?? '0'}',
                   style: TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w600,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w700,
                     color: AppColors.neutral[900],
                   ),
                 ),
                 const SizedBox(height: 4),
-                if (service.description != null &&
-                    service.description!.isNotEmpty)
-                  Text(
-                    service.description!,
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: AppColors.neutral[600],
-                    ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
+                Text(
+                  _formatDate(service.serviceDate),
+                  style: TextStyle(fontSize: 11, color: AppColors.neutral[500]),
+                ),
               ],
             ),
-          ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Text(
-                '\$${service.cost?.toStringAsFixed(0) ?? '0'}',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w700,
-                  color: AppColors.neutral[900],
-                ),
-              ),
-              const SizedBox(height: 4),
-              Text(
-                _formatDate(service.serviceDate),
-                style: TextStyle(fontSize: 11, color: AppColors.neutral[500]),
-              ),
-            ],
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -816,24 +832,6 @@ class _HomeScreenState extends State<HomeScreen> {
     } else {
       return '${date.day}/${date.month}/${date.year}';
     }
-  }
-
-  String _formatOdometer(int odometer) {
-    final l10n = context.l10n;
-    if (odometer == 0) {
-      return '0 ${l10n.km}';
-    }
-    // Format odometer value with comma separators (e.g., 50,000 km)
-    final valueStr = odometer.toString();
-    final buffer = StringBuffer();
-    for (int i = 0; i < valueStr.length; i++) {
-      final char = valueStr[valueStr.length - 1 - i];
-      buffer.write(char);
-      if ((i + 1) % 3 == 0 && i != valueStr.length - 1) {
-        buffer.write(',');
-      }
-    }
-    return '${buffer.toString().split('').reversed.join()} ${l10n.km}';
   }
 
   Widget _getVehicleTypeIcon(String? type) {

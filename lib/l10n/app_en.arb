@@ -432,6 +432,10 @@
   "@miles": {
     "description": "Miles unit"
   },
+  "distanceUnit": "Distance Unit",
+  "@distanceUnit": {
+    "description": "Distance unit setting label"
+  },
   "yes": "Yes",
   "@yes": {
     "description": "Yes option"
