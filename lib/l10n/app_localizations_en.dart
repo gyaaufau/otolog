@@ -871,4 +871,29 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get privacyPolicyContent =>
       'At OtoLog, we take your privacy seriously:\n\n1. All your data is stored locally on your device.\n2. We do not collect or transmit any personal data.\n3. We do not share your data with third parties.\n4. You can export or delete your data at any time.\n5. We use minimal permissions necessary for the app to function.\n\nIf you have any questions about our privacy practices, please contact us.';
+
+  @override
+  String get seeDetail => 'See Detail';
+
+  @override
+  String get serviceStatisticsDetail => 'Service Statistics Detail';
+
+  @override
+  String get monthlySpending => 'Monthly Spending';
+
+  @override
+  String get serviceTypeDistribution => 'Service Type Distribution';
+
+  @override
+  String get costTrend => 'Cost Trend';
+
+  @override
+  String get serviceFrequency => 'Service Frequency';
+
+  @override
+  String get noDataAvailable => 'No data available';
+
+  @override
+  String get addServiceRecordsToSeeStatistics =>
+      'Add service records to see statistics';
 }

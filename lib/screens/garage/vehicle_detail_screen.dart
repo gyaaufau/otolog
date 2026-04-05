@@ -752,14 +752,39 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            context.l10n.serviceStatistics,
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.w700,
-              color: AppColors.neutral[900],
-              letterSpacing: -0.3,
-            ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                context.l10n.serviceStatistics,
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w700,
+                  color: AppColors.neutral[900],
+                  letterSpacing: -0.3,
+                ),
+              ),
+              if (_vehicleId != null)
+                GestureDetector(
+                  onTap: () {
+                    context.push(
+                      AppRoutes.serviceStatisticsDetail.replaceFirst(
+                        ':vehicleId',
+                        _vehicleId.toString(),
+                      ),
+                    );
+                  },
+                  child: Text(
+                    context.l10n.seeDetail,
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.primary,
+                      letterSpacing: 0.2,
+                    ),
+                  ),
+                ),
+            ],
           ),
           SizedBox(height: 20),
           GridView.builder(

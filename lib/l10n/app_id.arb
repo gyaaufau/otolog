@@ -1175,5 +1175,37 @@
   "privacyPolicyContent": "Di OtoLog, kami menganggap privasi Anda dengan serius:\n\n1. Semua data Anda disimpan secara lokal di perangkat Anda.\n2. Kami tidak mengumpulkan atau mengirimkan data pribadi apa pun.\n3. Kami tidak berbagi data Anda dengan pihak ketiga.\n4. Anda dapat mengekspor atau menghapus data Anda kapan saja.\n5. Kami menggunakan izin minimal yang diperlukan agar aplikasi berfungsi.\n\nJika Anda memiliki pertanyaan tentang praktik privasi kami, silakan hubungi kami.",
   "@privacyPolicyContent": {
     "description": "Privacy Policy content"
+  },
+  "seeDetail": "Lihat Detail",
+  "@seeDetail": {
+    "description": "See detail button label"
+  },
+  "serviceStatisticsDetail": "Detail Statistik Servis",
+  "@serviceStatisticsDetail": {
+    "description": "Service statistics detail screen title"
+  },
+  "monthlySpending": "Pengeluaran Bulanan",
+  "@monthlySpending": {
+    "description": "Monthly spending chart title"
+  },
+  "serviceTypeDistribution": "Distribusi Tipe Servis",
+  "@serviceTypeDistribution": {
+    "description": "Service type distribution chart title"
+  },
+  "costTrend": "Tren Biaya",
+  "@costTrend": {
+    "description": "Cost trend chart title"
+  },
+  "serviceFrequency": "Frekuensi Servis",
+  "@serviceFrequency": {
+    "description": "Service frequency chart title"
+  },
+  "noDataAvailable": "Tidak ada data tersedia",
+  "@noDataAvailable": {
+    "description": "No data available message"
+  },
+  "addServiceRecordsToSeeStatistics": "Tambahkan catatan servis untuk melihat statistik",
+  "@addServiceRecordsToSeeStatistics": {
+    "description": "Message encouraging to add service records"
   }
 }

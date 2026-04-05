@@ -1771,6 +1771,54 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'At OtoLog, we take your privacy seriously:\n\n1. All your data is stored locally on your device.\n2. We do not collect or transmit any personal data.\n3. We do not share your data with third parties.\n4. You can export or delete your data at any time.\n5. We use minimal permissions necessary for the app to function.\n\nIf you have any questions about our privacy practices, please contact us.'**
   String get privacyPolicyContent;
+
+  /// See detail button label
+  ///
+  /// In en, this message translates to:
+  /// **'See Detail'**
+  String get seeDetail;
+
+  /// Service statistics detail screen title
+  ///
+  /// In en, this message translates to:
+  /// **'Service Statistics Detail'**
+  String get serviceStatisticsDetail;
+
+  /// Monthly spending chart title
+  ///
+  /// In en, this message translates to:
+  /// **'Monthly Spending'**
+  String get monthlySpending;
+
+  /// Service type distribution chart title
+  ///
+  /// In en, this message translates to:
+  /// **'Service Type Distribution'**
+  String get serviceTypeDistribution;
+
+  /// Cost trend chart title
+  ///
+  /// In en, this message translates to:
+  /// **'Cost Trend'**
+  String get costTrend;
+
+  /// Service frequency chart title
+  ///
+  /// In en, this message translates to:
+  /// **'Service Frequency'**
+  String get serviceFrequency;
+
+  /// No data available message
+  ///
+  /// In en, this message translates to:
+  /// **'No data available'**
+  String get noDataAvailable;
+
+  /// Message encouraging to add service records
+  ///
+  /// In en, this message translates to:
+  /// **'Add service records to see statistics'**
+  String get addServiceRecordsToSeeStatistics;
 }
 
 class _AppLocalizationsDelegate

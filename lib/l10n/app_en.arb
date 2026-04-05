@@ -1175,5 +1175,37 @@
   "privacyPolicyContent": "At OtoLog, we take your privacy seriously:\n\n1. All your data is stored locally on your device.\n2. We do not collect or transmit any personal data.\n3. We do not share your data with third parties.\n4. You can export or delete your data at any time.\n5. We use minimal permissions necessary for the app to function.\n\nIf you have any questions about our privacy practices, please contact us.",
   "@privacyPolicyContent": {
     "description": "Privacy Policy content"
+  },
+  "seeDetail": "See Detail",
+  "@seeDetail": {
+    "description": "See detail button label"
+  },
+  "serviceStatisticsDetail": "Service Statistics Detail",
+  "@serviceStatisticsDetail": {
+    "description": "Service statistics detail screen title"
+  },
+  "monthlySpending": "Monthly Spending",
+  "@monthlySpending": {
+    "description": "Monthly spending chart title"
+  },
+  "serviceTypeDistribution": "Service Type Distribution",
+  "@serviceTypeDistribution": {
+    "description": "Service type distribution chart title"
+  },
+  "costTrend": "Cost Trend",
+  "@costTrend": {
+    "description": "Cost trend chart title"
+  },
+  "serviceFrequency": "Service Frequency",
+  "@serviceFrequency": {
+    "description": "Service frequency chart title"
+  },
+  "noDataAvailable": "No data available",
+  "@noDataAvailable": {
+    "description": "No data available message"
+  },
+  "addServiceRecordsToSeeStatistics": "Add service records to see statistics",
+  "@addServiceRecordsToSeeStatistics": {
+    "description": "Message encouraging to add service records"
   }
 }

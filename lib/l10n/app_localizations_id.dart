@@ -878,4 +878,29 @@ class AppLocalizationsId extends AppLocalizations {
   @override
   String get privacyPolicyContent =>
       'Di OtoLog, kami menganggap privasi Anda dengan serius:\n\n1. Semua data Anda disimpan secara lokal di perangkat Anda.\n2. Kami tidak mengumpulkan atau mengirimkan data pribadi apa pun.\n3. Kami tidak berbagi data Anda dengan pihak ketiga.\n4. Anda dapat mengekspor atau menghapus data Anda kapan saja.\n5. Kami menggunakan izin minimal yang diperlukan agar aplikasi berfungsi.\n\nJika Anda memiliki pertanyaan tentang praktik privasi kami, silakan hubungi kami.';
+
+  @override
+  String get seeDetail => 'Lihat Detail';
+
+  @override
+  String get serviceStatisticsDetail => 'Detail Statistik Servis';
+
+  @override
+  String get monthlySpending => 'Pengeluaran Bulanan';
+
+  @override
+  String get serviceTypeDistribution => 'Distribusi Tipe Servis';
+
+  @override
+  String get costTrend => 'Tren Biaya';
+
+  @override
+  String get serviceFrequency => 'Frekuensi Servis';
+
+  @override
+  String get noDataAvailable => 'Tidak ada data tersedia';
+
+  @override
+  String get addServiceRecordsToSeeStatistics =>
+      'Tambahkan catatan servis untuk melihat statistik';
 }

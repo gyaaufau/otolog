@@ -9,6 +9,7 @@ import 'screens/logs/add_service_screen.dart';
 import 'screens/logs/edit_service_screen.dart';
 import 'screens/logs/service_logs_screen.dart';
 import 'screens/garage/vehicles_screen.dart';
+import 'screens/garage/service_statistics_detail_screen.dart';
 import 'screens/settings/settings_screen.dart';
 import '../widgets/main_shell.dart';
 import '../screens/database_viewer_screen.dart';
@@ -28,6 +29,8 @@ class AppRoutes {
   static const String serviceLogs = '/service-logs';
   static const String settings = '/settings';
   static const String databaseViewer = '/database-viewer';
+  static const String serviceStatisticsDetail =
+      '/vehicle/:vehicleId/service-statistics';
 }
 
 /// GoRouter configuration for the app
@@ -117,6 +120,11 @@ final goRouter = GoRouter(
               builder: (context, state) => const EditServiceScreen(),
             ),
           ],
+        ),
+        GoRoute(
+          path: 'service-statistics',
+          name: 'serviceStatisticsDetail',
+          builder: (context, state) => const ServiceStatisticsDetailScreen(),
         ),
       ],
     ),
