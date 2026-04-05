@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:otolog/cubit/currency_cubit.dart';
 import 'package:otolog/l10n/app_localizations.dart';
 import 'package:otolog/shared/localization/l10n_helper.dart';
 import '../cubit/vehicle_list_cubit.dart';
@@ -123,41 +124,47 @@ class _ServiceLogsScreenState extends State<ServiceLogsScreen> {
             children: [
               // Total Cost
               if (vehicles.isNotEmpty) ...[
-                Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 12,
-                  ),
-                  decoration: BoxDecoration(
-                    color: AppColors.primary,
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        l10n.totalCost,
-                        style: TextStyle(
-                          fontSize: 11,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.white.withOpacity(0.8),
-                          letterSpacing: 0.5,
-                        ),
+                BlocBuilder<CurrencyCubit, CurrencyState>(
+                  builder: (context, currencyState) {
+                    final currencySymbol =
+                        context.read<CurrencyCubit>().currentCurrencySymbol;
+                    return Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 12,
                       ),
-                      const SizedBox(height: 2),
-                      Text(
-                        _formatCurrency(totalCost),
-                        style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w700,
-                          color: Colors.white,
-                          letterSpacing: 0.2,
-                        ),
+                      decoration: BoxDecoration(
+                        color: AppColors.primary,
+                        borderRadius: BorderRadius.circular(12),
                       ),
-                    ],
-                  ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            l10n.totalCost,
+                            style: TextStyle(
+                              fontSize: 11,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.white.withOpacity(0.8),
+                              letterSpacing: 0.5,
+                            ),
+                          ),
+                          const SizedBox(height: 2),
+                          Text(
+                            '$currencySymbol${totalCost.toStringAsFixed(0).replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]}.')}',
+                            style: const TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w700,
+                              color: Colors.white,
+                              letterSpacing: 0.2,
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
                 ),
                 const SizedBox(height: 16),
               ],
@@ -1086,10 +1093,16 @@ class _ServiceLogsScreenState extends State<ServiceLogsScreen> {
             Row(
               children: [
                 if (service.cost != null) ...[
-                  _buildInfoItem(
-                    Icons.payments_outlined,
-                    _formatCurrency(service.cost),
-                    context.l10n.cost,
+                  BlocBuilder<CurrencyCubit, CurrencyState>(
+                    builder: (context, currencyState) {
+                      final currencySymbol =
+                          context.read<CurrencyCubit>().currentCurrencySymbol;
+                      return _buildInfoItem(
+                        Icons.payments_outlined,
+                        '$currencySymbol${service.cost!.toStringAsFixed(0).replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]}.')}',
+                        context.l10n.cost,
+                      );
+                    },
                   ),
                 ],
                 if (service.mechanic != null &&
@@ -1166,7 +1179,8 @@ class _ServiceLogsScreenState extends State<ServiceLogsScreen> {
   }
 
   String _formatCurrency(double cost) {
-    return 'Rp ${cost.toStringAsFixed(0).replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]}.')}';
+    final currencySymbol = context.read<CurrencyCubit>().currentCurrencySymbol;
+    return '$currencySymbol${cost.toStringAsFixed(0).replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]}.')}';
   }
 
   Widget _buildAddServiceButton() {

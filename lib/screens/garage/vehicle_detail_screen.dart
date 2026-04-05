@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:otolog/cubit/unit_cubit.dart';
+import 'package:otolog/cubit/currency_cubit.dart';
 import 'package:otolog/l10n/app_localizations.dart';
 import 'package:otolog/shared/commons/utils/unit_converter.dart';
 import 'package:otolog/shared/constants/unit.dart';
@@ -628,12 +629,18 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
                 ),
               ),
               Container(width: 1, height: 50, color: AppColors.neutral[200]),
-              Expanded(
-                child: _buildStatItem(
-                  context.l10n.totalCostLabel,
-                  _formatCurrency(totalCost),
-                  Icons.payments_outlined,
-                ),
+              BlocBuilder<CurrencyCubit, CurrencyState>(
+                builder: (context, currencyState) {
+                  final currencySymbol =
+                      context.read<CurrencyCubit>().currentCurrencySymbol;
+                  return Expanded(
+                    child: _buildStatItem(
+                      context.l10n.totalCostLabel,
+                      '$currencySymbol${totalCost.toStringAsFixed(0).replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]}.')}',
+                      Icons.payments_outlined,
+                    ),
+                  );
+                },
               ),
             ],
           ),
@@ -792,14 +799,20 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
             ),
           ),
           if (service.cost != null) ...[
-            Text(
-              _formatCurrency(service.cost),
-              style: TextStyle(
-                fontSize: 15,
-                fontWeight: FontWeight.w700,
-                color: AppColors.neutral[900],
-                letterSpacing: -0.1,
-              ),
+            BlocBuilder<CurrencyCubit, CurrencyState>(
+              builder: (context, currencyState) {
+                final currencySymbol =
+                    context.read<CurrencyCubit>().currentCurrencySymbol;
+                return Text(
+                  '$currencySymbol${service.cost!.toStringAsFixed(0).replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]}.')}',
+                  style: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w700,
+                    color: AppColors.neutral[900],
+                    letterSpacing: -0.1,
+                  ),
+                );
+              },
             ),
             const SizedBox(width: 8),
           ],
@@ -1196,7 +1209,8 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
   }
 
   String _formatCurrency(double cost) {
-    return 'Rp ${cost.toStringAsFixed(0).replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]}.')}';
+    final currencySymbol = context.read<CurrencyCubit>().currentCurrencySymbol;
+    return '$currencySymbol${cost.toStringAsFixed(0).replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]}.')}';
   }
 
   String _formatOdometer(int? odometer) {

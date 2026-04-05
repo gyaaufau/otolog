@@ -752,6 +752,12 @@ abstract class AppLocalizations {
   /// **'Distance Unit'**
   String get distanceUnit;
 
+  /// Currency setting label
+  ///
+  /// In en, this message translates to:
+  /// **'Currency'**
+  String get currency;
+
   /// Yes option
   ///
   /// In en, this message translates to:

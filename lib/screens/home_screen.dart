@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:otolog/cubit/unit_cubit.dart';
+import 'package:otolog/cubit/currency_cubit.dart';
 import 'package:otolog/l10n/app_localizations.dart';
 import 'package:otolog/shared/commons/utils/unit_converter.dart';
 import 'package:otolog/shared/constants/unit.dart';
@@ -797,13 +798,19 @@ class _HomeScreenState extends State<HomeScreen> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                Text(
-                  '\$${service.cost?.toStringAsFixed(0) ?? '0'}',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w700,
-                    color: AppColors.neutral[900],
-                  ),
+                BlocBuilder<CurrencyCubit, CurrencyState>(
+                  builder: (context, currencyState) {
+                    final currencySymbol =
+                        context.read<CurrencyCubit>().currentCurrencySymbol;
+                    return Text(
+                      '$currencySymbol${service.cost?.toStringAsFixed(0) ?? '0'}',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w700,
+                        color: AppColors.neutral[900],
+                      ),
+                    );
+                  },
                 ),
                 const SizedBox(height: 4),
                 Text(

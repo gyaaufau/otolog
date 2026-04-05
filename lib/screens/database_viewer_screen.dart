@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:drift/drift.dart' hide Column;
+import 'package:otolog/cubit/currency_cubit.dart';
 import '../database/database.dart';
 
 class DatabaseViewerScreen extends StatefulWidget {
@@ -244,23 +246,31 @@ class _DatabaseViewerScreenState extends State<DatabaseViewerScreen> {
   }
 
   Widget _buildServiceRecordDetails(ServiceRecord record) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        _buildDetailRow('ID', record.id.toString()),
-        _buildDetailRow('Vehicle ID', record.vehicleId.toString()),
-        _buildDetailRow('Service Type', record.serviceType),
-        _buildDetailRow('Service Date', _formatDate(record.serviceDate)),
-        _buildDetailRow('Description', record.description ?? 'N/A'),
-        _buildDetailRow(
-          'Cost',
-          record.cost != null ? '\$${record.cost!.toStringAsFixed(2)}' : 'N/A',
-        ),
-        _buildDetailRow('Mechanic', record.mechanic ?? 'N/A'),
-        _buildDetailRow('Notes', record.notes ?? 'N/A'),
-        _buildDetailRow('Created At', _formatDate(record.createdAt)),
-        _buildDetailRow('Updated At', _formatDate(record.updatedAt)),
-      ],
+    return BlocBuilder<CurrencyCubit, CurrencyState>(
+      builder: (context, currencyState) {
+        final currencySymbol =
+            context.read<CurrencyCubit>().currentCurrencySymbol;
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _buildDetailRow('ID', record.id.toString()),
+            _buildDetailRow('Vehicle ID', record.vehicleId.toString()),
+            _buildDetailRow('Service Type', record.serviceType),
+            _buildDetailRow('Service Date', _formatDate(record.serviceDate)),
+            _buildDetailRow('Description', record.description ?? 'N/A'),
+            _buildDetailRow(
+              'Cost',
+              record.cost != null
+                  ? '$currencySymbol${record.cost!.toStringAsFixed(2)}'
+                  : 'N/A',
+            ),
+            _buildDetailRow('Mechanic', record.mechanic ?? 'N/A'),
+            _buildDetailRow('Notes', record.notes ?? 'N/A'),
+            _buildDetailRow('Created At', _formatDate(record.createdAt)),
+            _buildDetailRow('Updated At', _formatDate(record.updatedAt)),
+          ],
+        );
+      },
     );
   }
 

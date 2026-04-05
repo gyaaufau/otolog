@@ -436,6 +436,10 @@
   "@distanceUnit": {
     "description": "Distance unit setting label"
   },
+  "currency": "Currency",
+  "@currency": {
+    "description": "Currency setting label"
+  },
   "yes": "Yes",
   "@yes": {
     "description": "Yes option"

@@ -436,6 +436,10 @@
   "@distanceUnit": {
     "description": "Distance unit setting label"
   },
+  "currency": "Mata Uang",
+  "@currency": {
+    "description": "Currency setting label"
+  },
   "yes": "Ya",
   "@yes": {
     "description": "Yes option"

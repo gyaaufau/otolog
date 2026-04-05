@@ -338,6 +338,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get distanceUnit => 'Distance Unit';
 
   @override
+  String get currency => 'Currency';
+
+  @override
   String get yes => 'Yes';
 
   @override

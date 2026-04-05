@@ -2,6 +2,7 @@ import 'package:get_it/get_it.dart';
 import '../../repositories/drift_service.dart';
 import '../../repositories/language_repository.dart';
 import '../../repositories/unit_repository.dart';
+import '../../repositories/currency_repository.dart';
 import '../../database/database.dart';
 import '../../cubit/vehicle_cubit.dart';
 import '../../cubit/vehicle_list_cubit.dart';
@@ -9,6 +10,7 @@ import '../../cubit/vehicle_detail_cubit.dart';
 import '../../cubit/service_vehicle_selector_cubit.dart';
 import '../../cubit/language_cubit.dart';
 import '../../cubit/unit_cubit.dart';
+import '../../cubit/currency_cubit.dart';
 
 final sl = GetIt.instance;
 
@@ -26,6 +28,9 @@ Future<void> initServiceLocator() async {
   // Register UnitRepository as a singleton
   sl.registerSingleton<UnitRepository>(UnitRepository());
 
+  // Register CurrencyRepository as a singleton
+  sl.registerSingleton<CurrencyRepository>(CurrencyRepository());
+
   // Register cubits
   sl.registerFactory<VehicleCubit>(() => VehicleCubit(sl<DriftService>()));
   sl.registerFactory<VehicleListCubit>(
@@ -41,6 +46,9 @@ Future<void> initServiceLocator() async {
     () => LanguageCubit(sl<LanguageRepository>()),
   );
   sl.registerFactory<UnitCubit>(() => UnitCubit(sl<UnitRepository>()));
+  sl.registerFactory<CurrencyCubit>(
+    () => CurrencyCubit(sl<CurrencyRepository>()),
+  );
 }
 
 /// Reset the service locator (useful for testing)

@@ -339,6 +339,9 @@ class AppLocalizationsId extends AppLocalizations {
   String get distanceUnit => 'Satuan Jarak';
 
   @override
+  String get currency => 'Mata Uang';
+
+  @override
   String get yes => 'Ya';
 
   @override

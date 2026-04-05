@@ -5,8 +5,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:otolog/cubit/language_cubit.dart';
 import 'package:otolog/cubit/unit_cubit.dart';
+import 'package:otolog/cubit/currency_cubit.dart';
 import 'package:otolog/l10n/app_localizations.dart';
 import 'package:otolog/shared/constants/unit.dart';
+import 'package:otolog/shared/constants/currency.dart';
 import 'package:otolog/shared/localization/l10n_helper.dart';
 import '../../router.dart';
 
@@ -122,6 +124,8 @@ class SettingsScreen extends StatelessWidget {
           _buildLanguageSelector(context),
           // Unit Selector
           _buildUnitSelector(context),
+          // Currency Selector
+          _buildCurrencySelector(context),
         ],
       ),
     );
@@ -251,6 +255,68 @@ class SettingsScreen extends StatelessWidget {
     );
   }
 
+  Widget _buildCurrencySelector(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
+    return BlocBuilder<CurrencyCubit, CurrencyState>(
+      builder: (context, state) {
+        return InkWell(
+          onTap: () => _showCurrencyDialog(context, state.currency),
+          borderRadius: BorderRadius.circular(12),
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Row(
+              children: [
+                Container(
+                  width: 40,
+                  height: 40,
+                  decoration: BoxDecoration(
+                    color: AppColors.tertiary.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Icon(
+                    Icons.attach_money,
+                    color: AppColors.tertiary,
+                    size: 22,
+                  ),
+                ),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        l10n.currency,
+                        style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w500,
+                          color: AppColors.neutral[900],
+                        ),
+                      ),
+                      const SizedBox(height: 2),
+                      Text(
+                        _getCurrencyDisplayName(state.currency),
+                        style: TextStyle(
+                          fontSize: 13,
+                          color: AppColors.neutral[600],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Icon(
+                  Icons.chevron_right,
+                  color: AppColors.neutral[400],
+                  size: 20,
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   void _showLanguageDialog(BuildContext context, Locale currentLocale) {
     showModalBottomSheet(
       context: context,
@@ -271,12 +337,27 @@ class SettingsScreen extends StatelessWidget {
     );
   }
 
+  void _showCurrencyDialog(BuildContext context, Currency currentCurrency) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+      builder:
+          (context) =>
+              _CurrencySelectionBottomSheet(currentCurrency: currentCurrency),
+    );
+  }
+
   String _getLanguageDisplayName(Locale locale) {
     return AppLocales.getLocaleDisplayName(locale);
   }
 
   String _getUnitDisplayName(DistanceUnit unit) {
     return unit.fullName;
+  }
+
+  String _getCurrencyDisplayName(Currency currency) {
+    return currency.fullName;
   }
 
   Widget _buildThemeSelector(BuildContext context) {
@@ -1207,6 +1288,134 @@ class _UnitSelectionBottomSheet extends StatelessWidget {
                 color: AppColors.secondary[500],
                 size: 20,
               ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// Bottom sheet for currency selection
+class _CurrencySelectionBottomSheet extends StatelessWidget {
+  final Currency currentCurrency;
+
+  const _CurrencySelectionBottomSheet({required this.currentCurrency});
+
+  @override
+  Widget build(BuildContext context) {
+    final screenHeight = MediaQuery.of(context).size.height;
+
+    return Container(
+      constraints: BoxConstraints(maxHeight: screenHeight * 0.4),
+      decoration: const BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      child: SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // Header
+            Padding(
+              padding: const EdgeInsets.all(16),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    context.l10n.currency,
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.neutral[900],
+                    ),
+                  ),
+                  GestureDetector(
+                    onTap: () => Navigator.pop(context),
+                    child: Icon(
+                      Icons.close_rounded,
+                      color: AppColors.neutral[500],
+                      size: 20,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+            // Currency options
+            Flexible(
+              child: Column(
+                children: [
+                  Expanded(
+                    child: ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: Currency.values.length,
+                      itemBuilder: (context, index) {
+                        final currency = Currency.values[index];
+                        final isSelected = currency == currentCurrency;
+                        final displayName = currency.fullName;
+
+                        return _buildCurrencyOption(
+                          context,
+                          displayName: displayName,
+                          isSelected: isSelected,
+                          onTap: () {
+                            context.read<CurrencyCubit>().changeCurrency(
+                              currency,
+                            );
+                            Navigator.pop(context);
+                          },
+                        );
+                      },
+                    ),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.symmetric(vertical: 12),
+                    child: Icon(
+                      Icons.keyboard_arrow_down_rounded,
+                      color: AppColors.neutral[400],
+                      size: 20,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildCurrencyOption(
+    BuildContext context, {
+    required String displayName,
+    required bool isSelected,
+    required VoidCallback onTap,
+  }) {
+    return InkWell(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+        decoration: BoxDecoration(
+          color:
+              isSelected
+                  ? AppColors.tertiary.withOpacity(0.08)
+                  : Colors.transparent,
+        ),
+        child: Row(
+          children: [
+            Expanded(
+              child: Text(
+                displayName,
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                  color:
+                      isSelected ? AppColors.tertiary : AppColors.neutral[900],
+                ),
+              ),
+            ),
+            if (isSelected)
+              Icon(Icons.check_rounded, color: AppColors.tertiary, size: 20),
           ],
         ),
       ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:otolog/cubit/currency_cubit.dart';
 import '../../l10n/app_localizations.dart';
 import '../../shared/localization/l10n_helper.dart';
 import '../../cubit/vehicle_detail_cubit.dart';
@@ -224,12 +225,18 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
           Row(
             children: [
               if (service.cost != null) ...[
-                Expanded(
-                  child: _buildSummaryItem(
-                    context.l10n.totalCost,
-                    _formatCurrency(service.cost),
-                    Icons.payments_outlined,
-                  ),
+                BlocBuilder<CurrencyCubit, CurrencyState>(
+                  builder: (context, currencyState) {
+                    final currencySymbol =
+                        context.read<CurrencyCubit>().currentCurrencySymbol;
+                    return Expanded(
+                      child: _buildSummaryItem(
+                        context.l10n.totalCost,
+                        '$currencySymbol${service.cost!.toStringAsFixed(0).replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]}.')}',
+                        Icons.payments_outlined,
+                      ),
+                    );
+                  },
                 ),
                 const SizedBox(width: 16),
               ],
@@ -643,6 +650,7 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
   }
 
   String _formatCurrency(double cost) {
-    return 'Rp ${cost.toStringAsFixed(0).replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]}.')}';
+    final currencySymbol = context.read<CurrencyCubit>().currentCurrencySymbol;
+    return '$currencySymbol${cost.toStringAsFixed(0).replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]}.')}';
   }
 }

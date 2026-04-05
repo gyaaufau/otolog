@@ -4,6 +4,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:otolog/cubit/language_cubit.dart';
 import 'package:otolog/cubit/unit_cubit.dart';
+import 'package:otolog/cubit/currency_cubit.dart';
 import 'package:otolog/cubit/service_vehicle_selector_cubit.dart';
 import 'package:otolog/l10n/app_localizations.dart';
 import 'package:otolog/shared/localization/l10n_helper.dart';
@@ -44,6 +45,7 @@ class MyApp extends StatelessWidget {
             ),
             BlocProvider(create: (context) => sl<LanguageCubit>()),
             BlocProvider(create: (context) => sl<UnitCubit>()),
+            BlocProvider(create: (context) => sl<CurrencyCubit>()),
           ],
           child: BlocBuilder<LanguageCubit, LanguageState>(
             builder: (context, state) {
