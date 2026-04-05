@@ -553,6 +553,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get totalCostLabel => 'Total Cost';
 
   @override
+  String get averageCostLabel => 'Avg Cost';
+
+  @override
+  String get daysSinceLastServiceLabel => 'Days Ago';
+
+  @override
   String get addServiceRecord => 'Add Service Record';
 
   @override

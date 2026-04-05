@@ -1172,6 +1172,18 @@ abstract class AppLocalizations {
   /// **'Total Cost'**
   String get totalCostLabel;
 
+  /// Average cost label in statistics
+  ///
+  /// In en, this message translates to:
+  /// **'Avg Cost'**
+  String get averageCostLabel;
+
+  /// Days since last service label in statistics
+  ///
+  /// In en, this message translates to:
+  /// **'Days Ago'**
+  String get daysSinceLastServiceLabel;
+
   /// Add service record button
   ///
   /// In en, this message translates to:

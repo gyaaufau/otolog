@@ -732,6 +732,8 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
   Widget _buildServiceStatistics(VehicleDetailLoaded state) {
     final totalCost = state.totalCost;
     final serviceCount = state.serviceCount;
+    final averageCost = state.averageCost;
+    final daysSinceLastService = state.daysSinceLastService;
 
     return Container(
       padding: const EdgeInsets.all(20),
@@ -747,6 +749,7 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
         ],
       ),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             context.l10n.serviceStatistics,
@@ -758,30 +761,66 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
             ),
           ),
           SizedBox(height: 20),
-          Row(
-            children: [
-              Expanded(
-                child: _buildStatItem(
-                  context.l10n.totalServicesLabel,
-                  serviceCount.toString(),
-                  Icons.build_outlined,
-                ),
-              ),
-              Container(width: 1, height: 50, color: AppColors.neutral[200]),
-              BlocBuilder<CurrencyCubit, CurrencyState>(
-                builder: (context, currencyState) {
-                  final currencySymbol =
-                      context.read<CurrencyCubit>().currentCurrencySymbol;
-                  return Expanded(
-                    child: _buildStatItem(
-                      context.l10n.totalCostLabel,
-                      '$currencySymbol${totalCost.toStringAsFixed(0).replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]}.')}',
-                      Icons.payments_outlined,
-                    ),
+          GridView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              childAspectRatio: 1.4,
+              crossAxisSpacing: 12,
+              mainAxisSpacing: 12,
+            ),
+            itemCount: 4,
+            itemBuilder: (context, index) {
+              switch (index) {
+                case 0:
+                  return _buildEnhancedStatCard(
+                    context.l10n.totalServicesLabel,
+                    serviceCount.toString(),
+                    Icons.build_outlined,
+                    AppColors.primary,
+                    _getTrendIndicator(serviceCount > 5),
                   );
-                },
-              ),
-            ],
+                case 1:
+                  return BlocBuilder<CurrencyCubit, CurrencyState>(
+                    builder: (context, currencyState) {
+                      final currencySymbol =
+                          context.read<CurrencyCubit>().currentCurrencySymbol;
+                      return _buildEnhancedStatCard(
+                        context.l10n.totalCostLabel,
+                        '$currencySymbol${totalCost.toStringAsFixed(0).replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]}.')}',
+                        Icons.payments_outlined,
+                        AppColors.tertiary,
+                        null,
+                      );
+                    },
+                  );
+                case 2:
+                  return BlocBuilder<CurrencyCubit, CurrencyState>(
+                    builder: (context, currencyState) {
+                      final currencySymbol =
+                          context.read<CurrencyCubit>().currentCurrencySymbol;
+                      return _buildEnhancedStatCard(
+                        context.l10n.averageCostLabel,
+                        '$currencySymbol${averageCost.toStringAsFixed(0).replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]}.')}',
+                        Icons.trending_up_outlined,
+                        AppColors.secondary,
+                        null,
+                      );
+                    },
+                  );
+                case 3:
+                  return _buildEnhancedStatCard(
+                    context.l10n.daysSinceLastServiceLabel,
+                    '$daysSinceLastService',
+                    Icons.access_time_outlined,
+                    _getDaysSinceServiceColor(daysSinceLastService),
+                    _getDaysSinceServiceTrend(daysSinceLastService),
+                  );
+                default:
+                  return const SizedBox.shrink();
+              }
+            },
           ),
         ],
       ),
@@ -814,6 +853,130 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
         ),
       ],
     );
+  }
+
+  Widget _buildEnhancedStatCard(
+    String label,
+    String value,
+    IconData icon,
+    Color color,
+    String? trend,
+  ) {
+    return Container(
+      padding: const EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [color.withOpacity(0.1), color.withOpacity(0.05)],
+        ),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: color.withOpacity(0.2), width: 1),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Container(
+                padding: const EdgeInsets.all(5),
+                decoration: BoxDecoration(
+                  color: color.withOpacity(0.15),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Icon(icon, size: 16, color: color),
+              ),
+              if (trend != null)
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 4,
+                    vertical: 1,
+                  ),
+                  decoration: BoxDecoration(
+                    color:
+                        trend == 'up'
+                            ? AppColors.tertiary.withOpacity(0.1)
+                            : AppColors.error.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        trend == 'up' ? Icons.trending_up : Icons.trending_down,
+                        size: 9,
+                        color:
+                            trend == 'up'
+                                ? AppColors.tertiary
+                                : AppColors.error,
+                      ),
+                      const SizedBox(width: 2),
+                      Text(
+                        trend == 'up' ? 'Good' : 'Check',
+                        style: TextStyle(
+                          fontSize: 8,
+                          fontWeight: FontWeight.w600,
+                          color:
+                              trend == 'up'
+                                  ? AppColors.tertiary
+                                  : AppColors.error,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+            ],
+          ),
+          const SizedBox(height: 6),
+          Text(
+            label,
+            style: TextStyle(
+              fontSize: 10,
+              fontWeight: FontWeight.w600,
+              color: AppColors.neutral[500],
+              letterSpacing: 0.3,
+            ),
+          ),
+          const SizedBox(height: 2),
+          Text(
+            value,
+            style: TextStyle(
+              fontSize: 17,
+              fontWeight: FontWeight.w700,
+              color: AppColors.neutral[900],
+              letterSpacing: -0.3,
+            ),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ],
+      ),
+    );
+  }
+
+  String? _getTrendIndicator(bool isPositive) {
+    return isPositive ? 'up' : null;
+  }
+
+  Color _getDaysSinceServiceColor(int days) {
+    if (days <= 30) {
+      return AppColors.tertiary;
+    } else if (days <= 90) {
+      return AppColors.secondary;
+    } else {
+      return AppColors.error;
+    }
+  }
+
+  String? _getDaysSinceServiceTrend(int days) {
+    if (days <= 30) {
+      return 'up';
+    } else if (days <= 90) {
+      return null;
+    } else {
+      return 'down';
+    }
   }
 
   Widget _buildRecentServices(List<dynamic> services) {

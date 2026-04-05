@@ -555,6 +555,12 @@ class AppLocalizationsId extends AppLocalizations {
   String get totalCostLabel => 'Total Biaya';
 
   @override
+  String get averageCostLabel => 'Rata-rata';
+
+  @override
+  String get daysSinceLastServiceLabel => 'Hari Lalu';
+
+  @override
   String get addServiceRecord => 'Tambah Catatan Servis';
 
   @override

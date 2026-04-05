@@ -7,7 +7,7 @@ import 'screens/garage/add_vehicle_screen.dart';
 import 'screens/garage/edit_vehicle_screen.dart';
 import 'screens/logs/add_service_screen.dart';
 import 'screens/logs/edit_service_screen.dart';
-import '../screens/service_logs_screen.dart';
+import 'screens/logs/service_logs_screen.dart';
 import 'screens/garage/vehicles_screen.dart';
 import 'screens/settings/settings_screen.dart';
 import '../widgets/main_shell.dart';

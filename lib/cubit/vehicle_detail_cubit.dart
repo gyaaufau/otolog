@@ -27,12 +27,28 @@ class VehicleDetailCubit extends Cubit<VehicleDetailState> {
         vehicleId,
       );
 
+      // Calculate additional statistics
+      final averageCost = serviceCount > 0 ? totalCost / serviceCount : 0.0;
+      final lastServiceDate =
+          serviceRecords.isNotEmpty
+              ? serviceRecords
+                  .map((r) => r.serviceDate)
+                  .reduce((a, b) => a.isAfter(b) ? a : b)
+              : null;
+      final daysSinceLastService =
+          lastServiceDate != null
+              ? DateTime.now().difference(lastServiceDate).inDays
+              : 0;
+
       emit(
         VehicleDetailLoaded(
           vehicle: vehicle,
           serviceRecords: serviceRecords,
           totalCost: totalCost,
           serviceCount: serviceCount,
+          averageCost: averageCost,
+          lastServiceDate: lastServiceDate,
+          daysSinceLastService: daysSinceLastService,
         ),
       );
     } catch (e) {

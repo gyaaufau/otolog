@@ -762,6 +762,14 @@
   "@totalCostLabel": {
     "description": "Total cost label in statistics"
   },
+  "averageCostLabel": "Avg Cost",
+  "@averageCostLabel": {
+    "description": "Average cost label in statistics"
+  },
+  "daysSinceLastServiceLabel": "Days Ago",
+  "@daysSinceLastServiceLabel": {
+    "description": "Days since last service label in statistics"
+  },
   "addServiceRecord": "Add Service Record",
   "@addServiceRecord": {
     "description": "Add service record button"

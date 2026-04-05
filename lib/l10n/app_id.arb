@@ -762,6 +762,14 @@
   "@totalCostLabel": {
     "description": "Total cost label in statistics"
   },
+  "averageCostLabel": "Rata-rata",
+  "@averageCostLabel": {
+    "description": "Average cost label in statistics"
+  },
+  "daysSinceLastServiceLabel": "Hari Lalu",
+  "@daysSinceLastServiceLabel": {
+    "description": "Days since last service label in statistics"
+  },
   "addServiceRecord": "Tambah Catatan Servis",
   "@addServiceRecord": {
     "description": "Add service record button"

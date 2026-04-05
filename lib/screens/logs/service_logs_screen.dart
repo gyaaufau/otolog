@@ -4,11 +4,11 @@ import 'package:go_router/go_router.dart';
 import 'package:otolog/cubit/currency_cubit.dart';
 import 'package:otolog/l10n/app_localizations.dart';
 import 'package:otolog/shared/localization/l10n_helper.dart';
-import '../cubit/vehicle_list_cubit.dart';
-import '../cubit/vehicle_list_state.dart';
-import '../resources/colors.dart';
-import '../widgets/search_bar_widget.dart';
-import '../router.dart';
+import '../../cubit/vehicle_list_cubit.dart';
+import '../../cubit/vehicle_list_state.dart';
+import '../../resources/colors.dart';
+import '../../widgets/search_bar_widget.dart';
+import '../../router.dart';
 
 class ServiceLogsScreen extends StatefulWidget {
   const ServiceLogsScreen({super.key});
