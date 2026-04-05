@@ -1181,7 +1181,7 @@ abstract class AppLocalizations {
   /// Days since last service label in statistics
   ///
   /// In en, this message translates to:
-  /// **'Days Ago'**
+  /// **'Days Since Service'**
   String get daysSinceLastServiceLabel;
 
   /// Add service record button

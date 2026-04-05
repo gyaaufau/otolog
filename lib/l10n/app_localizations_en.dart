@@ -556,7 +556,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get averageCostLabel => 'Avg Cost';
 
   @override
-  String get daysSinceLastServiceLabel => 'Days Ago';
+  String get daysSinceLastServiceLabel => 'Days Since Service';
 
   @override
   String get addServiceRecord => 'Add Service Record';

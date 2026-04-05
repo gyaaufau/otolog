@@ -766,7 +766,7 @@
   "@averageCostLabel": {
     "description": "Average cost label in statistics"
   },
-  "daysSinceLastServiceLabel": "Days Ago",
+  "daysSinceLastServiceLabel": "Days Since Service",
   "@daysSinceLastServiceLabel": {
     "description": "Days since last service label in statistics"
   },
