@@ -7,6 +7,7 @@ import 'package:go_router/go_router.dart';
 import 'package:otolog/cubit/unit_cubit.dart';
 import 'package:otolog/cubit/currency_cubit.dart';
 import 'package:otolog/l10n/app_localizations.dart';
+import 'package:otolog/shared/commons/utils/image_picker_helper.dart';
 import 'package:otolog/shared/commons/utils/unit_converter.dart';
 import 'package:otolog/shared/constants/unit.dart';
 import 'package:otolog/shared/localization/l10n_helper.dart';
@@ -27,6 +28,7 @@ class VehicleDetailScreen extends StatefulWidget {
 class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
   int? _vehicleId;
   bool? _localIsPrimary;
+  final ImagePickerHelper _imagePickerHelper = ImagePickerHelper();
 
   @override
   void didChangeDependencies() {
@@ -42,6 +44,126 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
         context.read<VehicleDetailCubit>().loadVehicleWithServices(vehicleId);
       }
     }
+  }
+
+  Future<void> _showImagePickerOptions() async {
+    if (_vehicleId == null) return;
+
+    // Store cubit reference before showing modal to avoid context issues
+    final cubit = context.read<VehicleDetailCubit>();
+    final vehicleId = _vehicleId!;
+
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+      builder:
+          (context) => Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+            ),
+            padding: EdgeInsets.only(
+              bottom: MediaQuery.of(context).viewInsets.bottom,
+            ),
+            child: SafeArea(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    margin: EdgeInsets.only(top: 12, bottom: 16),
+                    width: 40,
+                    height: 4,
+                    decoration: BoxDecoration(
+                      color: AppColors.neutral[300],
+                      borderRadius: BorderRadius.circular(2),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+                    child: Text(
+                      context.l10n.changePhoto,
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w700,
+                        color: AppColors.neutral[900],
+                        letterSpacing: -0.3,
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 8),
+                  Container(height: 1, color: AppColors.neutral[100]),
+                  SizedBox(height: 8),
+                  ListTile(
+                    leading: Container(
+                      width: 40,
+                      height: 40,
+                      decoration: BoxDecoration(
+                        color: AppColors.primary.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Icon(
+                        Icons.camera_alt,
+                        color: AppColors.primary,
+                        size: 20,
+                      ),
+                    ),
+                    title: Text(
+                      context.l10n.takePhoto,
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        color: AppColors.neutral[900],
+                        letterSpacing: -0.1,
+                      ),
+                    ),
+                    onTap: () async {
+                      Navigator.pop(context);
+                      final image = await _imagePickerHelper
+                          .pickImageFromCamera(context);
+                      if (image != null) {
+                        cubit.updateVehicleImage(vehicleId, image.path);
+                      }
+                    },
+                  ),
+                  ListTile(
+                    leading: Container(
+                      width: 40,
+                      height: 40,
+                      decoration: BoxDecoration(
+                        color: AppColors.primary.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Icon(
+                        Icons.photo_library,
+                        color: AppColors.primary,
+                        size: 20,
+                      ),
+                    ),
+                    title: Text(
+                      context.l10n.chooseFromGallery,
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        color: AppColors.neutral[900],
+                        letterSpacing: -0.1,
+                      ),
+                    ),
+                    onTap: () async {
+                      Navigator.pop(context);
+                      final image = await _imagePickerHelper
+                          .pickImageFromGallery(context);
+                      if (image != null) {
+                        cubit.updateVehicleImage(vehicleId, image.path);
+                      }
+                    },
+                  ),
+                  SizedBox(height: 8),
+                ],
+              ),
+            ),
+          ),
+    );
   }
 
   @override
@@ -303,6 +425,23 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
                 ),
               ),
             ],
+          ),
+          const SizedBox(height: 12),
+          SizedBox(
+            width: double.infinity,
+            child: OutlinedButton.icon(
+              onPressed: _showImagePickerOptions,
+              icon: Icon(Icons.camera_alt, size: 18),
+              label: Text(context.l10n.changePhoto),
+              style: OutlinedButton.styleFrom(
+                foregroundColor: AppColors.primary,
+                side: BorderSide(color: AppColors.primary),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                padding: const EdgeInsets.symmetric(vertical: 10),
+              ),
+            ),
           ),
           const SizedBox(height: 20),
           Container(height: 1, color: AppColors.neutral[100]),

@@ -41,6 +41,7 @@ class ServiceRecords extends Table {
   RealColumn get cost => real().nullable()();
   TextColumn get mechanic => text().nullable()();
   TextColumn get notes => text().nullable()();
+  IntColumn get odometer => integer().nullable()();
   DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
   DateTimeColumn get updatedAt => dateTime().withDefault(currentDateAndTime)();
 }
@@ -51,7 +52,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase(QueryExecutor e) : super(e);
 
   @override
-  int get schemaVersion => 3;
+  int get schemaVersion => 4;
 
   @override
   MigrationStrategy get migration {
@@ -72,6 +73,19 @@ class AppDatabase extends _$AppDatabase {
           try {
             await customStatement(
               'ALTER TABLE vehicles ADD COLUMN isPrimary INTEGER NOT NULL DEFAULT 0',
+            );
+          } catch (e) {
+            // Column already exists, ignore the error
+            if (!e.toString().contains('duplicate column name')) {
+              rethrow;
+            }
+          }
+        }
+        // Migration from version 3 to 4: Add odometer column to service_records
+        if (from == 3 && to >= 4) {
+          try {
+            await customStatement(
+              'ALTER TABLE service_records ADD COLUMN odometer INTEGER',
             );
           } catch (e) {
             // Column already exists, ignore the error

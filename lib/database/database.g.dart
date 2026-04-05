@@ -1046,6 +1046,17 @@ class $ServiceRecordsTable extends ServiceRecords
     type: DriftSqlType.string,
     requiredDuringInsert: false,
   );
+  static const VerificationMeta _odometerMeta = const VerificationMeta(
+    'odometer',
+  );
+  @override
+  late final GeneratedColumn<int> odometer = GeneratedColumn<int>(
+    'odometer',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
   static const VerificationMeta _createdAtMeta = const VerificationMeta(
     'createdAt',
   );
@@ -1080,6 +1091,7 @@ class $ServiceRecordsTable extends ServiceRecords
     cost,
     mechanic,
     notes,
+    odometer,
     createdAt,
     updatedAt,
   ];
@@ -1155,6 +1167,12 @@ class $ServiceRecordsTable extends ServiceRecords
         notes.isAcceptableOrUnknown(data['notes']!, _notesMeta),
       );
     }
+    if (data.containsKey('odometer')) {
+      context.handle(
+        _odometerMeta,
+        odometer.isAcceptableOrUnknown(data['odometer']!, _odometerMeta),
+      );
+    }
     if (data.containsKey('created_at')) {
       context.handle(
         _createdAtMeta,
@@ -1212,6 +1230,10 @@ class $ServiceRecordsTable extends ServiceRecords
         DriftSqlType.string,
         data['${effectivePrefix}notes'],
       ),
+      odometer: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}odometer'],
+      ),
       createdAt:
           attachedDatabase.typeMapping.read(
             DriftSqlType.dateTime,
@@ -1240,6 +1262,7 @@ class ServiceRecord extends DataClass implements Insertable<ServiceRecord> {
   final double? cost;
   final String? mechanic;
   final String? notes;
+  final int? odometer;
   final DateTime createdAt;
   final DateTime updatedAt;
   const ServiceRecord({
@@ -1251,6 +1274,7 @@ class ServiceRecord extends DataClass implements Insertable<ServiceRecord> {
     this.cost,
     this.mechanic,
     this.notes,
+    this.odometer,
     required this.createdAt,
     required this.updatedAt,
   });
@@ -1272,6 +1296,9 @@ class ServiceRecord extends DataClass implements Insertable<ServiceRecord> {
     }
     if (!nullToAbsent || notes != null) {
       map['notes'] = Variable<String>(notes);
+    }
+    if (!nullToAbsent || odometer != null) {
+      map['odometer'] = Variable<int>(odometer);
     }
     map['created_at'] = Variable<DateTime>(createdAt);
     map['updated_at'] = Variable<DateTime>(updatedAt);
@@ -1295,6 +1322,10 @@ class ServiceRecord extends DataClass implements Insertable<ServiceRecord> {
               : Value(mechanic),
       notes:
           notes == null && nullToAbsent ? const Value.absent() : Value(notes),
+      odometer:
+          odometer == null && nullToAbsent
+              ? const Value.absent()
+              : Value(odometer),
       createdAt: Value(createdAt),
       updatedAt: Value(updatedAt),
     );
@@ -1314,6 +1345,7 @@ class ServiceRecord extends DataClass implements Insertable<ServiceRecord> {
       cost: serializer.fromJson<double?>(json['cost']),
       mechanic: serializer.fromJson<String?>(json['mechanic']),
       notes: serializer.fromJson<String?>(json['notes']),
+      odometer: serializer.fromJson<int?>(json['odometer']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
       updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
     );
@@ -1330,6 +1362,7 @@ class ServiceRecord extends DataClass implements Insertable<ServiceRecord> {
       'cost': serializer.toJson<double?>(cost),
       'mechanic': serializer.toJson<String?>(mechanic),
       'notes': serializer.toJson<String?>(notes),
+      'odometer': serializer.toJson<int?>(odometer),
       'createdAt': serializer.toJson<DateTime>(createdAt),
       'updatedAt': serializer.toJson<DateTime>(updatedAt),
     };
@@ -1344,6 +1377,7 @@ class ServiceRecord extends DataClass implements Insertable<ServiceRecord> {
     Value<double?> cost = const Value.absent(),
     Value<String?> mechanic = const Value.absent(),
     Value<String?> notes = const Value.absent(),
+    Value<int?> odometer = const Value.absent(),
     DateTime? createdAt,
     DateTime? updatedAt,
   }) => ServiceRecord(
@@ -1355,6 +1389,7 @@ class ServiceRecord extends DataClass implements Insertable<ServiceRecord> {
     cost: cost.present ? cost.value : this.cost,
     mechanic: mechanic.present ? mechanic.value : this.mechanic,
     notes: notes.present ? notes.value : this.notes,
+    odometer: odometer.present ? odometer.value : this.odometer,
     createdAt: createdAt ?? this.createdAt,
     updatedAt: updatedAt ?? this.updatedAt,
   );
@@ -1371,6 +1406,7 @@ class ServiceRecord extends DataClass implements Insertable<ServiceRecord> {
       cost: data.cost.present ? data.cost.value : this.cost,
       mechanic: data.mechanic.present ? data.mechanic.value : this.mechanic,
       notes: data.notes.present ? data.notes.value : this.notes,
+      odometer: data.odometer.present ? data.odometer.value : this.odometer,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
       updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
     );
@@ -1387,6 +1423,7 @@ class ServiceRecord extends DataClass implements Insertable<ServiceRecord> {
           ..write('cost: $cost, ')
           ..write('mechanic: $mechanic, ')
           ..write('notes: $notes, ')
+          ..write('odometer: $odometer, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt')
           ..write(')'))
@@ -1403,6 +1440,7 @@ class ServiceRecord extends DataClass implements Insertable<ServiceRecord> {
     cost,
     mechanic,
     notes,
+    odometer,
     createdAt,
     updatedAt,
   );
@@ -1418,6 +1456,7 @@ class ServiceRecord extends DataClass implements Insertable<ServiceRecord> {
           other.cost == this.cost &&
           other.mechanic == this.mechanic &&
           other.notes == this.notes &&
+          other.odometer == this.odometer &&
           other.createdAt == this.createdAt &&
           other.updatedAt == this.updatedAt);
 }
@@ -1431,6 +1470,7 @@ class ServiceRecordsCompanion extends UpdateCompanion<ServiceRecord> {
   final Value<double?> cost;
   final Value<String?> mechanic;
   final Value<String?> notes;
+  final Value<int?> odometer;
   final Value<DateTime> createdAt;
   final Value<DateTime> updatedAt;
   const ServiceRecordsCompanion({
@@ -1442,6 +1482,7 @@ class ServiceRecordsCompanion extends UpdateCompanion<ServiceRecord> {
     this.cost = const Value.absent(),
     this.mechanic = const Value.absent(),
     this.notes = const Value.absent(),
+    this.odometer = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
   });
@@ -1454,6 +1495,7 @@ class ServiceRecordsCompanion extends UpdateCompanion<ServiceRecord> {
     this.cost = const Value.absent(),
     this.mechanic = const Value.absent(),
     this.notes = const Value.absent(),
+    this.odometer = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
   }) : vehicleId = Value(vehicleId),
@@ -1468,6 +1510,7 @@ class ServiceRecordsCompanion extends UpdateCompanion<ServiceRecord> {
     Expression<double>? cost,
     Expression<String>? mechanic,
     Expression<String>? notes,
+    Expression<int>? odometer,
     Expression<DateTime>? createdAt,
     Expression<DateTime>? updatedAt,
   }) {
@@ -1480,6 +1523,7 @@ class ServiceRecordsCompanion extends UpdateCompanion<ServiceRecord> {
       if (cost != null) 'cost': cost,
       if (mechanic != null) 'mechanic': mechanic,
       if (notes != null) 'notes': notes,
+      if (odometer != null) 'odometer': odometer,
       if (createdAt != null) 'created_at': createdAt,
       if (updatedAt != null) 'updated_at': updatedAt,
     });
@@ -1494,6 +1538,7 @@ class ServiceRecordsCompanion extends UpdateCompanion<ServiceRecord> {
     Value<double?>? cost,
     Value<String?>? mechanic,
     Value<String?>? notes,
+    Value<int?>? odometer,
     Value<DateTime>? createdAt,
     Value<DateTime>? updatedAt,
   }) {
@@ -1506,6 +1551,7 @@ class ServiceRecordsCompanion extends UpdateCompanion<ServiceRecord> {
       cost: cost ?? this.cost,
       mechanic: mechanic ?? this.mechanic,
       notes: notes ?? this.notes,
+      odometer: odometer ?? this.odometer,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
     );
@@ -1538,6 +1584,9 @@ class ServiceRecordsCompanion extends UpdateCompanion<ServiceRecord> {
     if (notes.present) {
       map['notes'] = Variable<String>(notes.value);
     }
+    if (odometer.present) {
+      map['odometer'] = Variable<int>(odometer.value);
+    }
     if (createdAt.present) {
       map['created_at'] = Variable<DateTime>(createdAt.value);
     }
@@ -1558,6 +1607,7 @@ class ServiceRecordsCompanion extends UpdateCompanion<ServiceRecord> {
           ..write('cost: $cost, ')
           ..write('mechanic: $mechanic, ')
           ..write('notes: $notes, ')
+          ..write('odometer: $odometer, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt')
           ..write(')'))
@@ -2139,6 +2189,7 @@ typedef $$ServiceRecordsTableCreateCompanionBuilder =
       Value<double?> cost,
       Value<String?> mechanic,
       Value<String?> notes,
+      Value<int?> odometer,
       Value<DateTime> createdAt,
       Value<DateTime> updatedAt,
     });
@@ -2152,6 +2203,7 @@ typedef $$ServiceRecordsTableUpdateCompanionBuilder =
       Value<double?> cost,
       Value<String?> mechanic,
       Value<String?> notes,
+      Value<int?> odometer,
       Value<DateTime> createdAt,
       Value<DateTime> updatedAt,
     });
@@ -2225,6 +2277,11 @@ class $$ServiceRecordsTableFilterComposer
 
   ColumnFilters<String> get notes => $composableBuilder(
     column: $table.notes,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get odometer => $composableBuilder(
+    column: $table.odometer,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -2306,6 +2363,11 @@ class $$ServiceRecordsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<int> get odometer => $composableBuilder(
+    column: $table.odometer,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<DateTime> get createdAt => $composableBuilder(
     column: $table.createdAt,
     builder: (column) => ColumnOrderings(column),
@@ -2375,6 +2437,9 @@ class $$ServiceRecordsTableAnnotationComposer
 
   GeneratedColumn<String> get notes =>
       $composableBuilder(column: $table.notes, builder: (column) => column);
+
+  GeneratedColumn<int> get odometer =>
+      $composableBuilder(column: $table.odometer, builder: (column) => column);
 
   GeneratedColumn<DateTime> get createdAt =>
       $composableBuilder(column: $table.createdAt, builder: (column) => column);
@@ -2448,6 +2513,7 @@ class $$ServiceRecordsTableTableManager
                 Value<double?> cost = const Value.absent(),
                 Value<String?> mechanic = const Value.absent(),
                 Value<String?> notes = const Value.absent(),
+                Value<int?> odometer = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<DateTime> updatedAt = const Value.absent(),
               }) => ServiceRecordsCompanion(
@@ -2459,6 +2525,7 @@ class $$ServiceRecordsTableTableManager
                 cost: cost,
                 mechanic: mechanic,
                 notes: notes,
+                odometer: odometer,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
               ),
@@ -2472,6 +2539,7 @@ class $$ServiceRecordsTableTableManager
                 Value<double?> cost = const Value.absent(),
                 Value<String?> mechanic = const Value.absent(),
                 Value<String?> notes = const Value.absent(),
+                Value<int?> odometer = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<DateTime> updatedAt = const Value.absent(),
               }) => ServiceRecordsCompanion.insert(
@@ -2483,6 +2551,7 @@ class $$ServiceRecordsTableTableManager
                 cost: cost,
                 mechanic: mechanic,
                 notes: notes,
+                odometer: odometer,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
               ),

@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:drift/drift.dart';
 import '../database/database.dart';
 import '../repositories/drift_service.dart';
 import 'vehicle_detail_state.dart';
@@ -76,5 +77,28 @@ class VehicleDetailCubit extends Cubit<VehicleDetailState> {
   // Refresh vehicle detail
   Future<void> refresh(int vehicleId) async {
     await loadVehicleWithServices(vehicleId);
+  }
+
+  // Update vehicle image
+  Future<void> updateVehicleImage(int vehicleId, String imagePath) async {
+    try {
+      final vehicle = await _driftService.getVehicle(vehicleId);
+      if (vehicle == null) {
+        emit(const VehicleDetailError('Vehicle not found'));
+        return;
+      }
+
+      final updatedVehicle = vehicle.copyWith(
+        imagePath: Value(imagePath),
+        updatedAt: DateTime.now(),
+      );
+
+      await _driftService.updateVehicle(updatedVehicle);
+      await loadVehicleWithServices(vehicleId);
+    } catch (e) {
+      emit(
+        VehicleDetailError('Failed to update vehicle image: ${e.toString()}'),
+      );
+    }
   }
 }

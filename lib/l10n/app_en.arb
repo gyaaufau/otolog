@@ -160,6 +160,10 @@
   "@odometerReading": {
     "description": "Odometer reading field label"
   },
+  "enterOdometerReading": "e.g., 50000",
+  "@enterOdometerReading": {
+    "description": "Odometer field hint"
+  },
   "description": "Description",
   "@description": {
     "description": "Description field label"

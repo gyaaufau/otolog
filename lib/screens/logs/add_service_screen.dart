@@ -28,6 +28,7 @@ class _AddServiceScreenState extends State<AddServiceScreen> {
   final _costController = TextEditingController();
   final _mechanicController = TextEditingController();
   final _notesController = TextEditingController();
+  final _odometerController = TextEditingController();
 
   DateTime? _serviceDate;
   String? _selectedServiceType;
@@ -86,6 +87,7 @@ class _AddServiceScreenState extends State<AddServiceScreen> {
     _costController.dispose();
     _mechanicController.dispose();
     _notesController.dispose();
+    _odometerController.dispose();
     super.dispose();
   }
 
@@ -202,6 +204,8 @@ class _AddServiceScreenState extends State<AddServiceScreen> {
                         _buildServiceTypeField(),
                         const SizedBox(height: 20),
                         _buildServiceDatePicker(),
+                        const SizedBox(height: 20),
+                        _buildOdometerField(),
                         const SizedBox(height: 20),
                         _buildDescriptionField(),
                         const SizedBox(height: 20),
@@ -660,6 +664,67 @@ class _AddServiceScreenState extends State<AddServiceScreen> {
     );
   }
 
+  Widget _buildOdometerField() {
+    final l10n = context.l10n;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Text(
+              l10n.odometer,
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
+                color: AppColors.neutral[700],
+                letterSpacing: 0.15,
+              ),
+            ),
+            const SizedBox(width: 4),
+            Text(
+              '(${l10n.optional})',
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w400,
+                color: AppColors.neutral[500],
+                letterSpacing: 0.15,
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 8),
+        TextFormField(
+          controller: _odometerController,
+          keyboardType: TextInputType.number,
+          decoration: InputDecoration(
+            hintText: l10n.enterOdometerReading,
+            hintStyle: TextStyle(color: AppColors.neutral[400], fontSize: 15),
+            prefixIcon: Icon(Icons.speed, color: AppColors.neutral[500]),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(color: AppColors.neutral[200]!),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(color: AppColors.neutral[200]!),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(
+                color: AppColors.primary[500]!,
+                width: 1.5,
+              ),
+            ),
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 16,
+              vertical: 16,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
   Widget _buildDescriptionField() {
     final l10n = context.l10n;
     return Column(
@@ -955,6 +1020,10 @@ class _AddServiceScreenState extends State<AddServiceScreen> {
             _notesController.text.trim().isEmpty
                 ? const drift.Value.absent()
                 : drift.Value(_notesController.text.trim()),
+        odometer:
+            _odometerController.text.trim().isEmpty
+                ? const drift.Value.absent()
+                : drift.Value(int.tryParse(_odometerController.text.trim())),
       );
 
       print(

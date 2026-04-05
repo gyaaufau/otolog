@@ -338,6 +338,12 @@ abstract class AppLocalizations {
   /// **'Odometer Reading'**
   String get odometerReading;
 
+  /// Odometer field hint
+  ///
+  /// In en, this message translates to:
+  /// **'e.g., 50000'**
+  String get enterOdometerReading;
+
   /// Description field label
   ///
   /// In en, this message translates to:

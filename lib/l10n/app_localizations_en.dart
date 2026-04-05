@@ -129,6 +129,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get odometerReading => 'Odometer Reading';
 
   @override
+  String get enterOdometerReading => 'e.g., 50000';
+
+  @override
   String get description => 'Description';
 
   @override

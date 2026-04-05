@@ -130,6 +130,9 @@ class AppLocalizationsId extends AppLocalizations {
   String get odometerReading => 'Pembacaan Odometer';
 
   @override
+  String get enterOdometerReading => 'cth: 50000';
+
+  @override
   String get description => 'Deskripsi';
 
   @override
