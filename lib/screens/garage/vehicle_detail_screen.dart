@@ -277,6 +277,9 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
 
   Widget _buildVehicleDetail(VehicleDetailLoaded state) {
     final vehicle = state.vehicle;
+    final purchaseInfoWidget = _buildPurchaseInfo(vehicle);
+    final hasPurchaseInfo = vehicle.purchaseDate != null;
+
     return SingleChildScrollView(
       padding: const EdgeInsets.all(24),
       child: Column(
@@ -289,15 +292,13 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
           _buildVehicleSpecifications(vehicle),
           SizedBox(height: 24.h),
           _buildVehicleDetails(vehicle),
-          SizedBox(height: 24.h),
-          _buildPurchaseInfo(vehicle),
-          SizedBox(height: 24.h),
+          SizedBox(height: hasPurchaseInfo ? 24.h : 12.h),
+          purchaseInfoWidget,
+          SizedBox(height: hasPurchaseInfo ? 24.h : 12.h),
           _buildServiceStatistics(state),
           SizedBox(height: 24.h),
-          if (state.serviceRecords.isNotEmpty) ...[
-            _buildRecentServices(state.serviceRecords),
-            SizedBox(height: 24.h),
-          ],
+          _buildRecentServices(state.serviceRecords),
+          SizedBox(height: 24.h),
           _buildActionButtons(vehicle),
           SizedBox(height: 24.h),
         ],
@@ -766,7 +767,7 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
             physics: const NeverScrollableScrollPhysics(),
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
-              childAspectRatio: 1.4,
+              childAspectRatio: 1.3,
               crossAxisSpacing: 12,
               mainAxisSpacing: 12,
             ),
@@ -862,8 +863,19 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
     Color color,
     String? trend,
   ) {
+    final isCurrencyValue =
+        value.contains('\$') ||
+        value.contains('€') ||
+        value.contains('£') ||
+        value.contains('¥') ||
+        value.contains('Rp') ||
+        value.contains('IDR') ||
+        value.contains('USD') ||
+        value.contains('EUR') ||
+        value.contains('GBP');
+
     return Container(
-      padding: const EdgeInsets.all(10),
+      padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.topLeft,
@@ -880,75 +892,87 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Container(
-                padding: const EdgeInsets.all(5),
+                padding: const EdgeInsets.all(6),
                 decoration: BoxDecoration(
                   color: color.withOpacity(0.15),
                   borderRadius: BorderRadius.circular(8),
                 ),
-                child: Icon(icon, size: 16, color: color),
+                child: Icon(icon, size: 18, color: color),
               ),
               if (trend != null)
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 4,
-                    vertical: 1,
-                  ),
-                  decoration: BoxDecoration(
-                    color:
-                        trend == 'up'
-                            ? AppColors.tertiary.withOpacity(0.1)
-                            : AppColors.error.withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(4),
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(
-                        trend == 'up' ? Icons.trending_up : Icons.trending_down,
-                        size: 9,
-                        color:
-                            trend == 'up'
-                                ? AppColors.tertiary
-                                : AppColors.error,
-                      ),
-                      const SizedBox(width: 2),
-                      Text(
-                        trend == 'up' ? 'Good' : 'Check',
-                        style: TextStyle(
-                          fontSize: 8,
-                          fontWeight: FontWeight.w600,
+                Flexible(
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 4,
+                      vertical: 1,
+                    ),
+                    decoration: BoxDecoration(
+                      color:
+                          trend == 'up'
+                              ? AppColors.tertiary.withOpacity(0.1)
+                              : AppColors.error.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          trend == 'up'
+                              ? Icons.trending_up
+                              : Icons.trending_down,
+                          size: 10,
                           color:
                               trend == 'up'
                                   ? AppColors.tertiary
                                   : AppColors.error,
                         ),
-                      ),
-                    ],
+                        const SizedBox(width: 2),
+                        Text(
+                          trend == 'up' ? 'Good' : 'Check',
+                          style: TextStyle(
+                            fontSize: 9,
+                            fontWeight: FontWeight.w600,
+                            color:
+                                trend == 'up'
+                                    ? AppColors.tertiary
+                                    : AppColors.error,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ],
+                    ),
                   ),
                 ),
             ],
           ),
-          const SizedBox(height: 6),
+          const SizedBox(height: 8),
           Text(
             label,
             style: TextStyle(
-              fontSize: 10,
+              fontSize: 11,
               fontWeight: FontWeight.w600,
               color: AppColors.neutral[500],
               letterSpacing: 0.3,
             ),
           ),
-          const SizedBox(height: 2),
-          Text(
-            value,
-            style: TextStyle(
-              fontSize: 17,
-              fontWeight: FontWeight.w700,
-              color: AppColors.neutral[900],
-              letterSpacing: -0.3,
+          const SizedBox(height: 3),
+          Flexible(
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              alignment: Alignment.centerLeft,
+              child: Text(
+                value,
+                style: TextStyle(
+                  fontSize: isCurrencyValue ? 16 : 19,
+                  fontWeight: FontWeight.w700,
+                  color: AppColors.neutral[900],
+                  letterSpacing: -0.3,
+                ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
             ),
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
           ),
         ],
       ),
@@ -1028,20 +1052,71 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
             ],
           ),
           SizedBox(height: 20),
-          ...recentServices.asMap().entries.map((entry) {
-            final index = entry.key;
-            final service = entry.value;
-            return Column(
-              children: [
-                _buildServiceItem(service),
-                if (index < recentServices.length - 1)
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 12),
-                    child: Container(height: 1, color: AppColors.neutral[100]),
-                  ),
-              ],
-            );
-          }),
+          if (recentServices.isEmpty)
+            _buildEmptyRecentServicesState()
+          else
+            ...recentServices.asMap().entries.map((entry) {
+              final index = entry.key;
+              final service = entry.value;
+              return Column(
+                children: [
+                  _buildServiceItem(service),
+                  if (index < recentServices.length - 1)
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      child: Container(
+                        height: 1,
+                        color: AppColors.neutral[100],
+                      ),
+                    ),
+                ],
+              );
+            }),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildEmptyRecentServicesState() {
+    return Center(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            width: 64,
+            height: 64,
+            decoration: BoxDecoration(
+              color: AppColors.neutral[100],
+              shape: BoxShape.circle,
+            ),
+            child: Icon(
+              Icons.build_outlined,
+              size: 32,
+              color: AppColors.neutral[400],
+            ),
+          ),
+          SizedBox(height: 16),
+          Text(
+            context.l10n.noServices,
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+              color: AppColors.neutral[700],
+              letterSpacing: -0.1,
+            ),
+            textAlign: TextAlign.center,
+          ),
+          SizedBox(height: 8),
+          Text(
+            context.l10n.addFirstService,
+            style: TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.w500,
+              color: AppColors.neutral[500],
+              letterSpacing: 0.1,
+            ),
+            textAlign: TextAlign.center,
+          ),
         ],
       ),
     );
