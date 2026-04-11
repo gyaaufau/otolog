@@ -33,6 +33,7 @@ class _AddServiceScreenState extends State<AddServiceScreen> {
   DateTime? _serviceDate;
   String? _selectedServiceType;
   int? _vehicleId;
+  bool _isSaving = false;
 
   List<String> get _serviceTypes => [
     context.l10n.oilChange,
@@ -177,6 +178,24 @@ class _AddServiceScreenState extends State<AddServiceScreen> {
                     print(
                       '📱 [AddServiceScreen]   Local _vehicleId synced to: $_vehicleId',
                     );
+                  });
+                }
+
+                if (_vehicleId == null &&
+                    vehicleSelectorState.selectedVehicleId == null &&
+                    vehicleSelectorState.vehicles.isNotEmpty) {
+                  final defaultVehicle = vehicleSelectorState.vehicles.first;
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    if (!mounted || _vehicleId != null) {
+                      return;
+                    }
+
+                    context.read<ServiceVehicleSelectorCubit>().selectVehicle(
+                      defaultVehicle.id,
+                    );
+                    setState(() {
+                      _vehicleId = defaultVehicle.id;
+                    });
                   });
                 }
               }
@@ -930,7 +949,7 @@ class _AddServiceScreenState extends State<AddServiceScreen> {
   Widget _buildSaveButton() {
     return BlocBuilder<VehicleDetailCubit, VehicleDetailState>(
       builder: (context, state) {
-        final isLoading = state is VehicleDetailLoading;
+        final isLoading = _isSaving || state is VehicleDetailLoading;
         return Container(
           width: double.infinity,
           decoration: BoxDecoration(
@@ -981,7 +1000,7 @@ class _AddServiceScreenState extends State<AddServiceScreen> {
     );
   }
 
-  void _saveService() {
+  Future<void> _saveService() async {
     print('📱 [AddServiceScreen] _saveService called');
     print(
       '📱 [AddServiceScreen]   Form validation: ${_formKey.currentState!.validate()}',
@@ -1032,9 +1051,43 @@ class _AddServiceScreenState extends State<AddServiceScreen> {
       print(
         '📱 [AddServiceScreen]   Calling addServiceRecord on VehicleDetailCubit',
       );
-      context.read<VehicleDetailCubit>().addServiceRecord(service);
+      setState(() {
+        _isSaving = true;
+      });
+
+      final vehicleDetailCubit = context.read<VehicleDetailCubit>();
+      await vehicleDetailCubit.addServiceRecord(service);
+
+      if (!mounted) {
+        return;
+      }
+
+      setState(() {
+        _isSaving = false;
+      });
+
+      if (vehicleDetailCubit.state is VehicleDetailError) {
+        final errorState = vehicleDetailCubit.state as VehicleDetailError;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(errorState.message),
+            backgroundColor: AppColors.secondary[500],
+            behavior: SnackBarBehavior.floating,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8),
+            ),
+            margin: const EdgeInsets.all(16),
+          ),
+        );
+        return;
+      }
+
       print('📱 [AddServiceScreen]   Refreshing VehicleListCubit');
-      context.read<VehicleListCubit>().loadVehicles();
+      await context.read<VehicleListCubit>().loadVehicles();
+      if (!mounted) {
+        return;
+      }
+
       print('📱 [AddServiceScreen]   Navigating back');
       context.pop();
     } else {

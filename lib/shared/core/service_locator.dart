@@ -3,6 +3,7 @@ import '../../repositories/drift_service.dart';
 import '../../repositories/language_repository.dart';
 import '../../repositories/unit_repository.dart';
 import '../../repositories/currency_repository.dart';
+import '../../repositories/onboarding_repository.dart';
 import '../../database/database.dart';
 import '../../cubit/vehicle_cubit.dart';
 import '../../cubit/vehicle_list_cubit.dart';
@@ -30,6 +31,9 @@ Future<void> initServiceLocator() async {
 
   // Register CurrencyRepository as a singleton
   sl.registerSingleton<CurrencyRepository>(CurrencyRepository());
+
+  // Register OnboardingRepository as a singleton
+  sl.registerSingleton<OnboardingRepository>(OnboardingRepository());
 
   // Register cubits
   sl.registerFactory<VehicleCubit>(() => VehicleCubit(sl<DriftService>()));

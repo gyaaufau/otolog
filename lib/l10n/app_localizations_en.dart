@@ -362,6 +362,64 @@ class AppLocalizationsEn extends AppLocalizations {
   String get next => 'Next';
 
   @override
+  String get onboardingSkip => 'Skip';
+
+  @override
+  String get onboardingGetStarted => 'Start Tracking';
+
+  @override
+  String get onboardingBadge => 'OTOLOG SETUP';
+
+  @override
+  String get onboardingEyebrowOne => 'BUILD YOUR BASELINE';
+
+  @override
+  String get onboardingTitleOne => 'Create a garage that stays easy to read.';
+
+  @override
+  String get onboardingDescriptionOne =>
+      'Store each vehicle with the details that matter, from plates and trim to mileage and photos.';
+
+  @override
+  String get onboardingEyebrowTwo => 'KEEP THE WORK VISIBLE';
+
+  @override
+  String get onboardingTitleTwo =>
+      'Log every service without losing the context.';
+
+  @override
+  String get onboardingDescriptionTwo =>
+      'Capture service dates, mechanics, costs, notes, and odometer readings in one maintenance trail.';
+
+  @override
+  String get onboardingEyebrowThree => 'READ THE SIGNALS';
+
+  @override
+  String get onboardingTitleThree =>
+      'Spot spending and service rhythm at a glance.';
+
+  @override
+  String get onboardingDescriptionThree =>
+      'Review recent work, total cost, and per-vehicle patterns from a cleaner dashboard before small issues grow.';
+
+  @override
+  String get onboardingMetricGarage => 'Garage profile';
+
+  @override
+  String get onboardingMetricHistory => 'Service history';
+
+  @override
+  String get onboardingMetricInsights => 'Maintenance insight';
+
+  @override
+  String get onboardingPreferencesTitle =>
+      'Set your defaults before you start.';
+
+  @override
+  String get onboardingPreferencesDescription =>
+      'Choose your language, distance unit, and currency. You can change them again anytime in Settings.';
+
+  @override
   String get or => 'or';
 
   @override
@@ -865,12 +923,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get openingAppStore => 'Opening app store...';
 
   @override
+  String get unableToOpenAppStore => 'Unable to open the app store.';
+
+  @override
   String get termsOfServiceContent =>
-      'By using OtoLog, you agree to these terms:\n\n1. You are responsible for maintaining the confidentiality of your account.\n2. You agree not to use the app for any illegal purposes.\n3. We reserve the right to modify these terms at any time.\n4. Your data is stored locally on your device.\n5. We are not liable for any loss of data.\n\nFor more information, please contact us.';
+      'Terms of Service for OtoLog\nLast Updated: 30 January 2026\n\n1. Acceptance of Terms\nBy downloading, installing, or using OtoLog, you agree to these Terms of Service.\n\n2. Local-First Use\nOtoLog is a local-first application designed to help you manage vehicle service logs and maintenance records on your own device.\nThe app does not require an account and is intended for personal record-keeping purposes.\n\n3. Your Responsibilities\nYou are responsible for the accuracy of the information you enter into the app.\nYou are also responsible for maintaining backups of your data and keeping your device secure.\n\n4. Offline Data Storage\nAll data you enter into OtoLog is stored locally on your device. Because of this, you are responsible for any loss of data caused by uninstalling the app, device failure, or accidental deletion.\n\n5. Acceptable Use\nYou agree not to use OtoLog for unlawful, harmful, or abusive purposes.\nYou also agree not to attempt to reverse engineer, disrupt, or misuse the app in ways that could affect its normal operation.\n\n6. No Warranty\nOtoLog is provided on an \"as is\" and \"as available\" basis, without warranties of any kind. We do not guarantee that the app will always be error-free or uninterrupted.\n\n7. Limitation of Liability\nTo the fullest extent permitted by law, OtoLog will not be liable for any indirect, incidental, special, or consequential damages, including loss of data, resulting from the use or inability to use the app.\n\n8. Changes to These Terms\nWe may update these Terms of Service from time to time. Continued use of the app after changes are posted means you accept the updated terms.\n\n9. Contact Us\nIf you have any questions about these Terms of Service, you can contact us at: gialoopwork@gmail.com';
 
   @override
   String get privacyPolicyContent =>
-      'At OtoLog, we take your privacy seriously:\n\n1. All your data is stored locally on your device.\n2. We do not collect or transmit any personal data.\n3. We do not share your data with third parties.\n4. You can export or delete your data at any time.\n5. We use minimal permissions necessary for the app to function.\n\nIf you have any questions about our privacy practices, please contact us.';
+      'Privacy Policy for OtoLog\nLast Updated: 30 January 2026\n\n1. Introduction\nOtoLog (\"we,\" \"our,\" or \"us\") is committed to protecting your privacy. This Privacy Policy explains how we handle information in the OtoLog mobile application.\n\n2. Data Collection (No Collection)\nOtoLog is a local-first application.\nPersonal Data: We do not collect, store, or transmit any personal identification information (such as names, emails, or phone numbers) to external servers.\nUsage Data: All vehicle service logs and maintenance data you enter are stored locally on your device using the Drift database.\nOffline Access: The app functions entirely offline and does not require a user account to operate.\n\n3. Permissions\nThe app may request standard Android permissions required for its functionality, such as access to local storage to save your database. These permissions are used strictly for local data management.\n\n4. Third-Party Services\nWe do not use third-party analytics, advertising, or tracking services that collect your data.\n\n5. Changes to This Policy\nWe may update our Privacy Policy from time to time. We will notify you of any changes by posting the new Privacy Policy on this page.\n\n6. Contact Us\nIf you have any questions about this Privacy Policy, you can contact us at: gialoopwork@gmail.com';
 
   @override
   String get seeDetail => 'See Detail';

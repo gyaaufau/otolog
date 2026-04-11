@@ -30,9 +30,12 @@ class VehicleListCubit extends Cubit<VehicleListState> {
       final vehicles = await _driftService.getAllVehicles();
       final serviceRecords = await _driftService.getAllServiceRecords();
       emit(
-        VehicleListLoaded(vehicles: vehicles, serviceRecords: serviceRecords),
+        VehicleListOperationSuccess(
+          message: 'Vehicle added successfully',
+          vehicles: vehicles,
+          serviceRecords: serviceRecords,
+        ),
       );
-      emit(const VehicleListOperationSuccess('Vehicle added successfully'));
     } catch (e) {
       emit(VehicleListError('Failed to add vehicle: ${e.toString()}'));
     }
@@ -45,9 +48,12 @@ class VehicleListCubit extends Cubit<VehicleListState> {
       final vehicles = await _driftService.getAllVehicles();
       final serviceRecords = await _driftService.getAllServiceRecords();
       emit(
-        VehicleListLoaded(vehicles: vehicles, serviceRecords: serviceRecords),
+        VehicleListOperationSuccess(
+          message: 'Vehicle updated successfully',
+          vehicles: vehicles,
+          serviceRecords: serviceRecords,
+        ),
       );
-      emit(const VehicleListOperationSuccess('Vehicle updated successfully'));
     } catch (e) {
       emit(VehicleListError('Failed to update vehicle: ${e.toString()}'));
     }

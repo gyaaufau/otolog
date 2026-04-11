@@ -52,11 +52,16 @@ class VehicleListError extends VehicleListState {
   List<Object?> get props => [message];
 }
 
-class VehicleListOperationSuccess extends VehicleListState {
+class VehicleListOperationSuccess extends VehicleListLoaded {
   final String message;
 
-  const VehicleListOperationSuccess(this.message);
+  const VehicleListOperationSuccess({
+    required this.message,
+    required super.vehicles,
+    super.serviceRecords,
+    super.filterType,
+  });
 
   @override
-  List<Object?> get props => [message];
+  List<Object?> get props => [...super.props, message];
 }

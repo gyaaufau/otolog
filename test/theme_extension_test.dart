@@ -36,11 +36,11 @@ void main() {
 
       // Test interpolation at 0% (should be light theme)
       final t0 = lightTheme.lerp(darkTheme, 0.0);
-      expect(t0.primary, lightTheme.primary);
+      expect(t0.primary.value, lightTheme.primary.value);
 
       // Test interpolation at 100% (should be dark theme)
       final t1 = lightTheme.lerp(darkTheme, 1.0);
-      expect(t1.primary, darkTheme.primary);
+      expect(t1.primary.value, darkTheme.primary.value);
 
       // Test interpolation at 50%
       final t05 = lightTheme.lerp(darkTheme, 0.5);

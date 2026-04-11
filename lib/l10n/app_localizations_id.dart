@@ -363,6 +363,63 @@ class AppLocalizationsId extends AppLocalizations {
   String get next => 'Lanjut';
 
   @override
+  String get onboardingSkip => 'Lewati';
+
+  @override
+  String get onboardingGetStarted => 'Mulai Mencatat';
+
+  @override
+  String get onboardingBadge => 'PERSIAPAN OTOLOG';
+
+  @override
+  String get onboardingEyebrowOne => 'BANGUN DASAR DATA';
+
+  @override
+  String get onboardingTitleOne => 'Susun garasi yang tetap enak dibaca.';
+
+  @override
+  String get onboardingDescriptionOne =>
+      'Simpan tiap kendaraan dengan detail yang penting, mulai dari plat, model, jarak tempuh, sampai foto.';
+
+  @override
+  String get onboardingEyebrowTwo => 'BIAR RIWAYAT TETAP JELAS';
+
+  @override
+  String get onboardingTitleTwo =>
+      'Catat setiap servis tanpa kehilangan konteksnya.';
+
+  @override
+  String get onboardingDescriptionTwo =>
+      'Rekam tanggal servis, bengkel, biaya, catatan, dan odometer dalam satu alur perawatan yang rapi.';
+
+  @override
+  String get onboardingEyebrowThree => 'BACA SINYALNYA';
+
+  @override
+  String get onboardingTitleThree =>
+      'Lihat pola biaya dan ritme servis dalam sekali pandang.';
+
+  @override
+  String get onboardingDescriptionThree =>
+      'Pantau pekerjaan terbaru, total biaya, dan pola per kendaraan dari dashboard yang lebih bersih sebelum masalah kecil membesar.';
+
+  @override
+  String get onboardingMetricGarage => 'Profil garasi';
+
+  @override
+  String get onboardingMetricHistory => 'Riwayat servis';
+
+  @override
+  String get onboardingMetricInsights => 'Insight perawatan';
+
+  @override
+  String get onboardingPreferencesTitle => 'Atur default sebelum mulai.';
+
+  @override
+  String get onboardingPreferencesDescription =>
+      'Pilih bahasa, satuan jarak, dan mata uang. Semua ini bisa diubah lagi kapan saja lewat Pengaturan.';
+
+  @override
   String get or => 'atau';
 
   @override
@@ -872,12 +929,15 @@ class AppLocalizationsId extends AppLocalizations {
   String get openingAppStore => 'Membuka toko aplikasi...';
 
   @override
+  String get unableToOpenAppStore => 'Tidak dapat membuka toko aplikasi.';
+
+  @override
   String get termsOfServiceContent =>
-      'Dengan menggunakan OtoLog, Anda menyetujui ketentuan ini:\n\n1. Anda bertanggung jawab untuk menjaga kerahasiaan akun Anda.\n2. Anda setuju untuk tidak menggunakan aplikasi untuk tujuan ilegal.\n3. Kami berhak mengubah ketentuan ini kapan saja.\n4. Data Anda disimpan secara lokal di perangkat Anda.\n5. Kami tidak bertanggung jawab atas kehilangan data.\n\nUntuk informasi lebih lanjut, silakan hubungi kami.';
+      'Ketentuan Layanan untuk OtoLog\nTerakhir Diperbarui: 30 Januari 2026\n\n1. Penerimaan Ketentuan\nDengan mengunduh, memasang, atau menggunakan OtoLog, Anda menyetujui Ketentuan Layanan ini.\n\n2. Penggunaan Local-First\nOtoLog adalah aplikasi local-first yang dirancang untuk membantu Anda mengelola log servis kendaraan dan catatan perawatan di perangkat Anda sendiri.\nAplikasi ini tidak memerlukan akun dan ditujukan untuk keperluan pencatatan pribadi.\n\n3. Tanggung Jawab Anda\nAnda bertanggung jawab atas keakuratan informasi yang Anda masukkan ke dalam aplikasi.\nAnda juga bertanggung jawab untuk menjaga cadangan data Anda dan menjaga keamanan perangkat Anda.\n\n4. Penyimpanan Data Offline\nSemua data yang Anda masukkan ke OtoLog disimpan secara lokal di perangkat Anda. Karena itu, Anda bertanggung jawab atas kehilangan data yang disebabkan oleh menghapus aplikasi, kerusakan perangkat, atau penghapusan yang tidak disengaja.\n\n5. Penggunaan yang Diperbolehkan\nAnda setuju untuk tidak menggunakan OtoLog untuk tujuan yang melanggar hukum, merugikan, atau menyalahgunakan.\nAnda juga setuju untuk tidak mencoba merekayasa balik, mengganggu, atau menyalahgunakan aplikasi dengan cara yang dapat memengaruhi operasi normalnya.\n\n6. Tanpa Jaminan\nOtoLog disediakan \"sebagaimana adanya\" dan \"sebagaimana tersedia\", tanpa jaminan dalam bentuk apa pun. Kami tidak menjamin bahwa aplikasi akan selalu bebas dari kesalahan atau berjalan tanpa gangguan.\n\n7. Batasan Tanggung Jawab\nSejauh diizinkan oleh hukum, OtoLog tidak bertanggung jawab atas segala kerugian tidak langsung, insidental, khusus, atau konsekuensial, termasuk kehilangan data, yang timbul dari penggunaan atau ketidakmampuan menggunakan aplikasi.\n\n8. Perubahan Ketentuan Ini\nKami dapat memperbarui Ketentuan Layanan ini dari waktu ke waktu. Penggunaan aplikasi secara berkelanjutan setelah perubahan dipublikasikan berarti Anda menerima ketentuan yang diperbarui.\n\n9. Hubungi Kami\nJika Anda memiliki pertanyaan tentang Ketentuan Layanan ini, Anda dapat menghubungi kami di: gialoopwork@gmail.com';
 
   @override
   String get privacyPolicyContent =>
-      'Di OtoLog, kami menganggap privasi Anda dengan serius:\n\n1. Semua data Anda disimpan secara lokal di perangkat Anda.\n2. Kami tidak mengumpulkan atau mengirimkan data pribadi apa pun.\n3. Kami tidak berbagi data Anda dengan pihak ketiga.\n4. Anda dapat mengekspor atau menghapus data Anda kapan saja.\n5. Kami menggunakan izin minimal yang diperlukan agar aplikasi berfungsi.\n\nJika Anda memiliki pertanyaan tentang praktik privasi kami, silakan hubungi kami.';
+      'Kebijakan Privasi untuk OtoLog\nTerakhir Diperbarui: 30 Januari 2026\n\n1. Pendahuluan\nOtoLog (\"kami\") berkomitmen untuk melindungi privasi Anda. Kebijakan Privasi ini menjelaskan bagaimana kami menangani informasi di aplikasi seluler OtoLog.\n\n2. Pengumpulan Data (Tidak Ada Pengumpulan)\nOtoLog adalah aplikasi local-first.\nData Pribadi: Kami tidak mengumpulkan, menyimpan, atau mengirimkan informasi identitas pribadi apa pun (seperti nama, email, atau nomor telepon) ke server eksternal.\nData Penggunaan: Semua log servis kendaraan dan data perawatan yang Anda masukkan disimpan secara lokal di perangkat Anda menggunakan database Drift.\nAkses Offline: Aplikasi ini berfungsi sepenuhnya secara offline dan tidak memerlukan akun pengguna untuk digunakan.\n\n3. Izin\nAplikasi dapat meminta izin Android standar yang diperlukan untuk fungsinya, seperti akses ke penyimpanan lokal untuk menyimpan database Anda. Izin ini digunakan secara ketat hanya untuk pengelolaan data lokal.\n\n4. Layanan Pihak Ketiga\nKami tidak menggunakan layanan analitik, iklan, atau pelacakan pihak ketiga yang mengumpulkan data Anda.\n\n5. Perubahan pada Kebijakan Ini\nKami dapat memperbarui Kebijakan Privasi kami dari waktu ke waktu. Kami akan memberi tahu Anda tentang perubahan apa pun dengan memposting Kebijakan Privasi yang baru pada halaman ini.\n\n6. Hubungi Kami\nJika Anda memiliki pertanyaan tentang Kebijakan Privasi ini, Anda dapat menghubungi kami di: gialoopwork@gmail.com';
 
   @override
   String get seeDetail => 'Lihat Detail';

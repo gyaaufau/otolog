@@ -7,6 +7,7 @@ import 'package:otolog/cubit/language_cubit.dart';
 import 'package:otolog/cubit/unit_cubit.dart';
 import 'package:otolog/cubit/currency_cubit.dart';
 import 'package:otolog/l10n/app_localizations.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:otolog/shared/constants/unit.dart';
 import 'package:otolog/shared/constants/currency.dart';
 import 'package:otolog/shared/localization/l10n_helper.dart';
@@ -14,6 +15,10 @@ import '../../router.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
+
+  static final Uri _playStoreUri = Uri.parse(
+    'https://play.google.com/store/apps/details?id=com.gialoop.otolog',
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -986,12 +991,23 @@ class SettingsScreen extends StatelessWidget {
                 child: Text(l10n.maybeLater),
               ),
               ElevatedButton(
-                onPressed: () {
+                onPressed: () async {
                   Navigator.pop(context);
-                  // TODO: Implement app store link
                   ScaffoldMessenger.of(
                     context,
                   ).showSnackBar(SnackBar(content: Text(l10n.openingAppStore)));
+
+                  final messenger = ScaffoldMessenger.of(context);
+                  final didLaunch = await launchUrl(
+                    _playStoreUri,
+                    mode: LaunchMode.externalApplication,
+                  );
+
+                  if (!didLaunch && context.mounted) {
+                    messenger.showSnackBar(
+                      SnackBar(content: Text(l10n.unableToOpenAppStore)),
+                    );
+                  }
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.amber,

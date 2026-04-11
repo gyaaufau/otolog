@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>OtoLog Portfolio Presentation</title>
+    <style>
+      :root {
+        --bg: #eef2f6;
+        --paper: #f9fbfd;
+        --text: #142033;
+        --muted: #5f6f86;
+        --primary: #2f80ed;
+        --primary-soft: #dbeafe;
+        --secondary: #f2994a;
+        --secondary-soft: #fde7d3;
+        --line: #d7e0ea;
+        --shadow: 0 20px 55px rgba(16, 24, 40, 0.08);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        background: var(--bg);
+        color: var(--text);
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      }
+
+      @page {
+        size: 297mm 210mm;
+        margin: 0;
+      }
+
+      body {
+        padding: 20px 0 40px;
+      }
+
+      .deck {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        align-items: center;
+      }
+
+      .slide {
+        width: 297mm;
+        min-height: 210mm;
+        background:
+          radial-gradient(circle at top right, rgba(47, 128, 237, 0.12), transparent 28%),
+          radial-gradient(circle at bottom left, rgba(242, 153, 74, 0.14), transparent 26%),
+          linear-gradient(180deg, #fbfdff 0%, #f4f7fa 100%);
+        position: relative;
+        overflow: hidden;
+        box-shadow: var(--shadow);
+        page-break-after: always;
+      }
+
+      .slide:last-child {
+        page-break-after: auto;
+      }
+
+      .inner {
+        padding: 22mm 22mm 18mm;
+        height: 100%;
+      }
+
+      .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 8px 14px;
+        border-radius: 999px;
+        background: rgba(47, 128, 237, 0.1);
+        color: var(--primary);
+        font-size: 14px;
+        font-weight: 700;
+        letter-spacing: 0.02em;
+      }
+
+      h1,
+      h2,
+      h3,
+      p {
+        margin: 0;
+      }
+
+      h1 {
+        font-size: 38px;
+        line-height: 1.08;
+        margin-top: 18px;
+      }
+
+      h2 {
+        font-size: 28px;
+        line-height: 1.15;
+        margin-bottom: 18px;
+      }
+
+      .lead {
+        margin-top: 18px;
+        max-width: 70%;
+        font-size: 18px;
+        line-height: 1.55;
+        color: var(--muted);
+      }
+
+      .meta {
+        margin-top: 26px;
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 14px;
+      }
+
+      .meta-card,
+      .card {
+        background: rgba(255, 255, 255, 0.86);
+        border: 1px solid rgba(215, 224, 234, 0.95);
+        border-radius: 24px;
+        padding: 18px;
+        backdrop-filter: blur(8px);
+      }
+
+      .meta-card strong {
+        display: block;
+        font-size: 14px;
+        color: var(--muted);
+        margin-bottom: 10px;
+      }
+
+      .meta-card span {
+        display: block;
+        font-size: 18px;
+        font-weight: 700;
+      }
+
+      .grid-2 {
+        display: grid;
+        grid-template-columns: 1.1fr 0.9fr;
+        gap: 18px;
+      }
+
+      .grid-3 {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 16px;
+      }
+
+      .grid-4 {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
+      }
+
+      .stack {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+      }
+
+      .card h3 {
+        font-size: 19px;
+        margin-bottom: 10px;
+      }
+
+      .card p {
+        font-size: 15px;
+        line-height: 1.5;
+        color: var(--muted);
+      }
+
+      ul {
+        margin: 10px 0 0;
+        padding-left: 20px;
+        color: var(--muted);
+        font-size: 15px;
+        line-height: 1.5;
+      }
+
+      li + li {
+        margin-top: 6px;
+      }
+
+      .hero-mark {
+        position: absolute;
+        right: 24mm;
+        top: 26mm;
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        border: 14px solid var(--primary);
+      }
+
+      .hero-mark::before {
+        content: "";
+        position: absolute;
+        right: -8px;
+        top: 43px;
+        width: 78px;
+        height: 14px;
+        border-radius: 999px;
+        background: var(--secondary);
+        transform: skewX(-24deg);
+      }
+
+      .hero-mark::after {
+        content: "";
+        position: absolute;
+        right: -18px;
+        top: 40px;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background: var(--secondary);
+      }
+
+      .band {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        height: 14px;
+        background: linear-gradient(90deg, var(--primary), var(--secondary));
+      }
+
+      .two-col-text {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 18px;
+      }
+
+      .quote {
+        padding: 24px;
+        border-radius: 26px;
+        background: linear-gradient(135deg, rgba(47, 128, 237, 0.14), rgba(242, 153, 74, 0.14));
+        border: 1px solid rgba(255, 255, 255, 0.8);
+        font-size: 22px;
+        line-height: 1.5;
+        font-weight: 700;
+      }
+
+      .timeline {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 16px;
+        margin-top: 12px;
+      }
+
+      .timeline .card {
+        min-height: 185px;
+      }
+
+      .timeline-number {
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--primary-soft);
+        color: var(--primary);
+        font-weight: 800;
+        margin-bottom: 12px;
+      }
+
+      .footer-note {
+        position: absolute;
+        right: 22mm;
+        bottom: 16mm;
+        color: #7b8797;
+        font-size: 12px;
+      }
+
+      @media print {
+        body {
+          padding: 0;
+          background: white;
+        }
+
+        .slide {
+          box-shadow: none;
+          margin: 0;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="deck">
+      <section class="slide">
+        <div class="inner">
+          <div class="eyebrow">Portfolio Presentation</div>
+          <div class="hero-mark"></div>
+          <h1>OtoLog</h1>
+          <p class="lead">
+            Aplikasi pencatatan servis kendaraan yang local-first, fokus pada
+            privasi, kemudahan penggunaan, dan kesiapan rilis ke production.
+          </p>
+          <div class="meta">
+            <div class="meta-card">
+              <strong>Platform</strong>
+              <span>Flutter Mobile</span>
+            </div>
+            <div class="meta-card">
+              <strong>Arsitektur</strong>
+              <span>Local-first</span>
+            </div>
+            <div class="meta-card">
+              <strong>Database</strong>
+              <span>Drift + SQLite</span>
+            </div>
+            <div class="meta-card">
+              <strong>Rilis</strong>
+              <span>Google Play</span>
+            </div>
+          </div>
+          <p class="footer-note">OtoLog 1.1.0 • Portfolio Deck</p>
+        </div>
+        <div class="band"></div>
+      </section>
+
+      <section class="slide">
+        <div class="inner">
+          <div class="eyebrow">01 • Latar Belakang</div>
+          <h2>Masalah yang ingin diselesaikan</h2>
+          <div class="grid-2">
+            <div class="stack">
+              <div class="card">
+                <h3>Masalah utama</h3>
+                <p>
+                  Riwayat servis kendaraan sering tersebar di chat, nota fisik,
+                  catatan pribadi, atau ingatan saja. Akibatnya pengguna sulit
+                  melacak histori perawatan secara rapi.
+                </p>
+              </div>
+              <div class="card">
+                <h3>Pertanyaan yang sering muncul</h3>
+                <ul>
+                  <li>Kapan terakhir ganti oli?</li>
+                  <li>Berapa total biaya perawatan kendaraan?</li>
+                  <li>Servis apa saja yang sudah pernah dilakukan?</li>
+                  <li>Pada kilometer berapa perbaikan terakhir terjadi?</li>
+                </ul>
+              </div>
+            </div>
+            <div class="stack">
+              <div class="quote">
+                “Banyak user hanya butuh log servis personal yang cepat,
+                sederhana, dan tidak bergantung pada akun.”
+              </div>
+              <div class="card">
+                <h3>Peluang produk</h3>
+                <p>
+                  Membuat maintenance tracker yang ringan, usable secara
+                  offline, dan terasa seperti alat pribadi, bukan sistem fleet
+                  management.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="band"></div>
+      </section>
+
+      <section class="slide">
+        <div class="inner">
+          <div class="eyebrow">02 • Solusi</div>
+          <h2>Produk yang dibangun</h2>
+          <div class="grid-3">
+            <div class="card">
+              <h3>Garage Management</h3>
+              <p>
+                Menambah, mengedit, menghapus, dan menandai kendaraan utama
+                dalam satu garage.
+              </p>
+            </div>
+            <div class="card">
+              <h3>Service Logging</h3>
+              <p>
+                Menyimpan servis berdasarkan tanggal, biaya, odometer,
+                mekanik, dan catatan tambahan.
+              </p>
+            </div>
+            <div class="card">
+              <h3>Statistics</h3>
+              <p>
+                Menampilkan ringkasan jumlah servis, total biaya, dan histori
+                servis per kendaraan.
+              </p>
+            </div>
+            <div class="card">
+              <h3>Onboarding</h3>
+              <p>
+                Setup awal untuk bahasa, satuan jarak, dan currency agar user
+                langsung nyaman memakai aplikasi.
+              </p>
+            </div>
+            <div class="card">
+              <h3>Localization</h3>
+              <p>
+                Mendukung Bahasa Indonesia dan English di flow utama aplikasi.
+              </p>
+            </div>
+            <div class="card">
+              <h3>Privacy-first</h3>
+              <p>
+                Seluruh data inti disimpan lokal di perangkat tanpa kebutuhan
+                akun atau server backend.
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="band"></div>
+      </section>
+
+      <section class="slide">
+        <div class="inner">
+          <div class="eyebrow">03 • Product Goals</div>
+          <h2>Prinsip yang memandu pengembangan</h2>
+          <div class="grid-4">
+            <div class="card">
+              <h3>Pencatatan cepat</h3>
+              <p>
+                Menambah kendaraan dan servis harus bisa dilakukan tanpa alur
+                yang panjang.
+              </p>
+            </div>
+            <div class="card">
+              <h3>Offline-first</h3>
+              <p>
+                Fitur inti harus tetap usable tanpa koneksi internet.
+              </p>
+            </div>
+            <div class="card">
+              <h3>Privasi yang jelas</h3>
+              <p>
+                Data kendaraan dan servis tetap di perangkat pengguna.
+              </p>
+            </div>
+            <div class="card">
+              <h3>UX yang ringan</h3>
+              <p>
+                Antarmuka dibuat sederhana, fokus, dan tidak terasa berat bagi
+                pengguna umum.
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="band"></div>
+      </section>
+
+      <section class="slide">
+        <div class="inner">
+          <div class="eyebrow">04 • Tech Stack</div>
+          <h2>Stack dan alasan pemilihannya</h2>
+          <div class="two-col-text">
+            <div class="card">
+              <h3>Teknologi utama</h3>
+              <ul>
+                <li>Flutter</li>
+                <li>flutter_bloc</li>
+                <li>go_router</li>
+                <li>get_it</li>
+                <li>Drift + SQLite</li>
+                <li>SharedPreferences</li>
+                <li>image_picker</li>
+                <li>fl_chart</li>
+              </ul>
+            </div>
+            <div class="card">
+              <h3>Alasan</h3>
+              <ul>
+                <li>Single codebase untuk pengembangan mobile yang efisien</li>
+                <li>State management tetap modular dan terprediksi</li>
+                <li>Database lokal typed dengan dukungan migrasi schema</li>
+                <li>Navigasi bertab dan detail route lebih rapi</li>
+                <li>Preferensi kecil mudah disimpan secara lokal</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="band"></div>
+      </section>
+
+      <section class="slide">
+        <div class="inner">
+          <div class="eyebrow">05 • Arsitektur</div>
+          <h2>Struktur teknis aplikasi</h2>
+          <div class="grid-2">
+            <div class="stack">
+              <div class="card">
+                <h3>Lapisan utama</h3>
+                <ul>
+                  <li>Presentation layer: screen dan widget</li>
+                  <li>State layer: Cubit dan state</li>
+                  <li>Data layer: Drift service dan database</li>
+                  <li>Infrastructure layer: router, theme, localization, DI</li>
+                </ul>
+              </div>
+              <div class="card">
+                <h3>Startup flow</h3>
+                <ul>
+                  <li>Flutter binding initialization</li>
+                  <li>Service locator initialization</li>
+                  <li>Cek status onboarding</li>
+                  <li>Tentukan initial route</li>
+                  <li>Build app dengan provider state yang diperlukan</li>
+                </ul>
+              </div>
+            </div>
+            <div class="stack">
+              <div class="card">
+                <h3>Cubit utama</h3>
+                <ul>
+                  <li>VehicleCubit</li>
+                  <li>VehicleListCubit</li>
+                  <li>VehicleDetailCubit</li>
+                  <li>ServiceVehicleSelectorCubit</li>
+                  <li>LanguageCubit</li>
+                  <li>UnitCubit</li>
+                  <li>CurrencyCubit</li>
+                </ul>
+              </div>
+              <div class="card">
+                <h3>Routing</h3>
+                <p>
+                  `go_router` dipakai untuk shell tabs: Home, Garage, Service
+                  Logs, dan Settings, plus route detail seperti vehicle detail,
+                  add service, edit service, dan statistics.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="band"></div>
+      </section>
+
+      <section class="slide">
+        <div class="inner">
+          <div class="eyebrow">06 • Data Layer</div>
+          <h2>Local-first sebagai fondasi produk</h2>
+          <div class="grid-3">
+            <div class="card">
+              <h3>Tabel `vehicles`</h3>
+              <p>
+                Menyimpan identitas kendaraan, metadata, odometer, image path,
+                status primary, dan timestamp.
+              </p>
+            </div>
+            <div class="card">
+              <h3>Tabel `service_records`</h3>
+              <p>
+                Menyimpan jenis servis, tanggal, biaya, mekanik, odometer, dan
+                catatan yang terhubung ke kendaraan tertentu.
+              </p>
+            </div>
+            <div class="card">
+              <h3>Migrasi schema</h3>
+              <p>
+                Drift dipakai dengan migrasi untuk menjaga kompatibilitas data
+                saat aplikasi diperbarui di perangkat pengguna.
+              </p>
+            </div>
+          </div>
+          <div style="margin-top: 18px" class="card">
+            <h3>Keputusan produk</h3>
+            <p>
+              Menyimpan data secara lokal membuat OtoLog lebih cepat dipakai,
+              lebih sederhana dari sisi operasional, dan lebih kuat dari sisi
+              privasi untuk use case personal maintenance tracking.
+            </p>
+          </div>
+        </div>
+        <div class="band"></div>
+      </section>
+
+      <section class="slide">
+        <div class="inner">
+          <div class="eyebrow">07 • UX dan Onboarding</div>
+          <h2>Penyempurnaan pengalaman pengguna</h2>
+          <div class="grid-2">
+            <div class="stack">
+              <div class="card">
+                <h3>Fokus UX</h3>
+                <ul>
+                  <li>Form ringkas dan mudah dipindai</li>
+                  <li>Section yang jelas</li>
+                  <li>Komponen konsisten lintas screen</li>
+                  <li>Empty state yang informatif</li>
+                </ul>
+              </div>
+              <div class="card">
+                <h3>Onboarding</h3>
+                <p>
+                  Flow onboarding disederhanakan menjadi satu halaman pengantar
+                  lalu preferensi awal, agar tetap ringkas tetapi fungsional.
+                </p>
+              </div>
+            </div>
+            <div class="stack">
+              <div class="card">
+                <h3>Perbaikan visual</h3>
+                <ul>
+                  <li>Currency selector memakai modal bottom sheet</li>
+                  <li>Style input disamakan dengan komponen settings</li>
+                  <li>Chip selection dibuat lebih smooth</li>
+                  <li>Warna icon onboarding diselaraskan dengan settings</li>
+                </ul>
+              </div>
+              <div class="quote">
+                Tujuannya bukan sekadar “bagus”, tapi terasa konsisten dan
+                matang saat dipakai user pertama kali.
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="band"></div>
+      </section>
+
+      <section class="slide">
+        <div class="inner">
+          <div class="eyebrow">08 • Tantangan yang Diselesaikan</div>
+          <h2>Bug dan issue nyata menjelang rilis</h2>
+          <div class="timeline">
+            <div class="card">
+              <div class="timeline-number">1</div>
+              <h3>Vehicle list stuck</h3>
+              <p>
+                Saat add kendaraan pertama dari empty state, UI bisa stuck
+                karena success state tidak lagi renderable sebagai loaded state.
+              </p>
+            </div>
+            <div class="card">
+              <div class="timeline-number">2</div>
+              <h3>Add service mismatch</h3>
+              <p>
+                Kendaraan default terlihat terpilih, tetapi selected ID belum
+                sinkron, sehingga validasi save bisa gagal.
+              </p>
+            </div>
+            <div class="card">
+              <div class="timeline-number">3</div>
+              <h3>Save lalu pop terlalu cepat</h3>
+              <p>
+                Add/edit service sempat menutup screen sebelum proses simpan
+                selesai, sehingga error bisa tersembunyi.
+              </p>
+            </div>
+            <div class="card">
+              <div class="timeline-number">4</div>
+              <h3>Play policy issue</h3>
+              <p>
+                Permission media yang terlalu luas harus dihapus agar release
+                sesuai kebijakan Google Play untuk photo access.
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="band"></div>
+      </section>
+
+      <section class="slide">
+        <div class="inner">
+          <div class="eyebrow">09 • Release dan Production</div>
+          <h2>Perjalanan menuju Google Play</h2>
+          <div class="grid-2">
+            <div class="stack">
+              <div class="card">
+                <h3>Aktivitas release prep</h3>
+                <ul>
+                  <li>Update icon dan splash</li>
+                  <li>Store listing dan release note</li>
+                  <li>Privacy Policy dan Terms of Service</li>
+                  <li>APK dan AAB release build</li>
+                  <li>Open testing sebelum production</li>
+                </ul>
+              </div>
+              <div class="card">
+                <h3>Quality focus</h3>
+                <ul>
+                  <li>Onboarding</li>
+                  <li>Add first vehicle</li>
+                  <li>Add / edit / delete service</li>
+                  <li>Settings preference</li>
+                  <li>Persistence setelah restart</li>
+                </ul>
+              </div>
+            </div>
+            <div class="stack">
+              <div class="quote">
+                Proyek ini dikerjakan dengan mindset produk nyata: ada version
+                code, compliance check, release candidate, open testing, dan
+                production rollout.
+              </div>
+              <div class="card">
+                <h3>Nilai penting</h3>
+                <p>
+                  Bagian ini menunjukkan kemampuan shipping end-to-end, bukan
+                  hanya membuat UI atau fitur secara lokal.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="band"></div>
+      </section>
+
+      <section class="slide">
+        <div class="inner">
+          <div class="eyebrow">10 • Branding</div>
+          <h2>Produk yang dipoles, bukan sekadar prototype</h2>
+          <div class="grid-3">
+            <div class="card">
+              <h3>Logo baru</h3>
+              <p>
+                Identitas visual diperbarui agar lebih selaras dengan tema dan
+                nuansa aplikasi.
+              </p>
+            </div>
+            <div class="card">
+              <h3>App icon</h3>
+              <p>
+                Ikon launcher disesuaikan agar lebih kuat secara visual pada
+                homescreen device.
+              </p>
+            </div>
+            <div class="card">
+              <h3>Native splash</h3>
+              <p>
+                Splash screen dibuat konsisten dengan branding baru untuk
+                meningkatkan kesan first impression.
+              </p>
+            </div>
+          </div>
+          <div style="margin-top: 18px" class="card">
+            <h3>Kenapa ini penting untuk portofolio</h3>
+            <p>
+              Branding, app icon, splash, dan store assets menunjukkan bahwa
+              proyek ini dipikirkan sebagai produk utuh, bukan hanya latihan
+              coding.
+            </p>
+          </div>
+        </div>
+        <div class="band"></div>
+      </section>
+
+      <section class="slide">
+        <div class="inner">
+          <div class="eyebrow">11 • Hasil dan Pembelajaran</div>
+          <h2>Apa yang ditunjukkan oleh proyek ini</h2>
+          <div class="grid-2">
+            <div class="card">
+              <h3>Kemampuan yang ditunjukkan</h3>
+              <ul>
+                <li>Membangun app Flutter end-to-end</li>
+                <li>Mendesain arsitektur local-first</li>
+                <li>Mengelola state dan database lokal</li>
+                <li>Mengerjakan localization dan preference flow</li>
+                <li>Menangani bug production dan issue compliance</li>
+                <li>Menyiapkan release assets dan store presence</li>
+              </ul>
+            </div>
+            <div class="card">
+              <h3>Arah pengembangan berikutnya</h3>
+              <ul>
+                <li>Reminder servis berkala</li>
+                <li>Backup dan restore</li>
+                <li>Export data</li>
+                <li>Cloud sync opsional</li>
+                <li>Statistik yang lebih kaya</li>
+                <li>Test coverage yang lebih luas</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="band"></div>
+      </section>
+
+      <section class="slide">
+        <div class="inner">
+          <div class="eyebrow">12 • Closing</div>
+          <h2>Ringkasan</h2>
+          <div class="grid-2">
+            <div class="quote">
+              OtoLog adalah contoh proyek yang menggabungkan product thinking,
+              implementasi teknis, UX polish, branding, dan proses release
+              nyata dalam satu aplikasi.
+            </div>
+            <div class="stack">
+              <div class="card">
+                <h3>Posisi di portofolio</h3>
+                <p>
+                  Sangat cocok ditampilkan sebagai studi kasus mobile product
+                  yang benar-benar dibawa sampai production.
+                </p>
+              </div>
+              <div class="card">
+                <h3>Langkah lanjutan</h3>
+                <p>
+                  Deck ini bisa dilengkapi screenshot final, diagram arsitektur,
+                  dan before/after visual untuk presentasi yang lebih kuat lagi.
+                </p>
+              </div>
+            </div>
+          </div>
+          <p class="footer-note">Prepared for portfolio presentation</p>
+        </div>
+        <div class="band"></div>
+      </section>
+    </main>
+  </body>
+</html>

@@ -33,6 +33,7 @@ class _EditServiceScreenState extends State<EditServiceScreen> {
   int? _vehicleId;
   int? _serviceId;
   ServiceRecord? _existingService;
+  bool _isSaving = false;
 
   List<String> get _serviceTypes => [
     context.l10n.oilChange,
@@ -909,7 +910,7 @@ class _EditServiceScreenState extends State<EditServiceScreen> {
   Widget _buildSaveButton() {
     return BlocBuilder<VehicleDetailCubit, VehicleDetailState>(
       builder: (context, state) {
-        final isLoading = state is VehicleDetailLoading;
+        final isLoading = _isSaving || state is VehicleDetailLoading;
         return Container(
           width: double.infinity,
           decoration: BoxDecoration(
@@ -960,7 +961,7 @@ class _EditServiceScreenState extends State<EditServiceScreen> {
     );
   }
 
-  void _updateService() {
+  Future<void> _updateService() async {
     print('📱 [EditServiceScreen] _updateService called');
     print(
       '📱 [EditServiceScreen]   Form validation: ${_formKey.currentState!.validate()}',
@@ -1014,9 +1015,43 @@ class _EditServiceScreenState extends State<EditServiceScreen> {
       print(
         '📱 [EditServiceScreen]   Calling updateServiceRecord on VehicleDetailCubit',
       );
-      context.read<VehicleDetailCubit>().updateServiceRecord(updatedService);
+      setState(() {
+        _isSaving = true;
+      });
+
+      final vehicleDetailCubit = context.read<VehicleDetailCubit>();
+      await vehicleDetailCubit.updateServiceRecord(updatedService);
+
+      if (!mounted) {
+        return;
+      }
+
+      setState(() {
+        _isSaving = false;
+      });
+
+      if (vehicleDetailCubit.state is VehicleDetailError) {
+        final errorState = vehicleDetailCubit.state as VehicleDetailError;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(errorState.message),
+            backgroundColor: AppColors.secondary[500],
+            behavior: SnackBarBehavior.floating,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8),
+            ),
+            margin: const EdgeInsets.all(16),
+          ),
+        );
+        return;
+      }
+
       print('📱 [EditServiceScreen]   Refreshing VehicleListCubit');
-      context.read<VehicleListCubit>().loadVehicles();
+      await context.read<VehicleListCubit>().loadVehicles();
+      if (!mounted) {
+        return;
+      }
+
       print('📱 [EditServiceScreen]   Navigating back');
       context.pop();
     } else {
